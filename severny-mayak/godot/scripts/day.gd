@@ -11,6 +11,7 @@ const FIELD := 8.0             # поиски на местности: стол�
 const HIDE_PENALTY := 15.0     # эксперт нашёл скрытую папку — это подозрительно
 
 var away := false
+var active := false            # день идёт (не заставка и не отчёт)
 var cur: TextureRect
 var copied_today: Array = []
 var missed_today: Array = []
@@ -76,6 +77,7 @@ func run() -> void:
 	var rid := G.run_id
 	G.in_game = true
 	G.ending = ""
+	active = false
 	G.st.phase = "day"
 	G.st.mins = 0
 	copied_today.clear()
@@ -101,6 +103,7 @@ func run() -> void:
 	if seize:
 		await seized(d)
 		return
+	active = true
 	if G.fget("goal", "") != "day":
 		G.st.f["goalNight"] = G.fget("goal", "")
 	G.pix.goal("day")
@@ -137,6 +140,7 @@ func run() -> void:
 	G.house.move("cop", "out")
 	if not await _until(func(): return G.stealth.phase == "", 60.0):
 		return
+	active = false
 	G.add_case(FIELD)
 	await G.pix.say_wait(G.L.lines.dayEnd)
 	if not _alive(rid):

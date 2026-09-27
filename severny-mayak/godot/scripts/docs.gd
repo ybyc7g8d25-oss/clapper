@@ -568,7 +568,7 @@ func _chat_build(w: OSWindow) -> void:
 	for k in CHATS:
 		var o: Dictionary = CHATS[k]
 		var b := Button.new()
-		b.text = ("● " if o.on else "○ ") + String(o.name)
+		b.text = ("• " if o.on else "  ") + String(o.name)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_stylebox_override("normal", UI.flat(UI.PAPER if k == chat_sel else UI.PAPER2, UI.PAPER3, 0, 2, 1))
 		b.pressed.connect(func():

@@ -182,7 +182,7 @@ SM_LANG.en = {
     deleteSelf:['I erased evidence about myself.','…I\'ve done this before. At 23:58.']
   },
 
-  mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'● RECORDING', lost:'…the voices went quiet.' },
+  mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'• RECORDING', lost:'…the voices went quiet.' },
 
   events:[
     [
@@ -342,7 +342,7 @@ SM_LANG.en = {
       ['October 3, night.','I cant sleep. Packed my backpack: a <<flashlight|flashlight>>, <<sandwich|sandwiches>>, a sweater. {{Ill leave my phone.}} If the <<door|door>> is locked ill climb the <<ladder|fire ladder>>. Grandma said from the top you can see the whole river.']
     ], shard:4 },
 
-  cam:{ title:'Camera', osd:'CAM-1', rec:'● REC', led:'● LIGHT ON', empty:'Lyova\'s room. Nobody.', person:'In the room: %s.', off:'MONITOR OFF' },
+  cam:{ title:'Camera', osd:'CAM-1', rec:'• REC', led:'• LIGHT ON', empty:'Lyova\'s room. Nobody.', person:'In the room: %s.', off:'MONITOR OFF' },
 
   bin:{ title:'Bin', restore:'Restore', files:[
       {n:'math_homework.doc', s:'04.10', line:'Homework. He threw it away.'},
@@ -357,7 +357,7 @@ SM_LANG.en = {
   mem:{ title:'Recovering pix_log_0310.dat', hint:'The sectors are scrambled. Click two fragments to swap them. Put the conversation in order.', check:'Assemble' },
 
   map:{ title:'Map — cache', hint:'The map pieces are mixed up. Click two to swap them.',
-    done:'Route 04.10 07:02: home → past the <<school|school>> → past the <<garages|garages>> → to the <<river|river>>. Mark by the tower: "lighthouse — <<top|at the top>>!"' },
+    done:'Route 04.10 07:02: home > past the <<school|school>> > past the <<garages|garages>> > to the <<river|river>>. Mark by the tower: "lighthouse — <<top|at the top>>!"' },
 
   cipher:{ file:'cipher.txt', title:'cipher.txt', hint:'The captain\'s cipher: the letters are shifted. Turn the shift until the text is readable.', shift:'SHIFT %d',
     alphabet:'abcdefghijklmnopqrstuvwxyz', key:3,

@@ -557,7 +557,7 @@
  "mic": {
   "title": "Microphone",
   "idle": "Silence. The fridge is humming.",
-  "live": "● RECORDING",
+  "live": "• RECORDING",
   "lost": "…the voices went quiet."
  },
  "events": [
@@ -1425,8 +1425,8 @@
  "cam": {
   "title": "Camera",
   "osd": "CAM-1",
-  "rec": "● REC",
-  "led": "● LIGHT ON",
+  "rec": "• REC",
+  "led": "• LIGHT ON",
   "empty": "Lyova's room. Nobody.",
   "person": "In the room: %s.",
   "off": "MONITOR OFF"
@@ -1490,7 +1490,7 @@
  "map": {
   "title": "Map — cache",
   "hint": "The map pieces are mixed up. Click two to swap them.",
-  "done": "Route 04.10 07:02: home → past the <<school|school>> → past the <<garages|garages>> → to the <<river|river>>. Mark by the tower: \"lighthouse — <<top|at the top>>!\""
+  "done": "Route 04.10 07:02: home > past the <<school|school>> > past the <<garages|garages>> > to the <<river|river>>. Mark by the tower: \"lighthouse — <<top|at the top>>!\""
  },
  "cipher": {
   "file": "cipher.txt",

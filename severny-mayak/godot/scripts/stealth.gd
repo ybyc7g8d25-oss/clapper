@@ -15,8 +15,10 @@ var found := 0
 var checking := false
 var checked := false        # проверка экрана при входе уже прошла
 
+## Палево считается только пока идёт ночь или пока днём в квартире следователь (не во время заставок и отчётов).
 func active() -> bool:
-	return G.in_game and G.ending == "" and not G.st.mom_online
+	return G.in_game and G.ending == "" and not G.st.mom_online \
+		and ((G.night and G.night.running) or (G.day and G.day.active))
 
 func frozen() -> bool:
 	return phase == "in" and not (G.day and G.day.away)
