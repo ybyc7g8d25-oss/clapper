@@ -44,6 +44,10 @@ func _run() -> void:
 		await wait(0.4)
 		await shot("settings")
 		G.menus.panel.visible = false
+		G.menus.show_help()
+		await wait(0.4)
+		await shot("help")
+		G.menus.panel.visible = false
 	for k in ["a", "t", "b", "c", "p", "s", "x"]:
 		if only != "" and only != k:
 			continue
@@ -87,7 +91,12 @@ func _play(k: String) -> bool:
 	await shot("n1-house")
 	G.house.toggle(false)
 	G.docs.open_note()
+	await wait(0.3)
+	await shot("n1-point-lens")
 	G.set_lens(true)
+	G.collect("phone")
+	if G.fget("goal", "") != "board":
+		errors.append("tutorial: first word did not lead to the board")
 	await wait(0.3)
 	await shot("n1-note-lens")
 	G.docs.open_web()

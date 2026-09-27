@@ -257,6 +257,10 @@ func collect(id: String) -> void:
 		menus.toast(L.ui.wordAdded % word(id))
 	if st.words.size() >= 30:
 		achieve("WORDS")
+	# обучение: первое слово в банке → открой доску
+	if fget("goal", "") == "lens" and pix:
+		pix.goal("board")
+		pix.say(L.lines.boardTut)
 	save_game()
 
 # ---------------------------------------------------------------- доска

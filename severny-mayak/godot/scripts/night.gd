@@ -62,6 +62,11 @@ func start_night(fresh: bool) -> void:
 	update_stage(true)
 	G.hud.refresh()
 	G.stealth.render()
+	# перед самой первой ночью — «Как играть» (потом его можно открыть из паузы)
+	if fresh and n == 1 and not G.meta.get("helpSeen", false) and not G.TEST:
+		await G.menus.show_help(true)
+		G.meta["helpSeen"] = true
+		G.save_meta()
 	await G.menus.night_card(n)
 	# события ночи по порядку; всё, что уже прошло, применяется сразу
 	events = G.L.events[clampi(n - 1, 0, G.L.events.size() - 1)].duplicate(true)

@@ -188,6 +188,7 @@ func show_title() -> void:
 	(c if has_save else v.get_child(1)).call_deferred("grab_focus")
 
 func _process(_d: float) -> void:
+	_update_point()
 	if title.visible and _beam:
 		var t := Time.get_ticks_msec() / 1000.0
 		var k := cos(t * 0.8)
@@ -285,6 +286,7 @@ func open_pause() -> void:
 	v.add_child(UI.label(G.L.ui.paused, UI.PAPER, UI.logo, 8))
 	var r := item(G.L.ui.resume, close_pause)
 	v.add_child(r)
+	v.add_child(item(G.L.ui.help, func(): show_help()))
 	v.add_child(item(G.L.ui.settings, func(): open_panel("settings", true)))
 	v.add_child(item(G.L.ui.toMenu, func():
 		G.save_game()
@@ -640,6 +642,66 @@ func subtitle(who: String, text: String, sec := 2.6) -> void:
 	tw.tween_interval(sec)
 	tw.tween_property(s, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(s.queue_free)
+
+# ---------------------------------------------------------------- подсказка «куда нажать»
+var _point_key := ""
+var _point: Panel
+
+## Мигающая рамка вокруг того, что нужно нажать по текущей цели Пикселя.
+func point(key: String) -> void:
+	_point_key = key
+	if _point == null:
+		_point = Panel.new()
+		_point.add_theme_stylebox_override("panel", UI.flat(Color(0, 0, 0, 0), UI.AMBER2, 1, 0, 0))
+		_point.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(_point)
+		root.move_child(_point, 1)
+
+func _point_target() -> Control:
+	if not G.in_game or G.ending != "" or not G.desk or not G.hud:
+		return null
+	var icons := {"note": "note", "clues": "web", "pin": "draw", "night2": "map", "map": "map", "tale": "tale",
+		"cipher": "cipher", "guard": "tm", "restore": "bin", "mom": "chat", "lie": "mail"}
+	match _point_key:
+		"lens": return G.hud.btn_lens
+		"board": return G.hud.btn_board
+		"wait": return G.hud.btn_wait
+	if icons.has(_point_key):
+		var ic = G.desk.icon_nodes.get(icons[_point_key])
+		if ic and is_instance_valid(ic):
+			return ic
+	return null
+
+func _update_point() -> void:
+	if _point == null:
+		return
+	var tg := _point_target()
+	var hide: bool = tg == null or not tg.is_visible_in_tree() or (G.stealth and G.stealth.phase != "") or panel.visible or card.visible
+	_point.visible = not hide and fmod(Time.get_ticks_msec() / 450.0, 2.0) < 1.4
+	if not hide:
+		_point.position = tg.global_position - Vector2(2, 2)
+		_point.size = tg.size + Vector2(4, 4)
+
+# ---------------------------------------------------------------- «Как играть»
+func show_help(first_time := false) -> void:
+	_clear(panel)
+	var h = G.L.help
+	var v := _col(panel, 60, 16, 360, 4)
+	v.add_child(UI.label(h.title, UI.PAPER, UI.logo, 8))
+	for s in h.sections:
+		v.add_child(UI.label(String(s[0]), UI.AMBER2))
+		v.add_child(UI.label(String(s[1]), UI.LIGHT, null, 8, 360))
+	v.add_child(UI.label(h.keys, UI.GREY3, null, 8, 360))
+	var go := [false]
+	var b := item(h.go if first_time else G.L.ui.back, func():
+		go[0] = true
+		_hide(panel, 0.15))
+	v.add_child(b)
+	_show(panel, 0.2)
+	b.call_deferred("grab_focus")
+	if first_time:
+		while not go[0] and panel.visible:
+			await get_tree().create_timer(0.1, true).timeout
 
 func visit_flash() -> void:
 	var tw := create_tween()

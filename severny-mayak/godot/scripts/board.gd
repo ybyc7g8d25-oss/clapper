@@ -95,6 +95,10 @@ func toggle(force = null) -> void:
 	Sfx.play("paper")
 	if on:
 		render()
+		# обучение: доска открыта впервые → объяснить и отправить за словами в файлы
+		if G.fget("goal", "") == "board":
+			G.pix.goal("clues")
+			G.pix.say(G.L.lines.boardFirst)
 	G.desk.changed.emit()
 
 # ---------------------------------------------------------------- отрисовка

@@ -165,7 +165,14 @@ func run() -> void:
 ## Итог дня: нашли ли Лёву, не пора ли изымать компьютер, не кончилось ли время.
 func after_day(d: int) -> void:
 	if float(G.st.case) >= 100.0:
-		await police_found(G.hours_at(d, true, int(G.st.mins)))
+		var h := G.hours_at(d, true, int(G.st.mins))
+		if G.leva_idx(h) >= 3:
+			# следствие дошло до башни — но слишком поздно: никто не успел
+			G.st.found_h = h
+			G.ending = "pending"
+			G.night.show_end("b")
+			return
+		await police_found(h)
 		return
 	if G.hours_at(d + 1, false) >= G.DEADLINE:
 		G.ending = "pending"
@@ -370,7 +377,7 @@ func simulate() -> String:
 		G.add_case(FIELD)
 		if float(G.st.case) >= 100.0:
 			G.st.found_h = G.hours_at(d, true)
-			return "police"
+			return "police" if G.leva_idx(int(G.st.found_h)) < 3 else "lost"
 		if G.hours_at(d + 1, false) >= G.DEADLINE:
 			return "lost"
 		d += 1

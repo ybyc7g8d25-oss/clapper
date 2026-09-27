@@ -42,6 +42,7 @@
   "saved": "Progress saved",
   "retry": "Try again",
   "again": "Main menu",
+  "help": "How to play",
   "board": "BOARD",
   "lens": "LENS",
   "house": "HOUSE",
@@ -282,6 +283,7 @@
   "guard": "something is holding the bin. Open \"Processes\"",
   "restore": "restore the deleted record from the bin",
   "mom": "Mom is online. Answer her",
+  "clues": "read the files on the desktop and collect words with the lens",
   "wait": "wait for morning or keep looking",
   "day": "freeze while he looks. A phone call is your chance",
   "lie": "there's nothing in the parental log. Reread the mail"
@@ -313,6 +315,10 @@
   "boardTut": [
    "The board — Tab. This is where I piece together what happened.",
    "Pick a blank, then a word. When a section is full, I'll check it."
+  ],
+  "boardFirst": [
+   "The blanks are what I don't know yet. The words for them are in the files on the desktop.",
+   "Let's start with the morning of October 4: when he left and where to."
   ],
   "firstRight": [
    "It adds up.",
@@ -786,6 +792,33 @@
  "homework": {
   "title": "math_homework.doc",
   "body": "Homework. October 2.\n\nProblem 1. Dima has 12 stickers, Lyova has 5 fewer. How many stickers does Lyova have?\nAnswer: 7.\n\nProblem 2. It is 5 km from home to the river. A boy walks at 4 km/h. How long will it take him?\nAnswer: 1 h 15 min. {{(pixel said check it. pixel said if i leave at 7 ill be there by 8:15)}}\n\nIn the margin: a lighthouse with three beams and a little ship."
+ },
+ "help": {
+  "title": "HOW TO PLAY",
+  "go": "Got it",
+  "sections": [
+   [
+    "Who you are",
+    "Pixel — Lyova's AI friend who lives in his computer. Lyova is missing. Find where he is through his files."
+   ],
+   [
+    "Night: investigate",
+    "Double-click to open a file. The lens (Q) highlights key words — click them to put them in the bank. On the board (Tab), put words into the blanks: that's how you rebuild what happened."
+   ],
+   [
+    "Hide",
+    "Nobody in the house may realize the computer is alive. Footsteps — hide everything (D) and don't touch the mouse while someone is in the room: they will look at the screen. The house (H) shows who is where — but it's on screen too."
+   ],
+   [
+    "Day: the detective",
+    "He copies files to a flash drive. The files help find Lyova — and tell him about you. Right-click a file to hide or erase it. Best while he looks away."
+   ],
+   [
+    "Time",
+    "Lyova doesn't have much. At the bottom, Pixel's hint says what to do next, and a blinking frame shows where to click."
+   ]
+  ],
+  "keys": "Tab — board · Q — lens · H — house · D — hide all · W — speed up the night · Space — next · Esc — pause"
  },
  "uncanny": {
   "logDate": "today, 03:12",

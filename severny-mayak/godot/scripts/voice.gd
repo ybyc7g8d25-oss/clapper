@@ -183,6 +183,8 @@ func _process(delta: float) -> void:
 
 func goal(key: String) -> void:
 	G.st.f["goal"] = key
+	if G.menus:
+		G.menus.point(key)
 	goal_l.text = (G.L.ui.goal + String(G.L.goals.get(key, key))) if key != "" else ""
 	_layout()
 
