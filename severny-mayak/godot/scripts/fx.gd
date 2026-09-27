@@ -4,8 +4,8 @@ extends CanvasLayer
 
 const STAGES := [
 	{"sat": 1.0, "bright": 1.0, "contrast": 1.0, "tint": Vector3(1, 1, 1), "vignette": 0.0, "scan": 0.0, "noise_amt": 0.0},
-	{"sat": 0.72, "bright": 0.97, "contrast": 1.0, "tint": Vector3(1, 1, 1), "vignette": 0.35, "scan": 0.0, "noise_amt": 0.0},
-	{"sat": 0.35, "bright": 0.84, "contrast": 1.08, "tint": Vector3(0.96, 0.98, 1.04), "vignette": 0.65, "scan": 0.45, "noise_amt": 0.05},
+	{"sat": 0.8, "bright": 0.96, "contrast": 1.0, "tint": Vector3(1, 1, 1), "vignette": 0.3, "scan": 0.0, "noise_amt": 0.0},
+	{"sat": 0.55, "bright": 0.88, "contrast": 1.06, "tint": Vector3(0.96, 0.98, 1.04), "vignette": 0.6, "scan": 0.4, "noise_amt": 0.04},
 	{"sat": 0.25, "bright": 0.72, "contrast": 1.2, "tint": Vector3(1.18, 0.8, 0.76), "vignette": 1.0, "scan": 0.75, "noise_amt": 0.12},
 ]
 var rect: ColorRect

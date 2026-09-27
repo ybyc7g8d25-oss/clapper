@@ -1,56 +1,51 @@
 class_name DeskIcon
 extends Control
-## Значок на рабочем столе: одиночный клик выделяет, двойной — открывает.
+## Значок на столе: тёмная подложка, картинка 16x16, подпись. Двойной щелчок — открыть.
 
 signal open_requested(id: String)
 
 var id := ""
-var label: Label
-var sel_box: Panel
-var icon: TextureRect
+var plate: ColorRect
+var pic: TextureRect
+var lab: Label
 
 func setup(icon_id: String, icon_name: String, text: String) -> void:
 	id = icon_id
-	custom_minimum_size = Vector2(108, 76)
-	size = custom_minimum_size
-	focus_mode = Control.FOCUS_ALL
+	add_to_group("icons")
+	size = Vector2(42, 26)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	sel_box = Panel.new()
-	sel_box.add_theme_stylebox_override("panel", UI.flat(Color(0, 0, 0, 0), Color(1, 1, 1, 0.7), 2, 0))
-	UI.full(sel_box)
-	sel_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sel_box.visible = false
-	add_child(sel_box)
-	icon = UI.icon_rect(icon_name, 32)
-	icon.position = Vector2(38, 4)
-	add_child(icon)
-	label = UI.shadowed(UI.label(text, null, 16, Color.WHITE))
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.position = Vector2(0, 40)
-	label.size = Vector2(108, 36)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(label)
+	plate = ColorRect.new()
+	plate.color = Color(UI.BLACK, 0.55)
+	plate.size = size
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(plate)
+	pic = TextureRect.new()
+	pic.texture = UI.tex("icon_" + icon_name)
+	pic.position = Vector2(13, 1)
+	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(pic)
+	lab = UI.label(text, UI.LIGHT)
+	lab.position = Vector2(0, 16)
+	lab.size = Vector2(42, 9)
+	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lab.clip_text = true
+	add_child(lab)
 
-func set_text(t: String) -> void:
-	label.text = t
+func set_icon(n: String) -> void:
+	pic.texture = UI.tex("icon_" + n)
 
-func set_selected(on: bool) -> void:
-	sel_box.visible = on
-	label.add_theme_color_override("font_color", Color.WHITE)
-	if on:
-		label.add_theme_stylebox_override("normal", UI.flat(UI.GRAPE, Color(0, 0, 0, 0), 0, 0, 0))
-	else:
-		label.remove_theme_stylebox_override("normal")
+func set_sel(on: bool) -> void:
+	plate.color = Color(UI.PURPLE, 0.9) if on else Color(UI.BLACK, 0.55)
+
+func blink() -> void:
+	var tw := create_tween().set_loops(6)
+	tw.tween_property(plate, "color", Color(UI.AMBER, 0.9), 0.3)
+	tw.tween_property(plate, "color", Color(UI.BLACK, 0.55), 0.3)
 
 func _gui_input(e: InputEvent) -> void:
 	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
-		get_tree().call_group("desk_icons", "set_selected", false)
-		set_selected(true)
-		grab_focus()
+		get_tree().call_group("icons", "set_sel", false)
+		set_sel(true)
 		if e.double_click:
 			open_requested.emit(id)
-		accept_event()
-	elif e is InputEventKey and e.pressed and e.keycode in [KEY_ENTER, KEY_KP_ENTER]:
-		open_requested.emit(id)
 		accept_event()

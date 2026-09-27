@@ -16,7 +16,7 @@ func _ready() -> void:
 			AudioServer.set_bus_name(AudioServer.bus_count - 1, b)
 			AudioServer.set_bus_send(AudioServer.bus_count - 1, "Master")
 	for n in ["click", "tick0", "tick1", "tick2", "tick3", "key", "err", "msg", "shard", "glitch", "scare",
-			"door", "step", "heart", "chime", "sad", "soft", "drone0", "drone1", "drone2", "drone3"]:
+			"door", "step", "heart", "chime", "sad", "soft", "stamp", "paper", "ring", "type", "drone0", "drone1", "drone2", "drone3"]:
 		var s: AudioStreamWAV = load("res://sfx/%s.wav" % n)
 		if n.begins_with("drone"):
 			s = s.duplicate()

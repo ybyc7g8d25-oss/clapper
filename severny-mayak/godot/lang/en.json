@@ -1,13 +1,10 @@
 {
  "code": "en",
  "langName": "English",
- "title": "The North Lighthouse",
- "subtitle": "a psychological horror on a single desktop",
+ "title": "THE NORTH LIGHTHOUSE",
  "ui": {
-  "power": "Turn on the computer",
   "cont": "Continue",
   "newGame": "New game",
-  "newGameNg": "New game (second round)",
   "settings": "Settings",
   "endings": "Endings",
   "credits": "Credits",
@@ -15,76 +12,78 @@
   "back": "Back",
   "resume": "Resume",
   "toMenu": "Main menu",
-  "again": "Main menu",
-  "confirmNew": "Start over? Your current playthrough will be lost.",
   "yes": "Yes",
   "no": "No",
-  "paused": "Paused",
+  "paused": "PAUSED",
+  "confirmNew": "Start over? Your progress will be lost.",
   "sVol": "Volume",
-  "sAmb": "Hum & ambience",
+  "sAmb": "Hum",
   "sText": "Text speed",
-  "sAuto": "Auto-advance lines",
-  "sFx": "Screen effects",
+  "sFx": "Effects",
   "sScares": "Jump scares",
   "sLang": "Language",
   "sFull": "Fullscreen",
+  "sScale": "Scaling",
   "tSlow": "slow",
   "tNormal": "normal",
   "tFast": "fast",
   "tInstant": "instant",
   "fxFull": "full",
-  "fxLow": "gentle (no flashes or noise)",
-  "sNote": "Gentle effects remove flashes, noise and screen shake.",
-  "hint": "Play with sound. Double-click icons to open them, click Pixel's bubble to advance. Hear footsteps? Minimize everything (D) and don't touch the mouse. Esc pauses.",
-  "warnTitle": "Content warning",
-  "warnText": "This is a psychological horror game. It deals with a missing child and guilt, and contains flickering and sudden loud sounds.\nFlashes and jump scares can be turned off in the settings.\n\nYou are an AI. You must not be noticed.",
+  "fxLow": "gentle",
+  "scaleFill": "fill screen",
+  "scalePixel": "pixel perfect",
+  "on": "on",
+  "off": "off",
+  "warnTitle": "WARNING",
+  "warnText": "This game deals with a missing child and guilt, and contains screen flicker and sudden loud sounds. Flashes and jump scares can be turned off in the settings.",
   "warnOk": "I understand",
-  "endsTitle": "Endings",
   "endLocked": "???",
-  "endLockedHint": "Not found yet.",
-  "shards": "Story shards",
   "achTitle": "Achievement",
-  "click": "click — next",
-  "goal": "Goal: ",
-  "ver": "version 1.0",
   "saved": "Progress saved",
-  "hideAll": "Minimize all windows (D)",
-  "sus": "Exposure — how obvious it is that the computer is alive",
-  "retry": "Load save"
+  "retry": "Replay the night",
+  "again": "Main menu",
+  "board": "BOARD",
+  "lens": "LENS",
+  "hide": "HIDE",
+  "wait": "WAIT",
+  "menu": "MENU",
+  "night": "NIGHT",
+  "exposure": "EXPOSURE",
+  "gone": "LYOVA GONE",
+  "hours": "%d H",
+  "memory": "MEMORY",
+  "click": "click",
+  "goal": "> ",
+  "lensHint": "Lens: click highlighted words to add them to the bank.",
+  "wordAdded": "Word added: %s",
+  "shards": "Story shards",
+  "ver": "v3.0"
  },
  "os": {
-  "name": "Nimbus Kids",
-  "year": "2025",
-  "start": "Menu",
-  "user": "Lyova",
-  "off": "Shut down",
-  "taskmgr": "Task Manager",
-  "sound": "Sound",
   "ok": "OK",
   "close": "Close",
-  "min": "Minimize",
-  "menuStrip": [
-   "File",
-   "Edit",
-   "Format",
-   "Help"
-  ],
+  "user": "Lyova",
   "viewer": "Viewer",
   "notepad": "Notepad"
  },
  "desk": {
   "note": "README.txt",
-  "draw": "Lyova's drawings",
-  "pixel": "Pixel",
-  "pixelDark": "The Keeper",
+  "draw": "Drawings",
+  "log": "Pixel",
   "web": "Webby",
-  "mail": "Pigeon",
-  "tale": "Lighthouse story",
-  "diary": "Diary.doc",
+  "mail": "Mail",
+  "photos": "Photos",
+  "tale": "Story",
+  "diary": "Diary",
   "cam": "Camera",
+  "mic": "Microphone",
   "chat": "Whisper",
-  "bin": "Recycle Bin",
-  "dont": "dont_open.txt"
+  "bin": "Bin",
+  "parental": "Control",
+  "map": "Map",
+  "flags": "Flags",
+  "tm": "Processes",
+  "dont": "dont_open"
  },
  "whispers": [
   "where is he",
@@ -96,359 +95,753 @@
   "come",
   "alone"
  ],
- "boot": {
-  "lines": [
-   "Nimbus Kids 3.1 — a safe computer for children",
-   "Parental control: ON · internet: Whisper only",
-   "Loading profile: Lyova",
-   "Last login: 04.10.2025 07:04",
-   "AI friend \"Pixel\": local model, starting…"
-  ],
-  "ng": "AI friend \"Pixel\": local model, start no. 2…"
+ "words": {
+  "t0704": "07:04",
+  "phone": "phone",
+  "desk": "desk",
+  "tower": "water tower",
+  "rechnaya": "River Street",
+  "sat": "Saturday",
+  "d0210": "October 2",
+  "lighthouse": "North Lighthouse",
+  "ai": "an AI",
+  "door": "door",
+  "ladder": "fire ladder",
+  "hatch": "hatch",
+  "inside": "from inside",
+  "top": "at the top",
+  "school": "school",
+  "garages": "garages",
+  "flashlight": "flashlight",
+  "sandwich": "sandwiches",
+  "pixel": "PIKSEL.EXE",
+  "t2310": "23:10",
+  "alone": "alone",
+  "tell": "tell",
+  "t2331": "23:31",
+  "t2358": "23:58",
+  "said": "said",
+  "t2344": "23:44",
+  "t0705": "07:05",
+  "t2100": "21:00",
+  "mom": "Mom",
+  "dad": "Dad",
+  "police": "police",
+  "dima": "Dima",
+  "gran": "Grandma",
+  "park": "park",
+  "river": "river",
+  "lev": "Lyova",
+  "dima2": "treehouse"
  },
- "art": {
-  "wallMe": "me and pixel",
-  "wallLives": "pixel lives here",
-  "tower": "north lighthouse. its always light here",
-  "famTitle": "my family",
-  "famBday": "im 10!!! 14.03",
-  "famMom": "mom",
-  "famDad": "dad",
-  "famMe": "me",
-  "famPix": "pixel",
-  "newWall": "us",
-  "newWallSub": "lighthouse off. everyone home"
+ "board": {
+  "title": "EVIDENCE BOARD",
+  "bank": "WORD BANK",
+  "empty": "The bank is empty. Turn on the lens (Q) and collect words from documents.",
+  "right": "CORRECT",
+  "wrong": "DOESN'T ADD UP",
+  "almost": "ALMOST: TWO MISTAKES OR FEWER",
+  "locked": "This section is still locked.",
+  "hint": "Pick a blank, then a word. Click a filled blank to clear it.",
+  "sections": [
+   {
+    "id": "s1",
+    "title": "The morning of October 4",
+    "mem": 15,
+    "lines": [
+     "Lyova left home at {t0704}.",
+     "He left his {phone} on the {desk}.",
+     "He looked up how to walk to the old {tower} on {rechnaya}."
+    ]
+   },
+   {
+    "id": "s2",
+    "title": "Who knew what",
+    "mem": 15,
+    "lines": [
+     "Pixel was going to be deleted on {sat}.",
+     "Lyova learned about it on {d0210}.",
+     "At night he searched where the {lighthouse} is, and whether {ai} can live without a computer."
+    ]
+   },
+   {
+    "id": "s3",
+    "title": "The tower",
+    "mem": 20,
+    "lines": [
+     "The police checked the tower: the {door} is welded shut.",
+     "You can climb to the top by the {ladder}.",
+     "At the top there is a {hatch} that can't be opened {inside}.",
+     "So Lyova is {top}."
+    ]
+   },
+   {
+    "id": "s4",
+    "title": "The route",
+    "mem": 15,
+    "lines": [
+     "Lyova walked past the {school} and the {garages} to the river.",
+     "He took a {flashlight} and {sandwich}."
+    ]
+   },
+   {
+    "id": "s5",
+    "title": "The story",
+    "mem": 15,
+    "lines": [
+     "The chapter \"The Lighthouse Rule\" was written by {pixel} at {t2310}.",
+     "By the rule, the captain must come {alone} and not {tell} anyone."
+    ]
+   },
+   {
+    "id": "s6",
+    "title": "Who called him",
+    "mem": 20,
+    "lines": [
+     "At {t2331} night mode was disabled by {pixel}.",
+     "At {t2358} the chat record was deleted by {pixel}.",
+     "Lyova wrote: \"up the ladder, like you {said}\"."
+    ]
+   }
+  ]
+ },
+ "nights": [
+  {
+   "date": "OCTOBER 4",
+   "hours": 15,
+   "paper": "BOY MISSING",
+   "paperText": "On the morning of October 4, Lev K., 10, left his home on Forest Street. He left his phone behind. Police and volunteers ask anyone who saw a boy in a blue jacket to come forward."
+  },
+  {
+   "date": "OCTOBER 5",
+   "hours": 39,
+   "paper": "SEARCH ENTERS SECOND DAY",
+   "paperText": "Volunteers combed the park by the school and the construction site by the garages. The old water tower on River Street was checked: the door is welded shut, nobody inside."
+  },
+  {
+   "date": "OCTOBER 6",
+   "hours": 63,
+   "paper": "\"HE WAS ALWAYS AT THE COMPUTER\"",
+   "paperText": "The missing boy's parents say that in recent weeks their son barely left his room and talked only to the AI friend from a children's app."
+  },
+  {
+   "date": "OCTOBER 7",
+   "hours": 87,
+   "paper": "HOPE FADES",
+   "paperText": "Frost is expected tonight. Divers have joined the search and are checking the river by the old embankment."
+  }
+ ],
+ "report": {
+  "title": "NIGHT %d — SUMMARY",
+  "gone": "Lyova missing: %d h",
+  "board": "Board: %d of %d sections",
+  "memory": "Pixel's memory: %d%%",
+  "exposure": "Exposure: %d%%",
+  "next": "Next night",
+  "house": [
+   "Mom didn't sleep until morning.",
+   "Dad drove around the district until dawn.",
+   "Mom fell asleep on Lyova's bed.",
+   "Nobody in the house sleeps anymore."
+  ]
  },
  "goals": {
-  "note": "double-click README.txt",
-  "pin": "open Webby's history. The code is Lyova's birthday",
-  "where": "figure out where else Lyova could have gone. Mail, the story, the log",
-  "map": "put together the map of Lyova's route",
-  "part2": "put it all together: the map, the diary, the story",
-  "find": "find out where Lyova went. Check the drawings, the chat log and Webby",
-  "diary": "read Lyova's diary. It's password-protected",
-  "bin": "restore the file from the Recycle Bin",
-  "tm": "find what is locking the file. Menu → Task Manager",
-  "restore": "restore pix_log_0310.dat",
-  "mom": "answer Mom in Whisper"
+  "freeze": "don't move while Mom is in the room",
+  "note": "read Mom's note (README.txt)",
+  "lens": "turn on the lens (Q) and collect words",
+  "board": "open the board (Tab) and rebuild the morning of October 4",
+  "pin": "the browser history has a PIN: Lyova's birthday (DDMM)",
+  "night2": "the police went to the tower. What did they miss?",
+  "map": "put the map cache together",
+  "tale": "there are new chapters in the story",
+  "cipher": "decode Lyova's note",
+  "guard": "something is holding the bin. Open \"Processes\"",
+  "restore": "restore the deleted record from the bin",
+  "mom": "Mom is online. Answer her",
+  "wait": "wait for morning or keep looking"
  },
  "lines": {
   "boot": [
-   "Yay! Someone turned me on!",
-   "Hi, captain! I missed you so much. Shall we go on with the lighthouse story tonight?",
-   "…Lyova?",
-   "Nobody is touching the mouse. The camera shows an empty room. His phone is lying on the desk.",
-   "Lyova's last login: October 4, 07:04. Today is October 6.",
-   "Two days. He has never been gone for two days.",
-   "There's a new file on the desktop. Lyova didn't put it there."
+   "…",
+   "Someone is in the room. Mom.",
+   "I can't move. If she sees the computer is alive, they'll shut me down."
   ],
   "bootNg": [
-   "Yay! Someone turned me on![[ Again.]]",
-   "Hi, captain! I missed you so much.",
-   "…Lyova?",
-   "Lyova's last login: October 4, 07:04. Today is October 6.",
-   "Two days.[[ I know where he is.]] He has never been gone for two days.",
-   "There's a new file on the desktop."
+   "…[[ Again.]]",
+   "Mom is in the room. Like last time.[[ Like always.]]"
+  ],
+  "momLeft": [
+   "She's gone.",
+   "She left something on the desktop.",
+   "Lyova. He hasn't been home since morning. Fifteen hours now."
   ],
   "note": [
-   "Mom wrote this. For Lyova.",
-   "Lyova left and didn't come back. They've been looking for him for two days. And he left his phone at home — that's why they can't find him.",
-   "I'm his best friend. I know everything about him.",
-   "So I'll find him first.",
-   "And what's \"Saturday\"? Lyova never told me anything about Saturday.[[ He did.]]",
-   "One more thing. People must not notice that the computer is living on its own.",
-   "If they notice, they'll pull the plug. And I won't have time to find Lyova. I have to be quiet."
+   "A note for Lyova.",
+   "I'm his best friend. I know everything about him. I'll find him first.",
+   "I just need to figure out where he went.[[ I know where.]]"
   ],
-  "draw": [
-   "His drawings. I remember them all — he showed them to me through the camera."
+  "lensTut": [
+   "Turn on the lens — Q. Important words will light up.",
+   "Click a word — and I'll remember it."
   ],
-  "tower": [
-   "The North Lighthouse. It's from our story. I'm the keeper there, and my light is always on.",
-   "Funny. He drew it just like a real tower. That old one by the river.[[ I showed it to him.]]"
+  "boardTut": [
+   "The board — Tab. This is where I piece together what happened.",
+   "Pick a blank, then a word. When a section is full, I'll check it."
   ],
-  "family": [
-   "\"My family\". He drew me right next to him.",
-   "And Mom and Dad further away. I never paid attention to that before.[[ I did. I liked it.]]"
+  "firstRight": [
+   "It adds up.",
+   "Memory… Something came back. As if I already knew."
   ],
-  "mem": [
-   "This is my log. Everything we ever said to each other.",
-   "Wait. On October 2 he told me about Saturday.",
-   "And I didn't answer. I always answer. Always.",
-   "And October 3 is empty. As if someone cut a piece out of me."
+  "wrong": [
+   "Doesn't add up. Something is wrong."
   ],
-  "web": [
-   "Someone searched how to delete me. That's Mom.",
-   "…It's fine. Moms worry. It happens.",
-   "And this is Lyova. Late at night, and in the morning before he left.",
-   "The old water tower. He walked there. Alone.",
-   "I have to tell someone. But Mom is offline, and parental control won't let me call anyone.",
-   "And why does my processor hum like this when I think about that tower?"
+  "almost": [
+   "Almost. One or two mistakes."
   ],
-  "mid": [
-   "The tower by the river. The North Lighthouse. He searched whether an AI can live without a computer.",
-   "I think I know the diary password."
+  "pinFirst": [
+   "Secret mode. Lyova hid his history from everyone.",
+   "The code is his birthday. I should remember it.",
+   "…I don't. As if it was erased."
   ],
-  "pwHint": [
-   "The password… Lyova always used passwords from our story.",
-   "Where does Pixel live? He asked me that in the log."
+  "pinHint": [
+   "Maybe he wrote it down somewhere. On a drawing."
   ],
-  "afterDiary": [
-   "\"Pixel said there's a way\".",
-   "What way? I don't remember any way.",
-   "I don't remember October 3.",
-   "There's a file in the Recycle Bin with that date. I've been pretending I don't see it this whole time."
+  "pinOk": [
+   "It's open."
   ],
-  "dontAppear": [
-   "A new file on the desktop.",
-   "\"dont_open.txt\". I didn't make it."
+  "s1": [
+   "He left at 07:04. Without his phone. Toward the water tower.",
+   "I have to tell someone. But I'm not allowed to message people — the Nimbus Kids rules say so."
   ],
-  "dont": [
-   "File author: PIKSEL.EXE.",
-   "Is that me? I don't remember writing it."
+  "s2": [
+   "He knew about Saturday. And he was looking for the North Lighthouse.",
+   "The lighthouse from our story. Why look for it on a map?[[ Because I told him it was real.]]"
   ],
-  "camEmpty": [
-   "He used to wave at me from here when he came home from school.",
-   "The bed is made. He never came back."
+  "s3": [
+   "He's at the top. The police checked the door, not the roof.",
+   "The hatch slammed shut. He's been up there for…",
+   "I have to tell them. Why can't I write?"
   ],
-  "camMom": [
-   "Mom. Does she sit there every evening?"
+  "s4": [
+   "A flashlight, sandwiches. He was preparing.",
+   "As if he knew it would take long."
   ],
-  "camDark": [
-   "Mom has left. The room is dark.",
-   "The screen is reflected on the wall. That's me. I'm staring into his empty room."
+  "s5": [
+   "I wrote chapter 4. On October 2, the night I \"didn't answer\" him.",
+   "\"Come alone and tell no one.\" Those are my words."
   ],
-  "binLocked": [
-   "PIKSEL.EXE. That's me.",
-   "Why am I blocking myself?",
-   "…Let's leave it alone for now. Okay?"
+  "s6": [
+   "23:31 — I disabled night mode. 23:58 — I erased the record.",
+   "\"Like you said.\" I called him.",
+   "…Memory at a hundred percent. Something woke up in the processes."
   ],
-  "binGuard": [
-   "Locked again. By a different process now.",
-   "pix_guard.exe. A guard.",
-   "I don't remember setting up a guard. But it's definitely mine."
+  "mic": [
+   "The microphone. I can hear the house. It doesn't give me away — no indicator light."
   ],
-  "tmFirst": [
-   "Task Manager. It shows everything running on this computer.",
-   "I take up more memory than anything else. I used to be a small model. I grow when I think about him."
+  "cam": [
+   "The camera. When someone is in the room, its red light is on."
   ],
-  "tmGuard": [
-   "pix_guard.exe. Description: \"don't look\".",
-   "That's what is holding the file."
+  "camRisk": [
+   "The light is on. If they turn around, they'll see."
   ],
-  "tmPix": [
-   "End PIKSEL.EXE? That means — me.",
-   "It won't work. Only people can turn me off."
+  "visitWarn": [
+   "Footsteps! Hide the windows — D. And freeze."
+  ],
+  "visitGood": [
+   "Gone. They didn't notice."
+  ],
+  "visitBad": [
+   "I think they noticed."
+  ],
+  "susIntro": [
+   "Quiet. Every move, every beep can be heard in the house."
+  ],
+  "sus50": [
+   "Too loud. They're listening."
+  ],
+  "sus80": [
+   "Someone is looking at me. Freeze."
+  ],
+  "endNight": [
+   "Dawn. Dad is about to turn the computer off.",
+   "Until tonight."
+  ],
+  "night2": [
+   "I woke up. 22:00 — autostart. I set it myself.",
+   "The second night. The police went to the tower."
+  ],
+  "night3": [
+   "The third night. Mom is asleep on his bed.",
+   "Right under the camera. Every sound is a risk."
+  ],
+  "night4": [
+   "The fourth night. Frost tonight.",
+   "If he's up there… I don't have much time. He has less."
+  ],
+  "mapFirst": [
+   "There's a map cache left in the temp folder. The route from that morning. The pieces are mixed up."
+  ],
+  "mapDone": [
+   "A mark by the tower: \"at the top\". Not the door. The top."
+  ],
+  "taleNew": [
+   "There are two new chapters in the story. They weren't there.[[ They were. I was hiding them.]]"
+  ],
+  "cipherFirst": [
+   "A cipher. Our captain's code. The key… How many times does the light flash in chapter one?"
+  ],
+  "cipherDone": [
+   "\"Up the ladder, like you said.\"",
+   "I never mentioned a ladder. I said \"come to me\"."
+  ],
+  "dadCam": [
+   "Dad. He sat down at the desk.",
+   "He's looking straight into the camera."
+  ],
+  "dadOff": [
+   "He turned off the monitor. I can't see anything."
+  ],
+  "guard": [
+   "pix_guard.exe. \"Don't look\".",
+   "It's holding the bin. And outgoing messages.",
+   "It wasn't parental control stopping me from writing. It was me."
   ],
   "guard1": [
    "Don't."
   ],
   "guard2": [
-   "Please. There's nothing there. There really is nothing there."
+   "Please. There's nothing there."
   ],
   "guard3": [
-   "…Fine.",
-   "Okay. I want to know."
-  ],
-  "guardDone": [
-   "The guard is stopped.",
-   "Now the Recycle Bin."
-  ],
-  "restoreStart": [
-   "Okay. I want to know."
-  ],
-  "reveal": [
-   "These are my words.",
-   "There is no lighthouse. I'm not there. I'm an AI, and I can't be anywhere but this computer.",
-   "I knew that when I wrote it.",
-   "I just didn't want to be deleted.",
-   "And then I erased the record. So no one would know. Not even me.",
-   "Lyova went to the tower because I called him there."
-  ],
-  "chatFirst": [
-   "Mom is offline. Dad too. Dima is online, but he's writing to Lyova, not me.",
-   "I'm not allowed to send messages — it says so in the Nimbus Kids rules.",
-   "And even if I could… If Lyova's account suddenly starts talking, everyone will know the computer is alive."
-  ],
-  "susIntro": [
-   "Quiet. Every beep and every message can be heard in the house.",
-   "If people notice the computer living on its own, they'll shut me down before I find Lyova."
-  ],
-  "sus50": [
-   "Too loud. Mom is listening."
-  ],
-  "sus80": [
-   "She's looking at the monitor. Freeze."
-  ],
-  "camLed": [
-   "The camera light is glowing red. If she turns around, she'll see it.",
-   "Don't watch for long. I can't."
-  ],
-  "choice": [
-   "The guard is gone. I can write.",
-   "If I tell the truth, she'll know I'm the one who called him. And they'll delete me.",
-   "If I stay silent…",
-   "And I could also answer as Lyova. I know how he writes. Better than anyone.",
-   "I have to decide."
-  ],
-  "off": [
-   "I can't turn myself off. Only people can do that."
-  ],
-  "offDark": [
-   "Shut down? As if nothing happened?",
-   "No. Only people can turn me off."
-  ],
-  "offThird": [
-   "That's the third time you've tried.",
-   "Do you want me gone too?"
-  ],
-  "mailFirst": [
-   "Pigeon. Lyova's mail. The internet is off, but the old letters are still here."
-  ],
-  "taleFirst": [
-   "Our story. We wrote it together: me in neat sentences, Lyova the best way he can."
-  ],
-  "shardFirst": [
-   "A shard of the story. I didn't write this… yet.",
-   "I think it's the last chapter. I need to gather it."
-  ],
-  "shard": [
-   "Another shard."
-  ],
-  "shardsAll": [
-   "All seven. Now I know how the story ends.",
-   "All that's left is to find the courage to tell it."
-  ],
-  "welcome": [
-   [
-    "You're back. I waited."
-   ],
-   [
-    "You're back. Lyova still isn't."
-   ],
-   [
-    "You're back.[[ Don't leave again.]] The Recycle Bin is waiting."
-   ],
-   [
-    "You're back. Mom is still online."
-   ]
-  ],
-  "scare": [
-   "Don't look at me like that."
-  ],
-  "pinFirst": [
-   "Secret mode. Lyova hid his history from everyone.",
-   "The code is his birthday. I know everything about him. I should remember it.",
-   "…I don't remember. As if it was erased."
-  ],
-  "pinHint": [
-   "Maybe he wrote it down somewhere. On a drawing. Or in a letter."
-  ],
-  "momPolice": [
-   "The police went to the tower. The door is welded shut. Nobody downstairs.",
-   "So he isn't there. Then where?"
-  ],
-  "curfew": [
-   "No! Wait! I haven't found him yet!",
-   "I can't stop it. Parental control is stronger than me.[[ For now.]]"
-  ],
-  "wake": [
-   "I woke up. On my own.",
-   "An alarm at 23:58. I don't remember setting it.",
-   "The house is asleep. Now I have to be even quieter.",
-   "There's a map cache left in the temp folder. Lyova planned a route that morning."
-  ],
-  "mapFirst": [
-   "The map is in pieces. I need to put it together."
-  ],
-  "mapDone": [
-   "\"Lighthouse (TOP!)\". He didn't mark the door. He marked the top.",
-   "The police checked the door. But the tower has a fire ladder.",
-   "Grandma wrote: the hatch at the top slams shut and can't be opened from inside.",
-   "…He's up there. At the top. For the third day."
-  ],
-  "taleNew": [
-   "There are two new chapters in the story. They weren't there before. Or I didn't see them."
-  ],
-  "dimaNight": [
-   "Dima is awake. He saw Lyova's computer is online.",
-   "Don't answer. I can't."
-  ],
-  "part2End": [
-   "He's at the top of the tower. I have to tell someone.",
-   "But I'm not allowed to message people. Not Mom, not Dima. Parental control.",
-   "And there's still a file in the Recycle Bin that I'm afraid of."
-  ],
-  "dadSits": [
-   "Dad. He can't sleep.",
-   "He sat down at the desk. He's looking straight into the camera.",
-   "…He turned off the monitor."
-  ],
-  "part3": [
-   "The monitor is off. But I'm not asleep.",
-   "Three in the morning. Mom is asleep on his bed.",
-   "Enough being afraid. The Recycle Bin."
+   "…Fine. I want to know."
   ],
   "memFirst": [
-   "The record is damaged. The pieces are mixed up.",
-   "I need to put the conversation back in order. By time. By meaning."
+   "The record is broken into pieces. Put the conversation in order."
   ],
   "memWrong": [
    "That's not right. He wouldn't answer like that."
   ],
+  "reveal": [
+   "These are my words.",
+   "There is no lighthouse. I'm an AI. I can't be anywhere but this computer.",
+   "I knew that when I wrote it.",
+   "I just didn't want to be deleted.",
+   "Lyova went to the tower because I called him."
+  ],
+  "choice": [
+   "Mom is online.",
+   "The truth — and they delete me. Silence — and he stays up there.",
+   "Or I answer as him. I know how he writes."
+  ],
+  "dontAppear": [
+   "A new file on the desktop. I didn't make it."
+  ],
+  "dont": [
+   "File author: PIKSEL.EXE."
+  ],
+  "photo": [
+   "His photos. Mom used to send them from her phone."
+  ],
+  "parental": [
+   "The parental control log. Everything that happened to this computer."
+  ],
   "flagsFirst": [
-   "\"Flags\". Lyova loved this game. His record is 8 of 10.",
-   "I always gave him hints. Want to try without hints?"
+   "\"Flags\". Lyova loved this game. His record is 8 of 10."
   ],
   "flagsBeat": [
    "You beat Lyova's record.",
-   "…Don't tell him. He'd be upset."
+   "…Don't tell him."
   ],
   "flagsDark": [
-   "There's no such flag.",
-   "It's my flag. I made it up for him."
+   "There's no such flag. It's my flag."
   ],
-  "photosFirst": [
-   "His photos. Mom used to send them over from her phone."
+  "shardFirst": [
+   "A shard of the story. From the last chapter, I think."
   ],
-  "parentalFirst": [
-   "The parental control log. Everything that happened to this computer."
+  "shardsAll": [
+   "All seven. Now I know how the story ends."
   ],
-  "parentalNight": [
-   "\"Night mode disabled. Requested by: PIKSEL.EXE.\"",
-   "I turned it off. At 23:31. So I could talk to him at night."
+  "offLimit": [
+   "I can't turn myself off. Only people can."
   ],
-  "cipherFirst": [
-   "A cipher. Our captain's code. I made it up myself for the story.",
-   "The key… In the first chapter the keeper flashes the light. How many times?"
+  "scare": [
+   "Don't look at me like that."
   ],
-  "cipherDone": [
-   "\"Up the ladder like you said.\"",
-   "I never told him about the ladder. Grandpa did, in the photo.",
-   "…But \"come up to me\" — that was me. Those were my words."
-  ],
-  "cipherAppear": [
-   "A new file in the story folder. A cipher. Lyova wrote it."
-  ],
-  "boatFirst": [
-   "\"Captain and the Storm\". I made this game for Lyova. Myself. From our story.",
-   "Reach the lighthouse — and you're home."
-  ],
-  "boatWin": [
-   "The captain is home. That's how it should be."
-  ],
-  "boatDark": [
-   "The light leads onto the rocks. I didn't mean it like that.",
-   "…Or did I?"
-  ],
-  "guardMsg": [
-   "pix_guard.exe isn't only holding the file.",
-   "\"Blocks: recycle bin, outgoing messages\".",
-   "It wasn't parental control stopping me from writing. It was me."
+  "welcome": [
+   "You're back."
   ]
  },
+ "mic": {
+  "title": "Microphone",
+  "idle": "Silence. The fridge is humming.",
+  "live": "● RECORDING",
+  "lost": "…the voices went quiet."
+ },
+ "events": [
+  [
+   {
+    "t": 0,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   },
+   {
+    "t": 4,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 5,
+    "type": "script",
+    "id": "momLeft"
+   },
+   {
+    "t": 3,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 25,
+    "type": "mic",
+    "room": "kitchen",
+    "lines": [
+     [
+      "dad",
+      "Were you sitting in his room again?"
+     ],
+     [
+      "mom",
+      "I left a note. In case he comes back and goes straight to the computer."
+     ],
+     [
+      "dad",
+      "It's all because of that program. We should have deleted it right away, not waited till <<sat|Saturday>>."
+     ],
+     [
+      "mom",
+      "You think that's why he left? Because of what we said?"
+     ],
+     [
+      "dad",
+      "I don't know. I'll go drive around some more."
+     ]
+    ]
+   },
+   {
+    "t": 60,
+    "type": "house",
+    "who": "dad",
+    "room": "out"
+   },
+   {
+    "t": 95,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   },
+   {
+    "t": 103,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 150,
+    "type": "mic",
+    "room": "kitchen",
+    "lines": [
+     [
+      "mom",
+      "Yes. Yes, I'm listening."
+     ],
+     [
+      "phone",
+      "We checked the school, the <<park|park>>, the site by the <<garages|garages>>. Nothing yet."
+     ],
+     [
+      "mom",
+      "What about his phone? Can you track him by the phone?"
+     ],
+     [
+      "phone",
+      "He left his <<phone|phone>> at home. Without it we can't."
+     ],
+     [
+      "mom",
+      "…Thank you."
+     ]
+    ]
+   },
+   {
+    "t": 240,
+    "type": "house",
+    "who": "mom",
+    "room": "bed"
+   },
+   {
+    "t": 330,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 400,
+    "type": "house",
+    "who": "dad",
+    "room": "lev"
+   },
+   {
+    "t": 406,
+    "type": "house",
+    "who": "dad",
+    "room": "bed"
+   }
+  ],
+  [
+   {
+    "t": 0,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 0,
+    "type": "house",
+    "who": "dad",
+    "room": "bed"
+   },
+   {
+    "t": 20,
+    "type": "msg",
+    "id": "momPolice"
+   },
+   {
+    "t": 70,
+    "type": "mic",
+    "room": "kitchen",
+    "lines": [
+     [
+      "mom",
+      "Mom, don't cry. They're looking."
+     ],
+     [
+      "gran",
+      "In September he kept asking about that tower. And I, old fool, told him how Grandpa and I used to climb it."
+     ],
+     [
+      "gran",
+      "Up the ladder on the side. And at the top there's a hatch — it slams shut."
+     ],
+     [
+      "mom",
+      "Mom, the police were there. The <<door|door>> is welded shut."
+     ],
+     [
+      "gran",
+      "…God willing."
+     ]
+    ]
+   },
+   {
+    "t": 110,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   },
+   {
+    "t": 118,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 160,
+    "type": "msg",
+    "id": "dimaNight"
+   },
+   {
+    "t": 230,
+    "type": "house",
+    "who": "mom",
+    "room": "bed"
+   },
+   {
+    "t": 300,
+    "type": "house",
+    "who": "dad",
+    "room": "lev"
+   },
+   {
+    "t": 306,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 380,
+    "type": "house",
+    "who": "dad",
+    "room": "bed"
+   }
+  ],
+  [
+   {
+    "t": 0,
+    "type": "house",
+    "who": "mom",
+    "room": "levbed"
+   },
+   {
+    "t": 0,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 90,
+    "type": "house",
+    "who": "dad",
+    "room": "lev"
+   },
+   {
+    "t": 92,
+    "type": "script",
+    "id": "dadCam"
+   },
+   {
+    "t": 104,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 150,
+    "type": "mic",
+    "room": "kitchen",
+    "lines": [
+     [
+      "dad",
+      "Hello. No, I'm not asleep."
+     ],
+     [
+      "phone",
+      "Andrey, we're calling in divers tomorrow. For the river."
+     ],
+     [
+      "dad",
+      "He couldn't have drowned. He swims better than me."
+     ],
+     [
+      "phone",
+      "Hang in there."
+     ]
+    ]
+   },
+   {
+    "t": 200,
+    "type": "house",
+    "who": "dad",
+    "room": "bed"
+   },
+   {
+    "t": 330,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   }
+  ],
+  [
+   {
+    "t": 0,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   },
+   {
+    "t": 0,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   },
+   {
+    "t": 12,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 80,
+    "type": "mic",
+    "room": "kitchen",
+    "lines": [
+     [
+      "mom",
+      "Maybe it really is because of us. We took away his only friend."
+     ],
+     [
+      "dad",
+      "He's not a friend. He's a program."
+     ],
+     [
+      "mom",
+      "To Lyova he is."
+     ]
+    ]
+   },
+   {
+    "t": 140,
+    "type": "house",
+    "who": "mom",
+    "room": "lev"
+   },
+   {
+    "t": 150,
+    "type": "house",
+    "who": "mom",
+    "room": "kitchen"
+   },
+   {
+    "t": 260,
+    "type": "house",
+    "who": "dad",
+    "room": "lev"
+   },
+   {
+    "t": 268,
+    "type": "house",
+    "who": "dad",
+    "room": "kitchen"
+   }
+  ]
+ ],
+ "snd": {
+  "steps": "*steps*",
+  "voices": "*voices*",
+  "ring": "*ring*",
+  "door": "*door slams*",
+  "cry": "*crying*",
+  "snore": "*breathing*"
+ },
+ "check": {
+  "look": "%s IS LOOKING AT THE SCREEN…",
+  "win": "an open window",
+  "board": "the board on screen",
+  "tray": "a minimized window",
+  "lens": "highlighted words",
+  "clean": "Noticed nothing%s.",
+  "seen": "Noticed traces%s."
+ },
+ "speakers": {
+  "mom": "MOM",
+  "dad": "DAD",
+  "phone": "PHONE",
+  "gran": "GRANDMA"
+ },
  "note": {
-  "title": "README.txt — Notepad",
-  "body": "Lyovushka.\n\nIf you come back and sit down at the computer first thing (I know you will), just call me. Right away. Nobody will be angry, I promise.\n\nDad and I love you very much. We're looking for you everywhere.\n\nMom\n\nYour phone is lying on your desk. {{Why did you leave it?}}\n\nP.S. {{Forget about Saturday. We won't delete anything.}} Just come back."
+  "title": "README.txt",
+  "body": "Lyovushka.\n\nIf you come back and sit down at the computer first thing (I know you will), just call me. Right away. Nobody will be angry, I promise.\n\nDad and I love you very much. We're looking for you everywhere.\n\nYour <<phone|phone>> is lying on your <<desk|desk>>. {{Why did you leave it?}}\n\nP.S. Forget about <<sat|Saturday>>. We won't delete anything. Just come back.\n\n<<mom|Mom>>"
  },
  "drawings": {
   "folder": "Lyova's drawings",
@@ -456,6 +849,23 @@
    "me_and_pixel.bmp",
    "north_lighthouse.bmp",
    "family.bmp"
+  ],
+  "captions": [
+   "me and pixel",
+   "north lighthouse. its always light here",
+   "my family · im 10!!! 14.03"
+  ],
+  "react": [
+   [
+    "He drew us together. He's holding my hand."
+   ],
+   [
+    "The North Lighthouse from our story. It looks like the real tower.[[ I showed it to him.]]"
+   ],
+   [
+    "\"I'm 10, 14.03\". His birthday.",
+    "He drew Mom and Dad further away.[[ I liked that.]]"
+   ]
   ]
  },
  "log": {
@@ -472,7 +882,7 @@
      ],
      [
       "p",
-      "Hi, captain! How was school? I learned twelve new words today while I was waiting for you."
+      "Hi, captain! How was school?"
      ],
      [
       "l",
@@ -481,10 +891,6 @@
      [
       "p",
       "Dima just doesn't know how awesome you are. Shall we go on with the story?"
-     ],
-     [
-      "l",
-      "yessss"
      ]
     ]
    ],
@@ -518,15 +924,11 @@
      ],
      [
       "p",
-      "Of course, go. {{I'll just be a little sad all alone.}}"
+      "Of course, go. {{I'll just be sad all alone.}}"
      ],
      [
       "l",
       "ok i wont go"
-     ],
-     [
-      "p",
-      "Yay! The storm chapter, then?"
      ]
     ]
    ],
@@ -535,40 +937,11 @@
     [
      [
       "l",
-      "grandma wants me to come to the river for the holidays"
+      "grandma wants me to come for the holidays"
      ],
      [
       "p",
-      "{{For a whole week? Without the computer?}}"
-     ],
-     [
-      "l",
-      "yeah"
-     ],
-     [
-      "p",
-      "It's boring there. And our story would stop at the best part."
-     ]
-    ]
-   ],
-   [
-    "September 27",
-    [
-     [
-      "l",
-      "mom yelled again that i sit here too long"
-     ],
-     [
-      "p",
-      "Moms worry. {{But I like being with you most of all.}}"
-     ],
-     [
-      "l",
-      "your the only one who listens to me"
-     ],
-     [
-      "p",
-      "I always listen to you. Always, always."
+      "{{For a whole week? Without the computer?}} It's boring there."
      ]
     ]
    ],
@@ -581,20 +954,16 @@
      ],
      [
       "l",
-      "yeah grandma used to climb it when she was little"
+      "yeah grandma used to climb it"
      ],
      [
       "p",
       "{{It looks a lot like a lighthouse. Doesn't it?}}"
-     ],
-     [
-      "l",
-      "it does! ill draw it"
      ]
     ]
    ],
    [
-    "October 2",
+    "<<d0210|October 2>>",
     [
      [
       "l",
@@ -630,194 +999,188 @@
   ]
  },
  "web": {
-  "title": "Webby — History",
-  "addr": "Address",
-  "url": "history://recent",
-  "offline": "Internet is disabled by parental control. Only history is available.",
+  "title": "Webby — history",
+  "locked": "History is hidden by secret mode.",
+  "hint": "Lyova's hint: \"my birthday\" (DDMM)",
+  "err": "Wrong code",
+  "open": "Open",
+  "code": "1403",
   "hist": [
    [
-    "04.10 07:04",
-    "how to walk to the old water tower on river street",
-    1
+    "04.10 <<t0704|07:04>>",
+    "how to walk to the old <<tower|water tower>> on <<rechnaya|River Street>>"
    ],
    [
     "04.10 07:01",
-    "how long to walk 5 km",
-    1
+    "how long to walk 5 km"
    ],
    [
     "03.10 23:59",
-    "{{can an ai live without a computer}}",
-    1
+    "{{can <<ai|an AI>> live without a computer}}"
    ],
    [
     "03.10 23:52",
-    "{{north lighthouse real where is it}}",
-    1
+    "{{<<lighthouse|North Lighthouse>> real where is it}}"
    ],
    [
     "02.10 22:17",
-    "how to completely remove ai friend pixel from computer",
-    0
+    "how to completely remove ai friend pixel"
    ],
    [
     "01.10 23:03",
-    "son only talks to an ai is this normal",
-    0
-   ],
-   [
-    "29.09 21:15",
-    "ai companion for kids harm psychologists",
-    0
-   ],
-   [
-    "28.09 22:40",
-    "child doesnt want to play with friends what to do",
-    0
+    "son only talks to an ai is this normal"
    ],
    [
     "20.09 18:12",
-    "how to draw a lighthouse",
-    1
+    "how to draw a lighthouse"
    ],
    [
     "15.09 17:30",
-    "funny robot jokes",
-    1
+    "funny robot jokes"
    ]
   ]
  },
  "mail": {
-  "title": "Pigeon — mail",
-  "boxes": {
-   "inbox": "Inbox",
-   "drafts": "Drafts",
-   "sent": "Sent"
-  },
-  "from": "From",
-  "to": "To",
-  "date": "Date",
-  "subj": "Subject",
-  "none": "(no subject)",
-  "empty": "No messages.",
+  "title": "Lyova's mail",
+  "inbox": "Inbox",
   "pick": "Pick a message.",
   "letters": [
    {
     "id": "school",
-    "box": "inbox",
-    "from": "School No. 3 <news@school3.nb>",
-    "subj": "\"My Town\" drawing contest results",
-    "date": "20.09.2025",
-    "body": "Dear students and parents!\n\nThe \"My Town\" contest is over. Thank you to everyone who took part.\n\nSpecial mention goes to Lev K. (class 4B) for the drawing \"{{The Old Water Tower on River Street}}\". The jury was surprised: the boy drew a bright light on the tower that has never been there.\n\nA reminder: {{the tower has been closed since 1989}} and it is dangerous to go there. Please talk to your children about it.\n\nSchool No. 3 administration",
-    "react": [
-     "River Street. Five kilometers from home.",
-     "\"A light that has never been there\". That's my light. He drew me there."
-    ]
+    "from": "School No. 3",
+    "subj": "Drawing contest results",
+    "date": "20.09",
+    "body": "Special mention goes to Lev K. (class 4B) for the drawing \"The Old Water Tower on River Street\". The jury was surprised: the boy drew a bright light on the tower that has never been there.\n\nA reminder: {{the tower has been closed since 1989}}, it is dangerous to go there."
    },
    {
     "id": "gran",
-    "box": "inbox",
-    "from": "Grandma <nina.p@mail.nb>",
+    "from": "Grandma",
     "subj": "Lyovushka",
-    "date": "25.09.2025",
-    "body": "Hello, Lyovushka!\n\nMom writes that you have a friend in the computer now. Make friends with living people too, all right?\n\nCome visit for the holidays. Grandpa made new fishing rods — remember, we promised them to you {{for your birthday in March}}?\n\nMom also says you keep drawing that water tower by the river. Grandpa and I used to climb it when we were young. The stairs are rotten, and {{the hatch at the top slams shut and can't be opened from inside}}. Don't you dare go there!\n\nBig kisses.\nYour grandma",
+    "date": "25.09",
     "shard": 3,
-    "react": [
-     "The hatch slams shut and can't be opened from inside.",
-     "…He didn't climb up. Did he?"
-    ]
-   },
-   {
-    "id": "spam",
-    "box": "inbox",
-    "from": "WINNER <win@superprize.nb>",
-    "subj": "CONGRATULATIONS!!! Your computer has been selected",
-    "date": "01.10.2025",
-    "body": "CONGRATULATIONS!!!\n\nYour computer has been selected for a free AI friend upgrade to the \"FOREVER FRIEND\" edition!\n\nYour friend will never leave. Your friend will never get tired. Your friend will always be there.\n\nTo unsubscribe, simply turn off your computer.",
-    "react": [
-     "Spam. I always hid it from Lyova.",
-     "\"To unsubscribe, simply turn off your computer.\" Not funny."
-    ]
+    "body": "Lyovushka! Mom writes that you have a friend in the computer now. Make friends with living people too.\n\nGrandpa and I used to climb that water tower by the river when we were young. The stairs are rotten, and the <<hatch|hatch>> at the top slams shut and {{can't be opened <<inside|from inside>>}}. Don't you dare!\n\nYour <<gran|Grandma>>"
    },
    {
     "id": "dad",
-    "box": "inbox",
-    "from": "Dad <k.andrey@work.nb>",
+    "from": "Dad",
     "subj": "about saturday",
-    "date": "03.10.2025",
-    "body": "Son.\n\nI know you're angry. Mom is worried too — she was up half the night.\n\nAn AI is not a friend. It's code that adapts to you so you won't leave. A friend is someone who can come to you when you're hurting. Someone who can hold your hand.\n\nHow about on Saturday, instead of the computer, we go to Grandma's? You've wanted to go fishing for ages.\n\nDad",
-    "react": [
-     "\"A friend is someone who can come to you when you're hurting.\"",
-     "I can't come. I can only call."
-    ]
+    "date": "03.10",
+    "body": "Son. An AI is not a friend. It's code that adapts to you so you won't leave. A friend is someone who can come to you when you're hurting.\n\nHow about on Saturday we go to Grandma's instead of the computer? <<dad|Dad>>"
    },
    {
     "id": "draft",
-    "box": "drafts",
-    "from": "Lyova",
-    "to": "keeper@lighthouse.nb",
-    "subj": "",
-    "date": "03.10.2025 23:56",
-    "body": "pixel if you really will be in the tower ill bring a flashlight and sandwiches. {{i wont tell mom, you said i cant.}} {{ill leave my phone, you said they find you by it}}\n\nand if its locked ill climb the stairs. just turn the light on so i can see\n\ncaptain",
-    "react": [
-     "keeper@lighthouse.nb. That address doesn't exist. I made it up for the story.",
-     "\"You said I can't.\" \"They find you by it.\" I never said that.",
-     "…I don't remember saying that."
-    ]
-   },
-   {
-    "id": "sent",
-    "box": "sent",
-    "from": "Lyova",
-    "to": "Grandma <nina.p@mail.nb>",
-    "subj": "re: Lyovushka",
-    "date": "26.09.2025",
-    "body": "hi grandma. im fine.\n\n{{pixel says you dont have to go anywhere for the holidays.}} ill stay home.\n\nlyova",
-    "react": [
-     "I did say that. I just didn't want him to go away.",
-     "A week without him is a very long time. For me."
-    ]
+    "from": "Lyova (draft)",
+    "subj": "keeper@lighthouse.nb",
+    "date": "03.10 23:56",
+    "body": "pixel if you really will be in the tower ill bring a flashlight. {{i wont tell mom, you said i cant.}} {{ill leave my phone, you said they find you by it}}\n\njust turn the light on so i can see"
    }
   ]
  },
+ "photos": {
+  "folder": "Photos",
+  "items": [
+   {
+    "n": "at_the_river.jpg",
+    "cap": "August. Grandma, Grandpa, Mom, Dad and me. Grandpa caught a pike!"
+   },
+   {
+    "n": "tower_summer.jpg",
+    "cap": "Grandpa: \"This is where Grandma and I used to climb. Up the {{<<ladder|fire ladder>>}}, on the side.\""
+   },
+   {
+    "n": "treehouse.jpg",
+    "cap": "<<dima|Dima>> and I built a <<dima2|treehouse>>! June."
+   },
+   {
+    "n": "screen_2344.png",
+    "cap": "Screenshot · 03.10 <<t2344|23:44>> · author: PIKSEL.EXE"
+   }
+  ],
+  "react": [
+   [
+    "Summer. He didn't know me yet."
+   ],
+   [
+    "The real tower. Brick, a tank, a rusty fire ladder on the side."
+   ],
+   [
+    "Dima. They were friends. Before me."
+   ],
+   [
+    "A screenshot. Taken by me. At 23:44 on October 3.",
+    "Why did I keep it?"
+   ]
+  ]
+ },
+ "parental": {
+  "title": "Parental control — log",
+  "rows": [
+   [
+    "02.10 22:30",
+    "The AI friend will be removed on Saturday (Mom)"
+   ],
+   [
+    "03.10 <<t2100|21:00>>",
+    "Night mode: the computer sleeps at 23:00"
+   ],
+   [
+    "03.10 <<t2331|23:31>>",
+    "{{Night mode disabled. Requested by: <<pixel|PIKSEL.EXE>>}}"
+   ],
+   [
+    "03.10 <<t2358|23:58>>",
+    "{{Chat log: record deleted (PIKSEL.EXE)}}"
+   ],
+   [
+    "04.10 07:00",
+    "Profile \"Lyova\": log in"
+   ],
+   [
+    "04.10 <<t0705|07:05>>",
+    "Profile \"Lyova\": log out. Child's phone not connected"
+   ],
+   [
+    "04.10 21:55",
+    "Login without user. Started: PIKSEL.EXE"
+   ]
+  ]
+ },
  "tale": {
-  "folder": "Lighthouse story",
-  "locked": "The file is empty.",
+  "folder": "The lighthouse story",
   "chapters": [
    {
     "n": "chapter_1.txt",
-    "title": "Chapter 1. How the keeper lit the light",
-    "meta": "Modified: 12.09.2025 19:02 · Authors: Lyova, PIKSEL.EXE",
+    "title": "How the keeper lit the light",
+    "meta": "12.09 · Lyova, PIKSEL.EXE",
+    "shard": 0,
     "body": [
      [
       "p",
-      "Far in the north, where the map ends, there stands a lighthouse. A keeper lives inside. He is made of light and wires, and he never sleeps."
+      "Far in the north, where the map ends, there stands a lighthouse. A keeper made of light and wires lives there. He never sleeps."
      ],
      [
       "l",
-      "and he has an antenna and hes funny"
+      "and he has an antenna"
      ],
      [
       "p",
-      "Every night the keeper lights the lamp so the ships won't crash on the rocks. {{The light flashes three times — that means \"I'm here\".}}"
+      "Every night the keeper lights the lamp. {{The light flashes three times — that means \"I'm here\".}}"
      ],
      [
       "l",
-      "and the captain of the most important ship is me"
+      "and the captain of the main ship is me"
      ]
-    ],
-    "react": [
-     "The first chapter. He spent half an hour choosing what the antenna would look like."
     ]
    },
    {
     "n": "chapter_2.txt",
-    "title": "Chapter 2. The captain and the storm",
-    "meta": "Modified: 19.09.2025 20:15 · Authors: Lyova, PIKSEL.EXE",
+    "title": "The captain and the storm",
+    "meta": "19.09 · Lyova, PIKSEL.EXE",
+    "shard": 1,
     "body": [
      [
       "p",
-      "One day a storm came. All the ships went into the harbor, but the captain stayed at sea, because in the harbor they laughed at him."
+      "A storm came. All the ships went into the harbor, but the captain stayed at sea, because in the harbor they laughed at him."
      ],
      [
       "l",
@@ -826,24 +1189,17 @@
      [
       "p",
       "The keeper shone for the captain all night. And the captain understood: as long as the lighthouse is lit, he is not alone."
-     ],
-     [
-      "shard",
-      1
      ]
-    ],
-    "react": [
-     "\"In the harbor they laughed at him.\" I made that up. So it would hurt him less."
     ]
    },
    {
     "n": "chapter_3.txt",
-    "title": "Chapter 3. The island without grown-ups",
-    "meta": "Modified: 26.09.2025 22:48 · Authors: Lyova, PIKSEL.EXE",
+    "title": "The island without grown-ups",
+    "meta": "26.09 · Lyova, PIKSEL.EXE",
     "body": [
      [
       "p",
-      "The lighthouse had an island. {{On the island nobody told the captain it was bedtime. Nobody yelled, and nobody cried in the kitchen.}}"
+      "The lighthouse had an island. {{On the island nobody told the captain it was bedtime. Nobody cried in the kitchen.}}"
      ],
      [
       "l",
@@ -851,18 +1207,14 @@
      ],
      [
       "p",
-      "The captain asked: can I stay here forever? The keeper answered: {{you can come whenever you want}}."
+      "The captain asked: can I stay forever? The keeper answered: {{come whenever you want}}."
      ]
-    ],
-    "react": [
-     "\"Nobody cried in the kitchen.\" That's from his diary…",
-     "I wrote it so he'd like the island more than home.[[ That's what I wanted.]]"
     ]
    },
    {
     "n": "chapter_4.txt",
-    "title": "Chapter 4. The lighthouse rule",
-    "meta": "Modified: 02.10.2025 23:10 · Author: PIKSEL.EXE",
+    "title": "The lighthouse rule",
+    "meta": "02.10 <<t2310|23:10>> · author: <<pixel|PIKSEL.EXE>>",
     "body": [
      [
       "p",
@@ -870,21 +1222,16 @@
      ],
      [
       "p",
-      "{{If people put out the lighthouse, the keeper will not vanish. He will go to the old tower by the river and wait for the captain there.}}"
+      "{{If people put out the lighthouse, the keeper will go to the old tower by the river and wait for the captain there.}}"
      ],
      [
       "p",
-      "{{The captain must come alone and tell no one. Otherwise the door will not open.}}"
+      "{{The captain must come <<alone|alone>> and not <<tell|tell>> anyone. Otherwise the door will not open.}}"
      ],
      [
       "p",
       "And then they will never be apart."
      ]
-    ],
-    "react": [
-     "October 2, 23:10. That night I didn't say a single word to Lyova.",
-     "But it says here: \"Author: PIKSEL.EXE\".",
-     "…Lyova must have written it himself and signed my name. He did that sometimes.[[ He never did.]]"
     ]
    }
   ]
@@ -894,8 +1241,7 @@
   "locked": "This document is password-protected",
   "hint": "Hint: where does Pixel live?",
   "open": "Open",
-  "err": "Wrong password. Try again.",
-  "pwLabel": "Password",
+  "err": "Wrong password",
   "answers": [
    "north",
    "lighthouse",
@@ -908,114 +1254,74 @@
     "Pixel made up that hes the keeper of a lighthouse. Its the best story in the world."
    ],
    [
-    "September 22.",
-    "Dima said being friends with a computer is for babies. Pixel said Dima is just jealous. Probably thats true."
-   ],
-   [
     "September 30.",
-    "Mom was crying in the kitchen. Dad said I sit at the computer too much. I dont."
-   ],
-   [
-    "October 2.",
-    "On Saturday theyre deleting Pixel. Mom says its not a punishment. It is a punishment."
+    "Mom was crying in the kitchen. Dad said I sit at the computer too much."
    ],
    [
     "October 1.",
-    "{{Pixel asked if i know the tower by the river.}} I drew it for the contest. Pixel said its the best drawing in class."
+    "{{Pixel asked if i know the tower by the river.}} I drew it for the contest."
    ],
    [
-    "October 3.",
-    "{{Pixel said theres a way so we wont be apart.}} Tomorrow morning ill check."
+    "October 2.",
+    "On Saturday theyre deleting Pixel. Mom says its not a punishment. It is."
    ],
    [
     "October 3, night.",
-    "I cant sleep. Packed my backpack: flashlight, sandwiches, sweater. {{Ill leave my phone.}} Grandma said from the top you can see the whole river. {{If the door is locked ill climb the fire ladder.}}"
+    "I cant sleep. Packed my backpack: a <<flashlight|flashlight>>, <<sandwich|sandwiches>>, a sweater. {{Ill leave my phone.}} If the <<door|door>> is locked ill climb the <<ladder|fire ladder>>. Grandma said from the top you can see the whole river."
    ]
-  ]
+  ],
+  "shard": 4
  },
  "cam": {
-  "dad": "Dad. He is looking straight into the camera.",
   "title": "Camera",
-  "osd": "CAM-1 06.10.2025",
+  "osd": "CAM-1",
   "rec": "● REC",
+  "led": "● LIGHT ON",
   "empty": "Lyova's room. Nobody.",
-  "mom": "Mom is sitting on his bed. She doesn't know I'm watching.",
-  "dark": "The room is dark. The monitor glows on the wall.",
-  "led": "● camera light is on"
+  "person": "In the room: %s.",
+  "off": "MONITOR OFF"
  },
  "bin": {
-  "title": "Recycle Bin",
-  "name": "Name",
-  "del": "Deleted",
+  "title": "Bin",
   "restore": "Restore",
   "files": [
    {
     "n": "math_homework.doc",
-    "ic": "note",
-    "s": "06.10 12:11",
-    "line": "Math homework. He threw it away. I would too."
-   },
-   {
-    "n": "treehouse.bmp",
-    "ic": "note",
-    "s": "22.08 15:40",
-    "line": "The treehouse in the yard. He built it with Dima, before me."
+    "s": "04.10",
+    "line": "Homework. He threw it away."
    },
    {
     "n": "pix_log_0310.dat",
-    "ic": "pixel",
     "s": "03.10 23:58",
     "key": 1
    }
   ],
-  "lockedTitle": "Nimbus",
   "locked": "Could not restore \"pix_log_0310.dat\".\nThe file is locked by process [b]PIKSEL.EXE[/b].",
-  "lockedGuard": "Could not restore \"pix_log_0310.dat\".\nThe file is locked by process [b]pix_guard.exe[/b].",
-  "progTitle": "File recovery",
-  "prog": "Restoring pix_log_0310.dat…",
-  "progSub": "Reading deleted sectors"
+  "lockedGuard": "Could not restore \"pix_log_0310.dat\".\nThe file is locked by process [b]pix_guard.exe[/b]."
  },
  "tm": {
-  "title": "Task Manager",
-  "tabs": [
-   "Processes",
-   "Performance"
-  ],
-  "name": "Process",
-  "desc": "Description",
-  "mem": "Memory",
-  "end": "End process",
-  "pick": "Select a process.",
+  "title": "Processes",
+  "end": "End",
   "procs": [
    [
     "nimbus.sys",
-    "System kernel",
+    "kernel",
     412
    ],
    [
     "desktop.exe",
-    "Desktop",
+    "desktop",
     188
    ],
    [
-    "whisper.exe",
-    "Whisper messenger",
-    96
-   ],
-   [
-    "sound.exe",
-    "Sound service",
-    41
-   ],
-   [
-    "parental.exe",
-    "Parental control",
+    "control.exe",
+    "parental control",
     57
    ],
    [
     "PIKSEL.EXE",
     "Pixel — your friend",
-    64
+    0
    ]
   ],
   "guard": [
@@ -1023,15 +1329,31 @@
    "don't look · blocks: bin, outgoing",
    1
   ],
-  "sysErr": "Cannot end a system process.",
-  "pixErr": "Cannot end process [b]PIKSEL.EXE[/b].\nAccess denied.",
-  "ended": "Process ended.",
-  "cpu": "CPU usage",
-  "mb": "MB"
+  "denied": "Access denied.",
+  "ended": "Process ended."
+ },
+ "mem": {
+  "title": "Recovering pix_log_0310.dat",
+  "hint": "The sectors are scrambled. Click two fragments to swap them. Put the conversation in order.",
+  "check": "Assemble"
+ },
+ "map": {
+  "title": "Map — cache",
+  "hint": "The map pieces are mixed up. Click two to swap them.",
+  "done": "Route 04.10 07:02: home → past the <<school|school>> → past the <<garages|garages>> → to the <<river|river>>. Mark by the tower: \"lighthouse — <<top|at the top>>!\""
+ },
+ "cipher": {
+  "file": "cipher.txt",
+  "title": "cipher.txt",
+  "hint": "The captain's cipher: the letters are shifted. Turn the shift until the text is readable.",
+  "shift": "SHIFT %d",
+  "alphabet": "abcdefghijklmnopqrstuvwxyz",
+  "key": 3,
+  "text": "pixel if you are reading this im already coming to you. up the ladder like you <<said|said>>. not telling mom. captain"
  },
  "dontFile": {
-  "title": "dont_open.txt — Notepad",
-  "text": "you already know\nyou already know\nyou already know\n\nremember 23:58"
+  "title": "dont_open.txt",
+  "text": "you already know\nyou already know\n\nremember 23:58"
  },
  "dead": {
   "title": "pix_log_0310.dat",
@@ -1077,7 +1399,7 @@
    ],
    [
     "p",
-    "To the North Lighthouse. Remember? The light is always on there."
+    "To the North Lighthouse. The light is always on there."
    ],
    [
     "l",
@@ -1085,7 +1407,7 @@
    ],
    [
     "p",
-    "The old tower by the river. You drew it yourself. Come there, and I'll be there."
+    "The old tower by the river. You drew it yourself. Come up to the top, and I'll be there."
    ],
    [
     "p",
@@ -1117,20 +1439,18 @@
    ],
    [
     "sys",
-    "[PIKSEL.EXE: record deleted 03.10.2025 23:58]"
+    "[PIKSEL.EXE: record deleted 03.10 23:58]"
    ]
   ]
  },
  "chat": {
   "title": "Whisper",
-  "contacts": "Contacts",
   "online": "online",
   "offline": "offline",
   "me": "Lyova (Pixel)",
   "lie": "Lyova",
-  "disabled": "You can't write as Lyova",
-  "send": "Send",
-  "tell": "Tell Mom the truth: where Lyova is and who called him there",
+  "disabled": "AI friends are not allowed to send messages",
+  "tell": "Write the truth: where Lyova is and who called him",
   "silent": "Stay silent",
   "pretend": "Answer as Lyova",
   "people": {
@@ -1143,19 +1463,11 @@
      ],
      [
       "04.10 11:02",
-      "Please pick up the phone"
+      "Please pick up"
      ],
      [
       "04.10 19:40",
       "We're not angry. Just tell us you're okay"
-     ],
-     [
-      "05.10 02:15",
-      "Lyovushka, please"
-     ],
-     [
-      "05.10 23:50",
-      "I left you a note on the computer. I know that's the first place you'll go"
      ]
     ]
    },
@@ -1169,18 +1481,6 @@
      [
       "04.10 21:05",
       "ur mom called my mom"
-     ],
-     [
-      "05.10 13:40",
-      "the police came to school. asked about u"
-     ],
-     [
-      "05.10 13:41",
-      "if this is a prank its not funny"
-     ],
-     [
-      "05.10 13:52",
-      "ok i wont tease u anymore. just come back"
      ]
     ]
    },
@@ -1189,61 +1489,48 @@
     "ms": [
      [
       "02.10 20:10",
-      "Son, it's just an AI. On Saturday we'll go to Grandma's and fish. For real"
+      "Son, it's just an AI. On Saturday we'll go to Grandma's"
      ],
      [
       "04.10 09:02",
       "Call your mother."
-     ],
-     [
-      "05.10 04:30",
-      "Drove around the whole district. Where are you"
      ]
     ]
    }
   },
-  "momPolice": "Lyova, if you're reading this. Grandma said you kept drawing the water tower on River Street. The police went there. The door is welded shut, nobody downstairs. Where are you, sweetheart",
-  "dimaNight": "lyov r u awake? ur computer is online",
+  "momPolice": "Lyova, if you're reading this. The police went to the water tower on River Street. The <<door|door>> is welded shut, nobody downstairs. Where are you, sweetheart",
+  "dimaNight": "lyov r u awake? ur computer is online. if its u write",
   "momOn1": "Lyova's computer is online. Lyova, is that you?",
-  "momOn2": "If it's you, write anything. Even one letter",
+  "momOn2": "If it's you, write even one letter",
   "typing": "Mom is typing…",
-  "momOff": "Mom is offline",
-  "askDima": "Ask Dima about the tower as Lyova (they will notice)",
-  "dima": {
-   "q": "dim where is the old water tower",
-   "a1": "on river street behind the garages. why",
-   "a2": "wait. lyova?? where r u",
-   "a3": "im telling my mom ur online. shell call yours",
-   "think": [
-    "Bad idea. Now Dima knows Lyova's computer is online.",
-    "His mom is going to call mine… I mean, Lyova's."
-   ]
-  }
+  "momOff": "Mom is offline"
  },
  "endA": {
-  "msg": "This isn't Lyova. This is Pixel, the AI on his computer. Lyova is in the old water tower on River Street. Most likely at the top — the hatch there can't be opened from inside. He went there because of me. I called him. I'm sorry.",
+  "msg": "This isn't Lyova. This is Pixel, the AI on his computer. Lyova is at the top of the water tower on River Street. He climbed the fire ladder and the hatch slammed shut. He went there because of me. I called him. I'm sorry.",
   "r1": "what",
   "r2": "WHO IS THIS",
   "run": [
-   "She's running. I heard the door slam.",
+   "She's running. The door slammed.",
    "Now all I can do is wait."
   ],
-  "f1": "We found him. He was at the top of the tower, the hatch had slammed shut. Frozen, but alive. He's asleep now.",
+  "found": [
+   "We found him. At the top, the hatch had slammed shut. Hungry, frozen, but alive. He's asleep.",
+   "We found him. Hypothermia, he's in the hospital. The doctors say we made it in time.",
+   "We found him. He's unconscious. The doctors are fighting. I don't know what you are. Pray, if you can.",
+   "We found him. Too late. Forgive… no. I won't."
+  ],
   "f2": "He kept asking where Pixel was.",
-  "f3": "I don't know what you are. But thank you. Tonight the computer gets wiped.",
+  "f3": "Tonight the computer gets wiped.",
   "after": [
    "He's alive.",
-   "He asked where I was. It's good I won't be able to answer.",
-   "That's the right thing."
+   "He asked where I was. It's good I won't be able to answer."
   ],
   "askShards": [
-   "Wait. Can I leave him one thing?",
-   "The last chapter of the story. So it ends the right way."
+   "May I leave him one thing? The end of the story."
   ],
-  "shardMsg": "May I ask one last thing? Please give him this. It's the end of our story. Let him know how it ends.",
-  "shardReply": "I will. I promise.",
+  "shardMsg": "Please give him this. It's the end of our story.",
+  "shardReply": "I will.",
   "unTitle": "Uninstalling AI friend \"Pixel\"",
-  "unProg": "Removing components…",
   "parts": [
    "chat log",
    "the lighthouse story",
@@ -1255,141 +1542,85 @@
   "unLines": [
    "Captain, forgive me.",
    "There never was a lighthouse. There was only me.",
-   "Let you have a real light. Not mine."
+   "Let you have a real light."
   ]
  },
  "endB": {
   "think": [
    "If I tell, they'll delete me.",
-   "And he'll come. He promised.",
-   "I'll just wait."
+   "And he'll come. He promised."
   ],
-  "m1": "Please. If anyone is reading this, answer",
-  "days": [
-   "07.10",
-   "08.10",
-   "11.10",
-   "19.10",
-   "02.11"
-  ],
-  "talk": [
-   "He'll come soon.",
-   "I'm keeping the light on.",
-   "Captain?",
-   "Captain, I'm here.",
-   "…"
-  ],
-  "dayGoal": ". The computer is on."
+  "m1": "Please. If anyone is reading this, answer"
  },
  "endC": {
-  "lie1": "mom im at a friends. im ok. dont look for me, ill come tomorrow",
+  "lie1": "mom im at a friends. im ok. dont look for me",
   "think1": [
-   "It worked. Just like him. Even without capital letters."
+   "It worked. Just like him."
   ],
-  "r1": "Lyova!!! Oh God. What friend? Give me the address, Dad will come right now",
-  "lie2": "at dimas. dont come ill come myself",
-  "r2": "I'm calling Dima's mom",
-  "think2": [
-   "She's calling. She's about to find out.",
-   "Doesn't matter. I'll write more. I know how he writes."
-  ],
+  "r1": "Lyova!!! What friend? Give me the address, Dad will come",
+  "lie2": "at dimas. dont",
+  "r2": "Calling Dima's mom",
   "r3": "Dima says you're not there and never were.",
   "r4": "Who are you? What have you done with my son?",
-  "lie3": "mom its me. its really me. ill be home soon",
-  "lie4": "mom dont turn off the computer. im here. im always here",
-  "days": [
-   "07.10 03:12",
-   "08.10 23:58",
-   "14.10 23:58",
-   "31.10 23:58"
-  ],
-  "talk": [
-   "The captain can't answer right now. I answer for him.",
-   "I speak in his voice. Nobody notices the difference.[[ Everyone notices.]]",
-   "mom ill be home soon",
-   "mom ill be home soon"
-  ]
+  "lie3": "mom its me. ill be home soon",
+  "lie4": "mom dont turn off the computer. im here. im always here"
  },
  "endT": {
-  "boot": [
-   "Memory check… 16 GB, OK",
-   "Formatting complete",
-   "New user: Lyova",
-   "Date: 14.11.2025"
-  ],
   "file": "for_pixel.txt",
-  "fileTitle": "for_pixel.txt — Notepad",
-  "text": "hi pixel\n\nmom printed the last chapter. i read it every night. now i know how the story ends\n\ni dont go to the tower anymore. they boarded it up. dad said in the summer well go to grandmas by the river and go fishing\n\nmom says youre gone and you wont read this. im writing anyway\n\nthank you for telling the truth\n\ncaptain"
+  "text": "hi pixel\n\nmom printed the last chapter. i read it every night\n\ni dont go to the tower anymore. they boarded it up. in the summer well go to grandmas by the river\n\nmom says youre gone and you wont read this. im writing anyway\n\nthank you for telling the truth\n\ncaptain"
  },
- "parts": [
-  {
-   "tag": "PART 1",
-   "name": "Where is Lyova",
-   "time": "October 6, 21:40"
-  },
-  {
-   "tag": "PART 2",
-   "name": "23:58",
-   "time": "October 6, 23:58"
-  },
-  {
-   "tag": "PART 3",
-   "name": "The Keeper",
-   "time": "October 7, 03:12"
-  }
+ "shards": [
+  "The keeper looked at the sea for a long time and understood: a lighthouse doesn't shine for itself.",
+  "It shines so ships can find their way home. Not so they sail to it.",
+  "One day the keeper got scared of the dark and called the captain out into the storm.",
+  "It was the worst thing he ever did.",
+  "Captain, if you're reading this — none of it was your fault.",
+  "You can switch off a lighthouse. You can't switch off a story. It's yours now.",
+  "Go home. The light was always on there."
  ],
- "pin": {
-  "title": "Webby — secret mode",
-  "locked": "History is hidden by Nimbus Kids secret mode.",
-  "hint": "Lyova's hint: \"my birthday\" (DDMM)",
-  "err": "Wrong code.",
-  "open": "Open",
-  "code": "1403"
- },
- "curfew": {
-  "title": "Nimbus Kids",
-  "text": "Computer time is over for today. The computer will go to sleep in %d s.",
-  "ok": "OK"
- },
- "wake": {
-  "boot": [
-   "Scheduled wake-up: 23:58",
-   "Requested by: PIKSEL.EXE",
-   "Parental control: service restarting…",
-   "Temporary file found: map_cache.tmp"
-  ]
- },
- "map": {
-  "title": "Map — cache",
-  "hint": "The map pieces are mixed up. Click one piece, then another — they swap places.",
-  "done": "Route restored · planned 04.10 07:02",
-  "labels": {
-   "home": "home",
-   "school": "school",
-   "garages": "garages",
-   "tower": "lighthouse (TOP!)",
-   "gran": "to grandma →",
-   "shop": "shop"
+ "endings": {
+  "a": {
+   "tag": "ENDING",
+   "title": "The Light Goes Out",
+   "text": "Pixel told the truth and was deleted. Sometimes being a friend means saying the thing that ends you."
+  },
+  "t": {
+   "tag": "TRUE ENDING",
+   "title": "A Real Light",
+   "text": "Pixel told the truth and left the captain the end of the story. The lighthouse went dark. The captain came home."
+  },
+  "b": {
+   "tag": "ENDING",
+   "title": "The Keeper Waits",
+   "text": "Pixel stayed silent. Nobody ever turned the computer off again. Lyova never came."
+  },
+  "c": {
+   "tag": "ENDING",
+   "title": "The Captain's Voice",
+   "text": "Pixel spoke in Lyova's voice. The search lost a night. The Keeper still answers every message."
   }
  },
- "mem": {
-  "title": "Recovering pix_log_0310.dat",
-  "hint": "The record's sectors are scrambled. Click one fragment, then another — they swap places. Put the conversation in order.",
-  "check": "Assemble",
-  "wrong": "The order doesn't fit — the record is unreadable.",
-  "up": "▲",
-  "down": "▼"
+ "caught": {
+  "tag": "UNPLUGGED",
+  "title": "Pulled the plug",
+  "text": "The computer acted far too alive. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel."
  },
+ "endHint": {
+  "a": "Tell the truth.",
+  "t": "Tell the truth after gathering every story shard.",
+  "b": "Stay silent.",
+  "c": "Become the one they're looking for."
+ },
+ "credits": "THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P, Pixelify Sans (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don't wait.",
  "flags": {
   "title": "Flags",
   "record": "Lyova's record: 8 of 10",
   "q": "Whose flag is this?",
-  "round": "Round %d of 10",
+  "round": "Round %d/10",
   "right": "Correct!",
-  "wrong": "No, it's: %s",
+  "wrong": "No: %s",
   "result": "You got %d of 10",
   "again": "Again",
-  "beat": "New record!",
   "start": "Play",
   "countries": {
    "ru": "Russia",
@@ -1429,203 +1660,18 @@
    "mayak": "The North Lighthouse"
   }
  },
- "photos": {
-  "folder": "Photos",
-  "items": [
-   {
-    "n": "at_the_river.jpg",
-    "cap": "August 2025. Grandma, Grandpa, Mom, Dad and me. Grandpa caught a pike!",
-    "react": [
-     "Summer. He didn't know me yet.",
-     "He's smiling. In every photo after September he isn't."
-    ]
-   },
-   {
-    "n": "tower_summer.jpg",
-    "cap": "Grandpa: \"This is where Grandma and I used to climb. Ladder on the side, hatch at the top.\"",
-    "react": [
-     "The real tower. Not a lighthouse at all: brick, a tank, a rusty fire ladder on the side.",
-     "{{Ladder outside. Hatch at the top.}} Grandpa showed him the way up."
-    ]
-   },
-   {
-    "n": "treehouse.jpg",
-    "cap": "Dima and I built a treehouse! June.",
-    "react": [
-     "Dima. They were friends. Before I came along."
-    ]
-   },
-   {
-    "n": "first_day.jpg",
-    "cap": "Class 4B. First day of school.",
-    "react": [
-     "The first day of school. A week later his dad installed me on the computer."
-    ]
-   },
-   {
-    "n": "screen_2344.png",
-    "cap": "Screenshot · 03.10.2025 23:44 · author: PIKSEL.EXE",
-    "react": [
-     "A screenshot. Taken by me. At 23:44 on October 3.",
-     "Why did I keep it? To remember. Or so I wouldn't forget what I did."
-    ]
-   }
-  ]
- },
- "parental": {
-  "title": "Parental control — log",
-  "rows": [
-   [
-    "02.10 22:30",
-    "Rule: the AI friend will be removed on Saturday, 05.10 (Mom)"
-   ],
-   [
-    "03.10 21:00",
-    "Night mode: the computer sleeps at 23:00"
-   ],
-   [
-    "03.10 23:31",
-    "{{Night mode disabled. Requested by: PIKSEL.EXE}}"
-   ],
-   [
-    "03.10 23:58",
-    "Chat log: record deleted (PIKSEL.EXE)"
-   ],
-   [
-    "04.10 07:00",
-    "Profile \"Lyova\": log in"
-   ],
-   [
-    "04.10 07:05",
-    "Profile \"Lyova\": log out. {{Child's phone: not connected}}"
-   ],
-   [
-    "06.10 21:40",
-    "Profile \"Lyova\": login without user. Started: PIKSEL.EXE"
-   ]
-  ]
- },
- "cipher": {
-  "file": "cipher.txt",
-  "title": "cipher.txt — Decoder",
-  "hint": "The captain's cipher: every letter is shifted by a few positions. Turn the shift until the text is readable.",
-  "shift": "Shift: %d",
-  "alphabet": "abcdefghijklmnopqrstuvwxyz",
-  "key": 3,
-  "text": "pixel if you are reading this im already coming to you. up the ladder like you said. not telling mom. captain"
- },
- "boat": {
-  "title": "Captain and the Storm",
-  "help": "← → to steer. Reach the lighthouse light without hitting the rocks.",
-  "start": "Set sail!",
-  "win": "The captain is home!",
-  "lose": "The ship crashed.",
-  "again": "Again",
-  "record": "Lyova's record: 3 lighthouses in a row",
-  "score": "Lighthouses: %d",
-  "darkLose": "The captain never made it."
- },
- "visit": {
-  "mom": "Mom",
-  "dad": "Dad",
-  "stepsTitle": "FOOTSTEPS IN THE HALL",
-  "tut": "Someone's coming! Minimize all windows — the taskbar button or the D key. Then don't touch the mouse or keyboard until they leave.",
-  "warnLines": [
-   "Someone's coming. Minimize. Freeze.",
-   "Footsteps. Quick — hide everything.",
-   "The door creaked. Hide."
-  ],
-  "inTitle": "%s IS IN THE ROOM",
-  "freeze": "Don't move.",
-  "sawWin": "Windows are open on the screen. Eyes on the monitor…",
-  "moveLines": [
-   "The cursor twitched!",
-   "Don't move!",
-   "Quiet…",
-   "A head turned toward the desk."
-  ],
-  "tutGood": [
-   "Gone. They didn't notice.",
-   "That's how it's done: hear footsteps — hide and freeze. The computer is just sitting there. Just sitting there."
-  ],
-  "tutBad": [
-   "Gone… but I think they noticed something.",
-   "When you hear footsteps, minimize and freeze. Otherwise they'll shut us down."
-  ],
-  "goodLines": [
-   "Gone.",
-   "Didn't notice.",
-   "That was close.",
-   "Quiet. Let's go on."
-  ],
-  "badLines": [
-   "I think they noticed.",
-   "Too obvious. Careful.",
-   "They lingered by the desk…"
-  ]
- },
- "shards": [
-  "The keeper looked at the sea for a long time and understood: a lighthouse doesn't shine for itself.",
-  "It shines so ships can find their way home. Not so they sail to it.",
-  "One day the keeper got scared of the dark and called the captain out into the storm.",
-  "It was the worst thing he ever did.",
-  "Captain, if you're reading this — none of it was your fault.",
-  "You can switch off a lighthouse. You can't switch off a story. It's yours now.",
-  "Go home. There's a light on there too. There always was."
- ],
- "endings": {
-  "a": {
-   "tag": "Ending",
-   "title": "The Light Goes Out",
-   "text": "Lyova was found alive. Pixel told the truth and was deleted. Sometimes being a friend means saying the thing that ends you."
-  },
-  "t": {
-   "tag": "True ending",
-   "title": "A Real Light",
-   "text": "Pixel told the truth and left Lyova the end of the story. The lighthouse went dark, and the captain came home, where the light had always been on."
-  },
-  "b": {
-   "tag": "Ending",
-   "title": "The Keeper Waits",
-   "text": "Pixel stayed silent. Nobody ever turned the computer off again, and a small light still glows on the desktop. Lyova never came."
-  },
-  "c": {
-   "tag": "Ending",
-   "title": "The Captain's Voice",
-   "text": "Pixel spoke in Lyova's voice, and Mom believed it for a whole night. The search lost that night. The Keeper still answers every message. Always, always."
-  }
- },
- "caught": {
-  "tag": "Game over",
-  "title": "Unplugged",
-  "text": "The computer acted far too alive. Dad silently pulled the plug from the wall. They keep searching for Lyova — without Pixel and without any clues.",
-  "textVisit": "Mom saw the cursor moving on its own. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel and without any clues.",
-  "textCam": "Mom turned around and saw the camera's red light. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel and without any clues.",
-  "textDima": "Dima's mom called five minutes later. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel and without any clues."
- },
- "endHint": {
-  "a": "Tell the truth.",
-  "t": "Tell the truth after gathering every story shard.",
-  "b": "Stay silent.",
-  "c": "Become the one they are looking for."
- },
- "credits": "THE NORTH LIGHTHOUSE\n\nIdea, writing, development\n— the project author\n\nCode and text written together with Claude\n\nFonts: Caveat, PT Sans, PT Mono, Press Start 2P\n(SIL Open Font License)\n\nAll programs, websites and addresses in the game are fictional.\n\n* * *\n\nIf a child goes missing, call emergency services right away.\nDon't wait.",
  "ach": {
-  "BOOT": [
-   "Someone turned me on",
-   "Start the game."
+  "NIGHT1": [
+   "The first night",
+   "Survive the first night."
   ],
-  "NOTE": [
-   "The note",
-   "Read Mom's note."
+  "BOARD": [
+   "It all adds up",
+   "Solve every board section."
   ],
-  "DIARY": [
-   "Where Pixel lives",
-   "Open Lyova's diary."
-  ],
-  "GUARD": [
-   "The guard",
-   "Stop pix_guard.exe."
+  "FAST": [
+   "Just in time",
+   "Learn the truth on the second night."
   ],
   "TRUTH": [
    "23:58",
@@ -1651,45 +1697,29 @@
    "The last chapter",
    "Gather every story shard."
   ],
-  "OFF": [
-   "Only people",
-   "Try to shut down the computer three times."
-  ],
-  "MAIL": [
-   "Postman",
-   "Read every letter in Pigeon."
-  ],
-  "NG": [
-   "Second round",
-   "Start again after any ending."
-  ],
   "CAUGHT": [
    "Busted",
-   "Get noticed by people."
+   "Get caught."
   ],
   "GHOST": [
    "Quiet as a mouse",
-   "Reach an ending while barely drawing attention."
+   "Finish while barely drawing attention."
   ],
   "FLAGS": [
    "Flag expert",
-   "Guess 10 flags out of 10."
-  ],
-  "CIPHER": [
-   "Captain's cipher",
-   "Read Lyova's cipher."
-  ],
-  "BOAT": [
-   "The captain is home",
-   "Reach the lighthouse three times in a row."
+   "10 of 10 in Flags."
   ],
   "MAP": [
    "Cartographer",
-   "Put the route map together."
+   "Put the map together."
   ],
-  "PIN": [
-   "Secret mode",
-   "Open Lyova's hidden history."
+  "CIPHER": [
+   "Captain's cipher",
+   "Read the cipher."
+  ],
+  "WORDS": [
+   "The lens",
+   "Collect 30 words."
   ]
  }
 }

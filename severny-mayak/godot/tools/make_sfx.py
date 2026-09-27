@@ -67,4 +67,12 @@ for st, (vol, cut) in enumerate([(.05, .02), (.12, .03), (.26, .05), (.45, .08)]
         y += (v - y) * cut
         b[i] = y * vol
     save(f'drone{st}', b)
+b = buf(.35); noise(b, .12, .9, lp=.3, seed=11); tone(b, 90, .2, 'sine', .6); save('stamp', b)
+b = buf(.3); noise(b, .25, .25, lp=.6, seed=13); save('paper', b)
+b = buf(1.6)
+for k in range(2):
+    for i in range(12):
+        tone(b, 880 if i % 2 else 660, .05, 'square', .12, k * .7 + i * .04)
+save('ring', b)
+b = buf(.12); noise(b, .05, .5, lp=.7, seed=17); tone(b, 1800, .03, 'square', .05); save('type', b)
 print('sfx ok')

@@ -1,31 +1,27 @@
 extends Node
-## Автотест: проходит игру целиком во всех финалах и делает скриншоты.
-## Запуск:  godot --path . -- --test [--lang=en] [--shots=/папка] [--only=a]
-## (в конце печатает TEST OK / TEST FAIL и выходит с кодом 0/1)
+## Автотест версии 3: проходит ночи и все финалы, делает скриншоты.
+## godot --path . -- --test [--lang=en] [--shots=/папка] [--only=a|t|b|c|title]
 
 var failed := 0
-var shots := ""
 var errors: Array = []
 var scen := ""
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	shots = G.shots_dir
 	Engine.time_scale = 10.0
 	_run.call_deferred()
 
-func shot(name: String) -> void:
-	if shots == "" or DisplayServer.get_name() == "headless":
+func shot(n: String) -> void:
+	if G.shots_dir == "" or DisplayServer.get_name() == "headless":
 		return
 	await RenderingServer.frame_post_draw
-	var img := get_viewport().get_texture().get_image()
-	img.save_png("%s/%s-%s-%s.png" % [shots, G.settings.lang, scen, name])
+	await RenderingServer.frame_post_draw
+	G.screen.get_texture().get_image().save_png("%s/%s-%s-%s.png" % [G.shots_dir, G.settings.lang, scen, n])
 
 func until(cond: Callable, sec := 60.0, what := "") -> bool:
 	var t0 := Time.get_ticks_msec()
 	while not cond.call():
 		if Time.get_ticks_msec() - t0 > sec * 1000.0:
-			push_error("timeout: " + what)
 			errors.append("timeout: " + what)
 			return false
 		await get_tree().process_frame
@@ -39,25 +35,23 @@ func _run() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--only="):
 			only = a.substr(7)
-	if only == "" or only == "title":
+	if only in ["", "title"]:
 		scen = "menu"
 		G.menus.show_title()
-		await wait(1.5)
+		await wait(1.2)
 		await shot("title")
 		G.menus.open_panel("settings")
-		await wait(0.5)
+		await wait(0.4)
 		await shot("settings")
 		G.menus.panel.visible = false
 	for k in ["a", "t", "b", "c"]:
-		if only != "" and only != k and only != "title":
+		if only != "" and only != k:
 			continue
-		if only == "title":
-			break
 		scen = k
 		errors.clear()
 		var ok = await _play(k)
 		if ok and errors.is_empty():
-			print("OK   %s ending %s: %s  (палево max %d)" % [G.settings.lang, k, G.L.endings[k].title, int(G.st.sus_max)])
+			print("OK   %s ending %s: %s (night %d, палево max %d)" % [G.settings.lang, k, G.L.endings[k].title, int(G.st.night), int(G.st.sus_max)])
 		else:
 			failed += 1
 			print("FAIL %s ending %s: %s" % [G.settings.lang, k, str(errors)])
@@ -65,153 +59,156 @@ func _run() -> void:
 	print("TEST " + ("OK" if failed == 0 else "FAIL"))
 	get_tree().quit(1 if failed else 0)
 
+func solve(sid: String) -> void:
+	var s := G.section(sid)
+	var ans := G.section_blanks(s)
+	for w in ans:
+		G.collect(w)
+	G.board.sel_section = sid
+	for i in ans.size():
+		G.board.sel_blank = i
+		G.board.place(ans[i])
+
+func to_night_end() -> void:
+	G.st.mins = G.NIGHT_LEN - 1
+	G.night.minute()
+
 func _play(k: String) -> bool:
-	var A: Apps
 	G.meta.endings = {}
-	G.main.start_run(false)
-	A = G.apps
-	if not await until(func(): return G.st.goal == "note", 30, "boot"): return false
-	await shot("desk-part1")
-	A.open_note()
-	if not await until(func(): return G.st.goal == "find", 30, "note lines"): return false
-	A.open_drawings()
-	A.open_drawing(1)
-	A.open_drawing(2)
-	await shot("drawing-family")
-	A.open_log()
-	A.open_cam()
+	G.main.start_run("new")
+	if not await until(func(): return G.night.running, 30, "night 1 start"): return false
+	await wait(0.5)
+	await shot("n1-start")
+	if not await until(func(): return G.st.f.get("goal", "") == "note", 30, "mom leaves"): return false
+	await shot("n1-momleft")
+	G.docs.open_note()
+	G.set_lens(true)
+	await wait(0.3)
+	await shot("n1-note-lens")
+	G.docs.open_web()
+	G.docs.try_pin("0000")
+	G.docs.try_pin("1403")
+	G.docs.open_web()
+	await wait(0.3)
+	await shot("n1-web")
+	G.docs.open_drawing(2)
+	G.docs.open_log()
 	if k == "t":
 		for i in 7:
-			A.collect_shard(i)
+			G.docs.collect_shard(i)
+	solve("s1")
+	G.board.toggle(true)
+	await wait(0.4)
+	await shot("n1-board")
+	solve("s2")
+	if not G.st.solved.has("s1") or not G.st.solved.has("s2"):
+		errors.append("s1/s2 not solved")
+	G.board.toggle(false)
 	G.desk.close_all()
-	A.open_browser()
+	G.docs.open_note()            # оставим одно окно открытым и одно свёрнутым — проверка должна их найти
+	G.docs.open_log()
+	G.desk.win("log").visible = false
+	# визит: мама идёт в комнату в 23:35 (t=95)
+	G.st.mins = 90
+	G.night.minute()
+	if not await until(func(): return G.stealth.phase == "in", 60, "visit in"): return false
+	if not await until(func(): return G.stealth.found >= 2, 30, "check found traces"): return false
+	await shot("n1-visit")
+	var s0 := float(G.st.sus)
+	var ev := InputEventMouseMotion.new()
+	ev.position = Vector2(200, 150)
+	ev.relative = Vector2(5, 0)
+	G.screen.push_input(ev, true)
+	await wait(0.4)
+	G.screen.push_input(ev, true)
+	if not await until(func(): return G.stealth.phase == "", 60, "visit end"): return false
+	if not float(G.st.sus_max) > s0:
+		errors.append("moving during visit did not raise exposure")
+	# конец ночи 1
+	to_night_end()
+	if not await until(func(): return int(G.st.night) == 2 and G.night.running, 60, "night 2"): return false
+	await shot("n2-start")
+	G.st.mins = 21
+	G.night.minute()
+	if not await until(func(): return G.flag("momPolice"), 30, "mom police"): return false
+	G.docs.open_chat()
 	await wait(0.3)
-	await shot("pin")
-	A.try_pin("0000")
-	A.try_pin("1403")
-	if not await until(func(): return G.stage() == 1, 30, "stage 1"): return false
-	await shot("history")
-	if not await until(func(): return G.flag("momPolice"), 60, "mom police msg"): return false
-	await shot("chat-police")
+	await shot("n2-chat")
 	G.desk.close_all()
-	A.open_mail()
-	A.read_mail("gran")
-	A.read_mail("draft")
-	await shot("mail")
-	A.open_flags()
-	A._flags_begin()
-	await shot("flags")
-	A.open_photos()
-	A.open_photo(1)
-	await shot("photo")
-	A.open_parental()
-	await shot("parental")
-	A.open_boat()
-	A._boat_play()
-	await wait(1.0)
-	await shot("boat")
-	G.desk.close_all()
-	if k == "a":
-		# прятки: тихо пересидеть визит — палево падает; дёргать мышь — растёт
-		G.set_meta("visits", true)
-		G.stealth.start_visit()
-		if not await until(func(): return G.stealth.phase == "in", 30, "visit in"): return false
-		await shot("visit")
-		var s1 := float(G.st.sus)
-		for i in 5:
-			var ev := InputEventMouseMotion.new()
-			ev.position = Vector2(300 + i * 30, 300)
-			ev.relative = Vector2(30, 0)
-			Input.parse_input_event(ev)
-			await wait(0.5)
-		if not await until(func(): return G.stealth.phase == "", 60, "visit end"): return false
-		if not float(G.st.sus_max) > s1:
-			errors.append("moving during visit did not raise suspicion")
-		G.remove_meta("visits")
-	# конец части 1 → комендантский час → часть 2
-	if not await until(func(): return int(G.st.part) == 2, 120, "part 2"): return false
-	if not await until(func(): return G.st.goal == "map", 60, "wake lines"): return false
-	await shot("desk-part2")
-	A.open_map()
+	G.docs.open_map()
 	await wait(0.2)
-	await shot("map-scrambled")
-	A.map_order = [0, 1, 2, 3, 4, 5, 6, 8, 7]
-	A._map_click(7)
-	A._map_click(8)
-	if not await until(func(): return G.flag("map"), 10, "map solved"): return false
-	await shot("map-solved")
-	A.open_diary()
-	A.try_diary("северный маяк")
-	if not await until(func(): return G.stage() == 2, 30, "stage 2"): return false
-	await shot("diary")
-	A.open_tale()
-	A.open_chapter(2)
-	A.open_chapter(3)
-	await shot("tale4")
-	A.open_cipher()
-	await wait(0.2)
-	await shot("cipher")
-	for i in 3:
-		A.cipher_shift += 1
-		A._cipher_changed()
-	if not G.flag("cipher"):
-		errors.append("cipher not solved at shift 3")
-	G.desk.close_all()
+	await shot("n2-map")
+	G.docs.map_order = [0, 1, 2, 3, 4, 5, 6, 8, 7]
+	G.docs.map_click(7)
+	G.docs.map_click(8)
+	if not G.flag("map"):
+		errors.append("map not solved")
+	G.docs.open_diary()
+	G.docs.try_diary("северный маяк")
+	await wait(0.3)
+	await shot("n2-diary")
 	if k == "b":
-		# камера при маме в комнате поднимает палево; потом проверяем проигрыш и загрузку
-		A.open_cam()
-		await wait(0.6)
-		await shot("cam-mom")
-		G.desk.close_win("cam")
-		if not float(G.st.sus) > 0:
-			errors.append("camera did not raise suspicion")
-		G.save_game()
+		# проигрыш и переигровка ночи
 		G.stealth.add_sus(100, "cam")
-		if not await until(func(): return G.ending == "caught", 10, "caught"): return false
+		if not await until(func(): return G.ending == "caught", 20, "caught"): return false
 		await wait(0.6)
 		await shot("caught")
-		G.main.start_run(true)
-		if not await until(func(): return G.in_game and G.st.goal != "", 30, "continue after caught"): return false
-		A = G.apps
-		G.st.sus = 10.0
-	# конец части 2 → папа → часть 3
-	if not await until(func(): return G.desk.win("cam") != null or int(G.st.part) == 3, 120, "dad scene"): return false
+		G.main.start_run("night")
+		if not await until(func(): return G.night.running and int(G.st.night) == 2, 30, "retry night"): return false
+		G.set_flag("map")
+		G.set_flag("diary")
+	solve("s3")
+	solve("s4")
+	G.docs.open_tale()
+	G.docs.open_chapter(3)
 	await wait(0.3)
-	await shot("dad")
-	if not await until(func(): return int(G.st.part) == 3 and G.st.goal == "bin", 120, "part 3"): return false
-	await shot("desk-part3")
-	A.open_bin()
-	A.restore(2)
-	if not await until(func(): return G.st.goal == "tm", 30, "guard lock"): return false
+	await shot("n2-tale4")
+	solve("s5")
 	G.desk.close_all()
-	A.open_tm()
-	await wait(0.3)
-	await shot("tm")
+	G.docs.open_cipher()
+	await wait(0.2)
+	await shot("n2-cipher")
 	for i in 3:
-		A.tm_sel = G.L.tm.guard[0]
-		A.end_process()
-		await wait(0.4)
-	if not await until(func(): return G.flag("guardKilled"), 30, "guard killed"): return false
-	G.desk.close_all()
-	A.open_bin()
-	A.restore(2)
+		G.docs.cipher_shift += 1
+		G.docs.cipher_turn()
+	if not G.flag("cipher"):
+		errors.append("cipher not solved")
+	G.docs.open_parental()
+	solve("s6")
+	if int(G.st.mem) < 100:
+		errors.append("memory < 100: %d" % int(G.st.mem))
+	G.board.toggle(true)
 	await wait(0.3)
-	await shot("memfix")
-	A.mem_order = range(A._mem_chunks().size())
-	A._mem_check()
-	if not await until(func(): return G.stage() == 3, 60, "reveal"): return false
-	await shot("dead-log")
-	if not await until(func(): return A.choice_shown, 60, "choice"): return false
-	await shot("choice")
+	await shot("n2-board-done")
+	G.board.toggle(false)
+	G.desk.close_all()
+	G.docs.open_tm()
+	await wait(0.3)
+	await shot("n2-tm")
+	for i in 3:
+		G.docs.tm_sel = G.L.tm.guard[0]
+		G.docs.end_process()
+		await wait(0.3)
+	if not await until(func(): return G.flag("guardKilled"), 30, "guard"): return false
+	G.desk.close_all()
+	G.docs.restore(1)
+	await wait(0.3)
+	await shot("n2-memfix")
+	G.docs.mem_order = range(8)
+	G.docs.mem_check()
+	if not await until(func(): return G.flag("revealed"), 60, "reveal"): return false
+	await shot("n2-reveal")
+	if not await until(func(): return G.docs.choice_shown, 60, "choice"): return false
+	await shot("n2-choice")
 	match k:
-		"a", "t": G.story.ending_tell()
-		"b": G.story.ending_silent()
-		"c": G.story.ending_pretend()
+		"a", "t": G.night.ending_tell()
+		"b": G.night.ending_silent()
+		"c": G.night.ending_pretend()
 	if k == "t":
-		if not await until(func(): return G.desk.win("letter") != null, 120, "epilogue"): return false
+		if not await until(func(): return G.desk.win("letter") != null, 90, "epilogue"): return false
 		await wait(0.3)
 		await shot("epilogue")
-	if not await until(func(): return G.ending == k, 180, "ending " + k): return false
-	await wait(1.5)
+	if not await until(func(): return G.ending == k, 120, "ending " + k): return false
+	await wait(1.2)
 	await shot("end")
 	return true

@@ -1,33 +1,41 @@
 extends Node
-## Глобальное состояние игры (автозагрузка «G»): настройки, сохранения, тексты, достижения, Steam.
+## Глобальное состояние (автозагрузка «G»): настройки, сохранения, тексты, банк слов, доска, достижения, Steam.
 
-signal stage_changed(n: int)
-signal sus_changed(v: float)
-signal shards_changed
+signal lens_changed(on: bool)
+signal words_changed
+signal board_changed
 
-const SAVE_PATH := "user://save.json"
+const SAVE_PATH := "user://save.json"        # текущее состояние
+const NIGHT_PATH := "user://night.json"      # контрольная точка: начало ночи
 const META_PATH := "user://meta.json"
 const SET_PATH := "user://settings.json"
+const NIGHT_START := 22 * 60                  # ночь начинается в 22:00
+const NIGHT_LEN := 480                        # и длится 8 часов (до 06:00)
 
-var L: Dictionary = {}            # тексты текущего языка (lang/ru.json, lang/en.json)
+var L: Dictionary = {}
 var LANGS := {}
-var settings := {"vol": 0.8, "amb": 0.8, "text": "normal", "auto": true, "fx": "full", "scares": true,
-	"lang": "", "warned": false, "fullscreen": true}
+var settings := {"vol": 0.8, "amb": 0.8, "text": "normal", "fx": "full", "scares": true,
+	"lang": "", "warned": false, "fullscreen": true, "scale": "fill"}
 var meta := {"endings": {}, "ach": {}, "runs": 0}
-var st := {}                      # состояние прохождения
+var st := {}
 var in_game := false
-var ending := ""                  # "", "pending", "a", "b", "c", "t", "caught"
-var run_id := 0                   # растёт при каждом сбросе — отменяет «повисшие» await-цепочки
+var ending := ""
+var run_id := 0
+var lens := false
 var TEST := false
 var shots_dir := ""
 var steam = null
-# ссылки на узлы текущей сессии (их расставляет main.gd)
+# узлы текущей сессии (расставляет main.gd)
 var main
+var screen
+var house
+var hud
 var desk
-var pix
-var apps
-var story
+var docs
+var board
+var night
 var stealth
+var pix
 var menus
 var fx
 
@@ -35,16 +43,11 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var args := OS.get_cmdline_user_args()
 	TEST = args.has("--test")
-	for a in args:
-		if a.begins_with("--shots="):
-			shots_dir = a.substr(8)
-		if a.begins_with("--lang="):
-			settings.lang = a.substr(7)
 	for code in ["ru", "en"]:
 		var f := FileAccess.open("res://lang/%s.json" % code, FileAccess.READ)
 		LANGS[code] = JSON.parse_string(f.get_as_text())
 	if TEST:
-		for p in [SAVE_PATH, META_PATH, SET_PATH]:
+		for p in [SAVE_PATH, NIGHT_PATH, META_PATH, SET_PATH]:
 			if FileAccess.file_exists(_p(p)):
 				DirAccess.remove_absolute(ProjectSettings.globalize_path(_p(p)))
 		settings.warned = true
@@ -55,12 +58,15 @@ func _ready() -> void:
 	for a in args:
 		if a.begins_with("--lang="):
 			settings.lang = a.substr(7)
+		if a.begins_with("--shots="):
+			shots_dir = a.substr(8)
 	L = LANGS[settings.lang]
 	new_state()
-	_init_steam()
+	if Engine.has_singleton("Steam"):
+		steam = Engine.get_singleton("Steam")
+		steam.steamInitEx() if steam.has_method("steamInitEx") else steam.steamInit()
 
 # ---------------------------------------------------------------- файлы
-## В автотесте сохранения пишутся в отдельные файлы test_*.json.
 func _p(path: String) -> String:
 	return path.replace("user://", "user://test_") if TEST else path
 
@@ -68,8 +74,7 @@ func _read(path: String) -> Dictionary:
 	path = _p(path)
 	if not FileAccess.file_exists(path):
 		return {}
-	var f := FileAccess.open(path, FileAccess.READ)
-	var d = JSON.parse_string(f.get_as_text())
+	var d = JSON.parse_string(FileAccess.open(path, FileAccess.READ).get_as_text())
 	return d if d is Dictionary else {}
 
 func _write(path: String, d: Dictionary) -> void:
@@ -94,8 +99,8 @@ func set_lang(code: String) -> void:
 
 # ---------------------------------------------------------------- прохождение
 func new_state() -> void:
-	st = {"stage": 0, "f": {}, "shards": [], "goal": "", "mins": 21 * 60 + 40, "ng": false,
-		"mom_online": false, "sus": 0.0, "sus_max": 0.0, "part": 1}
+	st = {"v": 3, "night": 1, "mins": 0, "stage": 0, "f": {}, "words": [], "blanks": {}, "solved": [], "mem": 0,
+		"shards": [], "sus": 0.0, "sus_max": 0.0, "ng": false, "mom_online": false}
 
 func flag(k: String) -> bool:
 	return st.f.has(k) and bool(st.f[k])
@@ -108,24 +113,30 @@ func fget(k: String, def = 0):
 	return st.f.get(k, def)
 
 func save_game(force := false) -> void:
-	if not force and (not in_game or ending != ""):
-		return
-	var d := st.duplicate(true)
-	d["v"] = 1
-	_write(SAVE_PATH, d)
+	if force or (in_game and ending == ""):
+		_write(SAVE_PATH, st)
+
+func save_night() -> void:
+	_write(NIGHT_PATH, st)
+	_write(SAVE_PATH, st)
 
 func load_game() -> Dictionary:
 	var d := _read(SAVE_PATH)
-	return d if d.get("v", 0) == 1 else {}
+	return d if int(d.get("v", 0)) == 3 else {}
+
+func load_night() -> Dictionary:
+	var d := _read(NIGHT_PATH)
+	return d if int(d.get("v", 0)) == 3 else {}
 
 func has_save() -> bool:
 	return not load_game().is_empty()
 
 func clear_save() -> void:
-	if FileAccess.file_exists(_p(SAVE_PATH)):
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(_p(SAVE_PATH)))
+	for p in [SAVE_PATH, NIGHT_PATH]:
+		if FileAccess.file_exists(_p(p)):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(_p(p)))
 
-## Ждать sec секунд игрового времени (встаёт на паузу). false — если за это время начали новую игру.
+## Ждать sec секунд игрового времени (встаёт на паузу). false — если за это время начали заново или проиграли.
 func sleep(sec: float) -> bool:
 	var id := run_id
 	await get_tree().create_timer(sec, false).timeout
@@ -134,41 +145,100 @@ func sleep(sec: float) -> bool:
 func stage() -> int:
 	return int(st.stage)
 
-# ---------------------------------------------------------------- тексты
-## Значение по пути "a.b.c" из текущего языка.
-func t(path: String):
-	var cur = L
-	for part in path.split("."):
-		if cur is Dictionary and cur.has(part):
-			cur = cur[part]
-		elif cur is Array and part.is_valid_int():
-			cur = cur[int(part)]
-		else:
-			return path
-	return cur
+func clock() -> String:
+	var m := (NIGHT_START + int(st.mins)) % (24 * 60)
+	return "%02d:%02d" % [m / 60, m % 60]
 
+func hours_gone() -> int:
+	return int(L.nights[clampi(int(st.night) - 1, 0, 3)].hours) + int(st.mins) / 60
+
+# ---------------------------------------------------------------- тексты и разметка
 func esc(s: String) -> String:
 	return s.replace("[", "[lb]")
 
+var _re_word := RegEx.create_from_string("<<(\\w+)\\|(.+?)>>")
 var _re_clue := RegEx.create_from_string("\\{\\{(.+?)\\}\\}")
-## {{улика}} → во втором прохождении подчёркнута красным.
-func clue(s: String) -> String:
-	var tag := "[color=#c9372f][u]$1[/u][/color]" if st.ng else "$1"
-	return _re_clue.sub(esc(s), tag, true)
+
+## Текст документа → BBCode. <<id|слово>> — ключевое слово (в режиме лупы — ссылка), {{улика}} — подсветка во 2-м круге.
+func doc(s: String) -> String:
+	var r := esc(s)
+	r = _re_clue.sub(r, "[color=#a8443c]$1[/color]" if st.ng else "$1", true)
+	var out := ""
+	var pos := 0
+	for m in _re_word.search_all(r):
+		out += r.substr(pos, m.get_start() - pos)
+		var id := m.get_string(1)
+		var txt := m.get_string(2)
+		if lens:
+			var got: bool = st.words.has(id)
+			out += "[url=%s][bgcolor=%s]%s[/bgcolor][/url]" % [id, "#948c8e55" if got else "#c49a4580", txt]
+		else:
+			out += txt
+		pos = m.get_end()
+	out += r.substr(pos)
+	return out
 
 func plain(s: String) -> String:
-	return _re_clue.sub(s, "$1", true)
+	return _re_clue.sub(_re_word.sub(s, "$2", true), "$1", true)
 
-func clock_str(m: int) -> String:
-	return "%d:%02d" % [int(m / 60) % 24, m % 60]
+func word(id: String) -> String:
+	return String(L.words.get(id, id))
 
-# ---------------------------------------------------------------- достижения и Steam
-func _init_steam() -> void:
-	if Engine.has_singleton("Steam"):
-		steam = Engine.get_singleton("Steam")
-		var r = steam.steamInitEx() if steam.has_method("steamInitEx") else steam.steamInit()
-		print("Steam: ", r)
+func set_lens(on: bool) -> void:
+	lens = on
+	Sfx.play("click")
+	lens_changed.emit(on)
 
+func collect(id: String) -> void:
+	if st.words.has(id) or not L.words.has(id):
+		return
+	st.words.append(id)
+	Sfx.play("paper")
+	words_changed.emit()
+	if menus:
+		menus.toast(L.ui.wordAdded % word(id))
+	if st.words.size() >= 30:
+		achieve("WORDS")
+	save_game()
+
+# ---------------------------------------------------------------- доска
+func section(id: String) -> Dictionary:
+	for s in L.board.sections:
+		if s.id == id:
+			return s
+	return {}
+
+func section_blanks(s: Dictionary) -> Array:
+	var re := RegEx.create_from_string("\\{(\\w+)\\}")
+	var out := []
+	for line in s.lines:
+		for m in re.search_all(line):
+			out.append(m.get_string(1))
+	return out
+
+func section_open(id: String) -> bool:
+	match id:
+		"s1", "s2": return true
+		"s3", "s4": return int(st.night) >= 2
+		"s5": return st.solved.has("s3")
+		"s6": return st.solved.has("s4") and st.solved.has("s5")
+	return false
+
+## Проверить раздел. Возвращает число ошибок (0 — верно), -1 — не заполнен.
+func check_section(id: String) -> int:
+	var s := section(id)
+	var ans := section_blanks(s)
+	var filled: Dictionary = st.blanks.get(id, {})
+	var wrong := 0
+	for i in ans.size():
+		var got = filled.get(str(i), "")
+		if got == "":
+			return -1
+		if word(got) != word(ans[i]):
+			wrong += 1
+	return wrong
+
+# ---------------------------------------------------------------- достижения
 func achieve(id: String) -> void:
 	if meta.ach.has(id):
 		return
@@ -178,5 +248,5 @@ func achieve(id: String) -> void:
 		steam.setAchievement(id)
 		steam.storeStats()
 	var a = L.ach.get(id)
-	if a:
-		get_tree().call_group("toast", "show_toast", L.ui.achTitle, a[0])
+	if a and menus:
+		menus.toast(L.ui.achTitle + ": " + a[0])

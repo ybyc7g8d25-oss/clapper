@@ -1,21 +1,37 @@
 class_name UI
 extends RefCounted
-## Шрифты, тема и помощники для сборки интерфейса кодом.
+## Палитра, шрифты и помощники. Вся игра — на сетке 480x270, 1 пиксель = 1 пиксель арта.
 
-const INK := Color("#1d1a2b")
-const WIN := Color("#eef2f7")
-const LINE := Color("#b9c2d0")
-const GRAPE := Color("#5b3fb5")
-const GRAPE_LO := Color("#35217a")
-const MINT := Color("#3fbf86")
-const ALERT := Color("#c9372f")
-const GREY := Color("#667085")
-const PAPER := Color("#fbfaf2")
+# ---- палитра (приглушённая, в духе Papers Please) ----
+const BLACK := Color("#121115")
+const DARK := Color("#1d1b21")
+const DARK2 := Color("#27242c")
+const DARK3 := Color("#35313b")
+const GREY := Color("#4d4852")
+const GREY2 := Color("#6b6570")
+const GREY3 := Color("#948c8e")
+const LIGHT := Color("#c2b8ac")
+const PAPER := Color("#ddd2ba")
+const PAPER2 := Color("#c9bb9c")
+const PAPER3 := Color("#a8997c")
+const INK := Color("#2b2624")
+const INK2 := Color("#554b45")
+const RED := Color("#a8443c")
+const RED2 := Color("#d0695c")
+const GREEN := Color("#5f7a55")
+const GREEN2 := Color("#9aae7c")
+const BLUE := Color("#3f5068")
+const BLUE2 := Color("#6c86a0")
+const AMBER := Color("#c49a45")
+const AMBER2 := Color("#e3c983")
+const PURPLE := Color("#5a4b75")
+const PURPLE2 := Color("#8574a4")
+const ALARM := Color("#cf3f4f")
 
-static var mono: FontFile       # Unifont 16 — основной текст
-static var head: FontFile       # Tiny5 — заголовки и кнопки меню
-static var pixf: FontFile       # Press Start 2P — имя Пикселя, логотип
-static var kid: FontFile        # Caveat без сглаживания — детский почерк
+static var tiny: FontFile      # Tiny5 8 — основной текст
+static var big: FontFile       # Tiny5 16 — заголовки
+static var logo: FontFile      # Press Start 2P — логотип, номера ночей
+static var hand: FontFile      # Pixelify Sans 11 — почерк
 static var theme: Theme
 static var _tex := {}
 
@@ -36,183 +52,158 @@ static func _font(files: Array) -> FontFile:
 	return main
 
 static func setup() -> void:
-	mono = _font(["unifont.otf"])
-	head = _font(["tiny5-latin-400-normal.woff2", "tiny5-cyrillic-400-normal.woff2", "unifont.otf"])
-	pixf = _font(["press-start-2p-latin-400-normal.woff2", "press-start-2p-cyrillic-400-normal.woff2", "unifont.otf"])
-	kid = _font(["caveat-latin-600-normal.woff2", "caveat-cyrillic-600-normal.woff2", "unifont.otf"])
+	tiny = _font(["tiny5-latin-400-normal.woff2", "tiny5-cyrillic-400-normal.woff2"])
+	big = tiny
+	logo = _font(["press-start-2p-latin-400-normal.woff2", "press-start-2p-cyrillic-400-normal.woff2"])
+	hand = _font(["pixelify-sans-latin-400-normal.woff2", "pixelify-sans-cyrillic-400-normal.woff2"])
 	theme = Theme.new()
-	theme.default_font = mono
-	theme.default_font_size = 16
-	for t in ["Label", "Button", "LineEdit", "RichTextLabel", "OptionButton", "CheckBox", "PopupMenu"]:
+	theme.default_font = tiny
+	theme.default_font_size = 8
+	for t in ["Label", "Button", "LineEdit", "RichTextLabel", "OptionButton", "CheckBox"]:
 		theme.set_color("font_color", t, INK)
 	theme.set_color("default_color", "RichTextLabel", INK)
-	theme.set_constant("line_separation", "RichTextLabel", 2)
-	theme.set_constant("line_spacing", "Label", 2)
-	# кнопки с фаской
-	theme.set_stylebox("normal", "Button", box9("ui_btn"))
-	theme.set_stylebox("hover", "Button", box9("ui_btn_hover"))
-	theme.set_stylebox("pressed", "Button", box9("ui_btn_press"))
-	theme.set_stylebox("disabled", "Button", box9("ui_btn", 0.5))
-	theme.set_stylebox("focus", "Button", flat(Color(0, 0, 0, 0), INK, 2, 0))
+	theme.set_constant("line_separation", "RichTextLabel", 1)
+	theme.set_constant("line_spacing", "Label", 1)
+	theme.set_stylebox("normal", "Button", flat(PAPER2, INK, 1, 3, 1))
+	theme.set_stylebox("hover", "Button", flat(PAPER, INK, 1, 3, 1))
+	theme.set_stylebox("pressed", "Button", flat(PAPER3, INK, 1, 3, 1))
+	theme.set_stylebox("disabled", "Button", flat(Color(PAPER2, 0.5), Color(INK, 0.4), 1, 3, 1))
+	theme.set_stylebox("focus", "Button", StyleBoxEmpty.new())
 	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		theme.set_color(c, "Button", INK)
 	theme.set_color("font_disabled_color", "Button", Color(INK, 0.4))
-	# поле ввода
-	theme.set_stylebox("normal", "LineEdit", flat(Color.WHITE, Color("#7f8aa0"), 2, 0, 6))
-	theme.set_stylebox("focus", "LineEdit", flat(Color(0, 0, 0, 0), GRAPE, 2, 0))
+	theme.set_stylebox("normal", "LineEdit", flat(Color("#efe7d4"), INK, 1, 3, 1))
+	theme.set_stylebox("focus", "LineEdit", flat(Color(0, 0, 0, 0), RED, 1, 3, 1))
 	theme.set_color("caret_color", "LineEdit", INK)
-	theme.set_color("selection_color", "LineEdit", Color(GRAPE, 0.4))
-	# полосы прокрутки: пиксельные, узкие
+	theme.set_color("font_placeholder_color", "LineEdit", Color(INK, 0.4))
 	for sb in ["VScrollBar", "HScrollBar"]:
-		theme.set_stylebox("scroll", sb, flat(Color("#dde3ec"), Color(0, 0, 0, 0), 0, 0, 0))
-		theme.set_stylebox("grabber", sb, flat(Color("#8b9bb4"), INK, 2, 0))
-		theme.set_stylebox("grabber_highlight", sb, flat(Color("#5a6988"), INK, 2, 0))
-		theme.set_stylebox("grabber_pressed", sb, flat(GRAPE, INK, 2, 0))
-	theme.set_stylebox("panel", "PanelContainer", flat(WIN, Color(0, 0, 0, 0), 0, 0))
-	theme.set_stylebox("panel", "Panel", flat(WIN, Color(0, 0, 0, 0), 0, 0))
-	# ползунки и галочки в настройках
-	theme.set_stylebox("slider", "HSlider", flat(Color("#2b2840"), Color(0, 0, 0, 0), 0, 0, 0, 4))
-	theme.set_stylebox("grabber_area", "HSlider", flat(MINT, Color(0, 0, 0, 0), 0, 0, 0, 4))
-	theme.set_stylebox("grabber_area_highlight", "HSlider", flat(MINT, Color(0, 0, 0, 0), 0, 0, 0, 4))
+		theme.set_stylebox("scroll", sb, flat(Color(0, 0, 0, 0.12), Color(0, 0, 0, 0), 0, 0, 0))
+		theme.set_stylebox("grabber", sb, flat(GREY2, GREY2, 0, 1, 1))
+		theme.set_stylebox("grabber_highlight", sb, flat(GREY, GREY, 0, 1, 1))
+		theme.set_stylebox("grabber_pressed", sb, flat(INK, INK, 0, 1, 1))
+		theme.set_constant("scroll_size" if sb == "VScrollBar" else "scroll_size", sb, 3)
+	theme.set_stylebox("panel", "PanelContainer", StyleBoxEmpty.new())
+	theme.set_stylebox("slider", "HSlider", flat(DARK3, DARK3, 0, 0, 0, 2))
+	theme.set_stylebox("grabber_area", "HSlider", flat(AMBER, AMBER, 0, 0, 0, 2))
+	theme.set_stylebox("grabber_area_highlight", "HSlider", flat(AMBER2, AMBER2, 0, 0, 0, 2))
 	theme.set_icon("grabber", "HSlider", tex("ui_knob"))
 	theme.set_icon("grabber_highlight", "HSlider", tex("ui_knob"))
+	theme.set_icon("checked", "CheckBox", tex("ui_check_on"))
+	theme.set_icon("unchecked", "CheckBox", tex("ui_check_off"))
+	theme.set_stylebox("normal", "CheckBox", StyleBoxEmpty.new())
+	theme.set_stylebox("hover", "CheckBox", StyleBoxEmpty.new())
+	theme.set_stylebox("pressed", "CheckBox", StyleBoxEmpty.new())
+	theme.set_stylebox("focus", "CheckBox", StyleBoxEmpty.new())
 
 static func tex(n: String) -> Texture2D:
 	if not _tex.has(n):
 		_tex[n] = load("res://art/%s.png" % n)
 	return _tex[n]
 
-static func box9(n: String, alpha := 1.0) -> StyleBoxTexture:
-	var s := StyleBoxTexture.new()
-	s.texture = tex(n)
-	for side in [SIDE_LEFT, SIDE_RIGHT, SIDE_TOP, SIDE_BOTTOM]:
-		s.set_texture_margin(side, 4)
-		s.set_content_margin(side, 6)
-	s.set_content_margin(SIDE_LEFT, 10)
-	s.set_content_margin(SIDE_RIGHT, 10)
-	s.modulate_color = Color(1, 1, 1, alpha)
-	return s
-
-static func flat(bg: Color, border: Color, bw := 2, shadow := 0, pad := 4, pad_v := -1) -> StyleBoxFlat:
+static func flat(bg: Color, border: Color, bw := 1, pad_h := 3, pad_v := 2, pad_all := -1) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = bg
 	s.border_color = border
 	s.set_border_width_all(bw)
 	s.anti_aliasing = false
-	s.set_content_margin_all(pad)
-	if pad_v >= 0:
-		s.content_margin_top = pad_v
-		s.content_margin_bottom = pad_v
-	if shadow > 0:
-		s.shadow_color = Color(0, 0, 0, 0.35)
-		s.shadow_size = 0
-		s.shadow_offset = Vector2(shadow, shadow)
-		s.shadow_size = 1
+	s.content_margin_left = pad_h
+	s.content_margin_right = pad_h
+	s.content_margin_top = pad_v
+	s.content_margin_bottom = pad_v
+	if pad_all >= 0:
+		s.set_content_margin_all(pad_all)
 	return s
 
-static func label(text: String, font: Font = null, size := 16, color := INK, wrap := false) -> Label:
+static func label(text: String, color := INK, font: Font = null, size := 8, wrap_w := 0) -> Label:
 	var l := Label.new()
 	l.text = text
 	if font:
 		l.add_theme_font_override("font", font)
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
-	if wrap:
+	if wrap_w > 0:
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size.x = wrap_w
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
 
-static func shadowed(l: Label, c := Color(0, 0, 0, 1)) -> Label:
-	l.add_theme_color_override("font_shadow_color", c)
-	l.add_theme_constant_override("shadow_offset_x", 2)
-	l.add_theme_constant_override("shadow_offset_y", 2)
-	return l
-
-static func rich(bb: String, fit := false) -> RichTextLabel:
+static func rich(bb := "", fit := true) -> RichTextLabel:
 	var r := RichTextLabel.new()
 	r.bbcode_enabled = true
 	r.text = bb
 	r.fit_content = fit
 	r.scroll_active = not fit
-	r.selection_enabled = false
-	r.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	r.meta_underlined = false
+	r.add_theme_constant_override("line_separation", 1)
 	return r
 
-static func button(text: String, cb: Callable, kind := "") -> Button:
+static func button(text: String, cb: Callable, style := "") -> Button:
 	var b := Button.new()
 	b.text = text
 	b.focus_mode = Control.FOCUS_ALL
-	if kind != "":
-		b.add_theme_stylebox_override("normal", box9("ui_btn_" + kind))
-		b.add_theme_stylebox_override("hover", box9("ui_btn_" + kind))
-		b.add_theme_color_override("font_color", Color.WHITE)
-		b.add_theme_color_override("font_hover_color", Color.WHITE)
-		b.add_theme_color_override("font_pressed_color", Color.WHITE)
-		b.add_theme_color_override("font_focus_color", Color.WHITE)
+	match style:
+		"dark":
+			b.add_theme_stylebox_override("normal", flat(DARK3, GREY, 1, 3, 1))
+			b.add_theme_stylebox_override("hover", flat(GREY, GREY3, 1, 3, 1))
+			b.add_theme_stylebox_override("pressed", flat(DARK, GREY3, 1, 3, 1))
+			for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+				b.add_theme_color_override(c, LIGHT)
+		"red":
+			b.add_theme_stylebox_override("normal", flat(RED, INK, 1, 3, 1))
+			b.add_theme_stylebox_override("hover", flat(RED2, INK, 1, 3, 1))
+			b.add_theme_stylebox_override("pressed", flat(Color("#7d312b"), INK, 1, 3, 1))
+			for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+				b.add_theme_color_override(c, PAPER)
 	b.pressed.connect(func():
 		Sfx.play("click")
 		cb.call())
 	return b
 
-## Кнопка меню: пиксельная рамка мятного цвета (титульный экран, пауза, финал).
-static func menu_button(text: String, cb: Callable) -> Button:
-	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size = Vector2(300, 40)
-	b.add_theme_font_override("font", head)
-	b.add_theme_font_size_override("font_size", 16)
-	var n := flat(Color(0, 0, 0, 0), MINT, 2, 0, 8)
-	var h := flat(MINT, MINT, 2, 0, 8)
-	b.add_theme_stylebox_override("normal", n)
-	b.add_theme_stylebox_override("hover", h)
-	b.add_theme_stylebox_override("focus", h)
-	b.add_theme_stylebox_override("pressed", h)
-	b.add_theme_stylebox_override("disabled", flat(Color(0, 0, 0, 0), Color(MINT, 0.3), 2, 0, 8))
-	b.add_theme_color_override("font_color", MINT)
-	b.add_theme_color_override("font_hover_color", Color("#05040a"))
-	b.add_theme_color_override("font_focus_color", Color("#05040a"))
-	b.add_theme_color_override("font_pressed_color", Color("#05040a"))
-	b.add_theme_color_override("font_disabled_color", Color(MINT, 0.3))
-	b.pressed.connect(func():
-		Sfx.play("click")
-		cb.call())
-	b.mouse_entered.connect(func(): if not b.disabled: b.grab_focus())
-	return b
-
-static func vbox(sep := 6) -> VBoxContainer:
+static func vbox(sep := 2) -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", sep)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return v
 
-static func hbox(sep := 6) -> HBoxContainer:
+static func hbox(sep := 2) -> HBoxContainer:
 	var h := HBoxContainer.new()
 	h.add_theme_constant_override("separation", sep)
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return h
 
-static func margin(child: Control, m := 8) -> MarginContainer:
-	var c := MarginContainer.new()
-	for s in ["left", "right", "top", "bottom"]:
-		c.add_theme_constant_override("margin_" + s, m)
-	c.add_child(child)
-	return c
-
-static func panel(child: Control, bg: Color, border := Color(0, 0, 0, 0), bw := 0, pad := 8) -> PanelContainer:
+static func panel(child: Control, bg: Color, border := Color(0, 0, 0, 0), bw := 0, pad := 3) -> PanelContainer:
 	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", flat(bg, border, bw, 0, pad))
+	p.add_theme_stylebox_override("panel", flat(bg, border, bw, pad, pad))
 	p.add_child(child)
 	p.size_flags_vertical = child.size_flags_vertical
 	p.size_flags_horizontal = child.size_flags_horizontal
 	return p
 
-static func icon_rect(n: String, size := 32) -> TextureRect:
+static func icon(n: String) -> TextureRect:
 	var t := TextureRect.new()
 	t.texture = tex("icon_" + n)
-	t.custom_minimum_size = Vector2(size, size)
-	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 	return t
+
+static func scroll(child: Control) -> ScrollContainer:
+	var s := ScrollContainer.new()
+	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	child.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	s.add_child(child)
+	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return s
 
 static func full(c: Control) -> Control:
 	c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	return c
+
+static func spacer() -> Control:
+	var c := Control.new()
+	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	c.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return c
