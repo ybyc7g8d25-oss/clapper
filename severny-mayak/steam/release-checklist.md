@@ -25,8 +25,8 @@
 - [ ] Сборка:
 ```bash
 cd godot
-godot --headless --export-release "Windows Desktop" ../dist/windows/SevernyMayak.exe
-godot --headless --export-release "Linux" ../dist/linux/SevernyMayak.x86_64
+godot --headless --export-release "Windows Desktop" ../dist/windows/Pixel.exe
+godot --headless --export-release "Linux" ../dist/linux/Pixel.x86_64
 ```
 - [ ] Иконка .exe: сделать `icon.ico` (256×256) и указать в Project → Export → Windows → Application → Icon
       (понадобится rcedit: Editor Settings → Export → Windows → rcedit).
@@ -34,8 +34,8 @@ godot --headless --export-release "Linux" ../dist/linux/SevernyMayak.x86_64
 
 ## 5. Загрузка билда
 - [ ] Steamworks SDK → `tools/ContentBuilder`: депо для Windows (и Linux при желании), путь к `dist/windows`.
-- [ ] Launch options: `SevernyMayak.exe` (Windows), `SevernyMayak.x86_64` (Linux).
-- [ ] Steam Cloud (Auto-Cloud): Windows — `%APPDATA%/SevernyMayak/*.json`, Linux — `~/.local/share/SevernyMayak/*.json`.
+- [ ] Launch options: `Pixel.exe` (Windows), `Pixel.x86_64` (Linux).
+- [ ] Steam Cloud (Auto-Cloud): Windows — `%APPDATA%/Pixel/*.json`, Linux — `~/.local/share/Pixel/*.json`.
 
 ## 6. Перед релизом
 - [ ] Автотест зелёный на обоих языках: `godot --headless -- --test --lang=ru` и `--lang=en`.

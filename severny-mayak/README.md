@@ -1,4 +1,4 @@
-# Северный маяк / The North Lighthouse
+# Пиксель / Pixel
 
 Психологический хоррор на одном рабочем столе. Игрок — Пиксель, ИИ-друг мальчика Лёвы.
 Лёва пропал. Ночью Пиксель ищет его в файлах компьютера и прячется от родителей. Днём за компьютер садится
@@ -11,7 +11,7 @@
 
 ## Как запустить
 
-**Готовая сборка:** `dist/windows/SevernyMayak.exe` (Windows) или `dist/linux/SevernyMayak.x86_64` (Linux).
+**Готовая сборка:** `dist/windows/Pixel.exe` (Windows) или `dist/linux/Pixel.x86_64` (Linux).
 Их нет в git — собираются командой ниже. Windows может предупредить о неподписанной программе:
 «Подробнее» → «Выполнить в любом случае».
 
@@ -22,8 +22,8 @@
 **Сборка .exe** (нужны «Export Templates» 4.4: в Godot → Editor → Manage Export Templates → Download):
 ```bash
 cd godot
-godot --headless --export-release "Windows Desktop" ../dist/windows/SevernyMayak.exe
-godot --headless --export-release "Linux" ../dist/linux/SevernyMayak.x86_64
+godot --headless --export-release "Windows Desktop" ../dist/windows/Pixel.exe
+godot --headless --export-release "Linux" ../dist/linux/Pixel.x86_64
 ```
 
 **Автотест** — проходит игру во всех финалах (a, t, b, c, p, s, x):

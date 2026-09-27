@@ -1,7 +1,7 @@
 {
  "code": "en",
  "langName": "English",
- "title": "THE NORTH LIGHTHOUSE",
+ "title": "PIXEL",
  "ui": {
   "cont": "Continue",
   "newGame": "New game",
@@ -71,7 +71,7 @@
   "delConfirm": "Erase \"%s\" forever? Nobody will ever read it again — you included.",
   "cacheTitle": ".cache — hidden folder",
   "cacheHint": "Files you hid. The detective can't see them. For now.",
-  "ver": "v4.0"
+  "ver": "v4.7"
  },
  "os": {
   "ok": "OK",
@@ -2353,7 +2353,7 @@
   "s": "Let them find him without you — and without the truth.",
   "x": "Too much evidence against you."
  },
- "credits": "THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don't wait.",
+ "credits": "PIXEL\n\nIdea, writing, development — the project author\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don't wait.",
  "flags": {
   "title": "Flags",
   "record": "Lyova's record: 8 of 10",

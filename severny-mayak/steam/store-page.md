@@ -2,7 +2,7 @@
 
 ## RU
 
-**Название:** Северный маяк
+**Название:** Пиксель
 
 **Короткое описание (до 300 символов):**
 Лёва пропал. В его компьютере живёшь ты — Пиксель, его ИИ-друг. Ночью ищешь его по файлам. Днём за компьютер садится следователь и копирует всё, что найдёт, — в том числе то, что лучше бы никто не читал.
@@ -28,7 +28,7 @@
 
 ## EN
 
-**Title:** The North Lighthouse
+**Title:** Pixel
 
 **Short description:**
 Lyova is missing. You live inside his computer — you are Pixel, his AI friend. At night you search his files for him. By day a detective sits at the computer and copies everything he finds, including things nobody should ever read.

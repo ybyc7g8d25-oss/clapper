@@ -1,8 +1,8 @@
-/* The North Lighthouse v3 — all text, English. Markup: see ru.js. */
+/* "Pixel" — all text, English. Markup: see ru.js. */
 window.SM_LANG = window.SM_LANG || {};
 SM_LANG.en = {
   code:'en', langName:'English',
-  title:'THE NORTH LIGHTHOUSE',
+  title:'PIXEL',
 
   ui:{
     cont:'Continue', newGame:'New game', settings:'Settings', endings:'Endings', credits:'Credits', quit:'Quit',
@@ -28,7 +28,7 @@ SM_LANG.en = {
     fileOpen:'Open', fileHide:'Hide in .cache', fileDel:'Erase', fileBack:'Restore',
     delConfirm:'Erase "%s" forever? Nobody will ever read it again — you included.',
     cacheTitle:'.cache — hidden folder', cacheHint:'Files you hid. The detective can\'t see them. For now.',
-    ver:'v4.0'
+    ver:'v4.7'
   },
 
   os:{ ok:'OK', close:'Close', user:'Lyova', viewer:'Viewer', notepad:'Notepad' },
@@ -550,7 +550,7 @@ SM_LANG.en = {
   },
   caught:{ tag:'UNPLUGGED', title:'Pulled the plug', text:'The computer acted far too alive. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel.' },
   endHint:{a:'Tell the truth.',t:'Tell the truth after gathering every story shard.',b:'Run out of time.',c:'Become the one they\'re looking for.',p:'Leave the investigation everything.',s:'Let them find him without you — and without the truth.',x:'Too much evidence against you.'},
-  credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
+  credits:'PIXEL\n\nIdea, writing, development — the project author\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d/10', right:'Correct!', wrong:'No: %s', result:'You got %d of 10', again:'Again', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
   ach:{

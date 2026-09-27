@@ -20,8 +20,9 @@ var visit_box: PanelContainer
 var visit_l: Label
 var monitor: ColorRect
 var scare_o: Control
-var _beam: Polygon2D
-var _lamp: TextureRect
+var _face: TextureRect          # лицо Пикселя на мониторе заставки
+var _cursor_l: Label
+var _glitch_at := 0.0
 
 func _ready() -> void:
 	layer = 30
@@ -146,24 +147,37 @@ func show_warn(then: Callable) -> void:
 func show_title() -> void:
 	Sfx.music("title")
 	_clear(title)
+	# пустая детская ночью; светится только монитор — на нём Пиксель
 	var bg := TextureRect.new()
-	bg.texture = UI.tex("title_bg")
+	bg.texture = UI.tex("title_room")
 	title.add_child(bg)
-	_beam = Polygon2D.new()
-	_beam.polygon = PackedVector2Array([Vector2(0, -2), Vector2(260, -30), Vector2(260, 18), Vector2(0, 2)])
-	_beam.color = Color(UI.AMBER2, 0.14)
-	_beam.position = Vector2(240, 83)
-	title.add_child(_beam)
-	_lamp = TextureRect.new()
-	_lamp.texture = UI.tex("title_lamp")
-	_lamp.position = Vector2(232, 75)
-	title.add_child(_lamp)
-	var t := UI.label(G.L.title, UI.PAPER, UI.logo, 16)
-	t.position = Vector2(16, 20)
+	var scr := ColorRect.new()
+	scr.color = Color("#16263a")
+	scr.position = Vector2(292, 90)
+	scr.size = Vector2(116, 82)
+	title.add_child(scr)
+	_face = TextureRect.new()
+	_face.texture = UI.tex(_face_tex())
+	_face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_face.size = Vector2(64, 64)
+	_face.position = Vector2(318, 99)
+	title.add_child(_face)
+	for y in range(90, 172, 2):   # строки кинескопа
+		var ln := ColorRect.new()
+		ln.color = Color(0, 0, 0, 0.18)
+		ln.position = Vector2(292, y)
+		ln.size = Vector2(116, 1)
+		title.add_child(ln)
+	var t := UI.label(G.L.title, UI.PAPER, UI.logo, 24)
+	t.position = Vector2(16, 18)
 	t.add_theme_color_override("font_shadow_color", UI.BLACK)
-	t.add_theme_constant_override("shadow_offset_x", 1)
-	t.add_theme_constant_override("shadow_offset_y", 1)
+	t.add_theme_constant_override("shadow_offset_x", 2)
+	t.add_theme_constant_override("shadow_offset_y", 2)
 	title.add_child(t)
+	_cursor_l = UI.label("_", UI.AMBER2, UI.logo, 24)
+	_cursor_l.position = Vector2(16 + t.get_combined_minimum_size().x + 2, 18)
+	title.add_child(_cursor_l)
+	_glitch_at = Time.get_ticks_msec() / 1000.0 + 3.0
 	var v := _col(title, 14, 150, 180, 0)
 	var has_save := G.has_save()
 	var c := item(G.L.ui.cont, func():
@@ -190,11 +204,22 @@ func show_title() -> void:
 
 func _process(_d: float) -> void:
 	_update_point()
-	if title.visible and _beam:
+	if title.visible and _face and is_instance_valid(_face):
 		var t := Time.get_ticks_msec() / 1000.0
-		var k := cos(t * 0.8)
-		_beam.scale = Vector2(k, 1)
-		_lamp.modulate.a = 0.7 + 0.3 * absf(k)
+		_cursor_l.visible = fmod(t, 1.0) < 0.55
+		_face.modulate.a = 0.92 + 0.08 * sin(t * 9.0)
+		# иногда лицо сбоит: на миг — тёмное, со сдвигом
+		if t >= _glitch_at:
+			_face.texture = UI.tex("pix_3")
+			_face.position = Vector2(318 + randi_range(-3, 3), 99)
+			if t >= _glitch_at + 0.14:
+				_face.texture = UI.tex(_face_tex())
+				_face.position = Vector2(318, 99)
+				_glitch_at = t + randf_range(3.5, 8.0)
+
+## После первого пройденного финала Пиксель на заставке уже не улыбается.
+func _face_tex() -> String:
+	return "pix_2" if not G.meta.endings.is_empty() else "pix_0"
 
 # ---------------------------------------------------------------- панели
 func open_panel(kind: String, in_game := false) -> void:

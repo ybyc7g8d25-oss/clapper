@@ -333,6 +333,60 @@ def make_icons(v2):
     cv.rect(3, 3, 2, 2, 'grey2'); cv.rect(7, 3, 2, 2, 'grey2'); save(cv, 'icon_flags')
 
 
+
+# ================================================================ ЗАСТАВКА «ПИКСЕЛЬ»: пустая детская, светится монитор
+def title_room():
+    W, H = 480, 270
+    cv = Canvas(W, H, '#0e0d11')
+    cv.dither(0, 0, W, 214, '#141218', .35)
+    # пол
+    cv.rect(0, 214, W, 56, '#17151b')
+    for y in range(218, H, 9):
+        cv.rect(0, y, W, 1, '#1d1a21')
+    # окно: ночь, огни города, на горизонте — башня с красным огоньком
+    wx, wy, ww, wh = 40, 46, 96, 92
+    cv.rect(wx, wy, ww, wh, '#141c2b')
+    cv.dither(wx, wy, ww, wh, '#1b2538', .3)
+    rnd = random.Random(5)
+    for _ in range(14):
+        cv.px(wx + rnd.randint(2, ww - 3), wy + rnd.randint(2, wh // 2), '#6c7a8c')
+    for x in range(wx, wx + ww):            # дома напротив
+        h = 10 + (x * 13 % 7) + (8 if 60 < x < 85 else 0)
+        cv.rect(x, wy + wh - h, 1, h, '#0d1017')
+    for _ in range(9):
+        cv.px(wx + rnd.randint(2, ww - 3), wy + wh - rnd.randint(3, 12), '#b89045')
+    cv.rect(wx + 74, wy + wh - 34, 5, 24, '#0a0c12')   # башня
+    cv.rect(wx + 72, wy + wh - 38, 9, 5, '#0a0c12')
+    cv.px(wx + 76, wy + wh - 40, '#cf3f4f')
+    cv.frame(wx - 1, wy - 1, ww + 2, wh + 2, '#2c2a31')
+    cv.rect(wx + ww // 2, wy, 1, wh, '#2c2a31'); cv.rect(wx, wy + wh // 2, ww, 1, '#2c2a31')
+    cv.rect(wx - 4, wy + wh + 1, ww + 8, 3, '#2c2a31')
+    cv.rect(wx - 10, wy - 6, 8, wh + 16, '#1f1b25'); cv.rect(wx + ww + 2, wy - 6, 8, wh + 16, '#1f1b25')   # шторы
+    # кровать слева, заправлена
+    cv.rect(10, 178, 150, 20, '#1f2430'); cv.rect(10, 172, 26, 10, '#2a2f3b')
+    cv.rect(10, 198, 150, 16, '#15171e'); cv.rect(10, 150, 6, 64, '#1b1a20')
+    # постер с маяком (рисунок Лёвы)
+    cv.rect(186, 58, 30, 42, '#2b2826'); cv.frame(186, 58, 30, 42, '#3a3640')
+    cv.rect(199, 70, 4, 22, '#4a4552'); cv.px(201, 68, '#8a7a4c')
+    # свет монитора на полу (под мебелью)
+    for y in range(178, 262):
+        spread = (y - 178) * 0.9 + 60
+        for x in range(int(350 - spread), int(350 + spread)):
+            if 0 <= x < W and bayer(x, y) < .22 * (1 - (y - 178) / 90):
+                cv.px(x, y, '#27354a')
+    # стол, монитор, клавиатура; стул отодвинут в сторону — пустой
+    cv.rect(250, 180, 210, 5, '#2a241f'); cv.rect(254, 185, 4, 40, '#1f1a16'); cv.rect(452, 185, 4, 40, '#1f1a16')
+    cv.rect(286, 84, 128, 94, '#2c2a2e'); cv.frame(286, 84, 128, 94, '#3a383d')
+    cv.rect(292, 90, 116, 82, '#0b0c10')
+    cv.rect(340, 178, 20, 2, '#2c2a2e'); cv.rect(330, 176, 40, 4, '#252327')
+    cv.rect(300, 186, 90, 6, '#232127'); cv.rect(396, 186, 8, 6, '#232127')
+    cv.px(410, 88, '#5f7a55')
+    cv.rect(424, 150, 30, 52, '#1c1a20'); cv.frame(424, 150, 30, 52, '#26232b')
+    cv.rect(418, 200, 44, 7, '#1c1a20'); cv.rect(422, 207, 3, 30, '#141217'); cv.rect(455, 207, 3, 30, '#141217')
+    cv.rect(438, 207, 3, 26, '#141217')
+    return cv
+
+
 # ================================================================ ДОКУМЕНТЫ-КАРТИНКИ (из v2, перекрашенные)
 def make_docs(v2):
     save(v2.drawing_tower(), 'drawing_tower')
@@ -364,6 +418,7 @@ def make_docs(v2):
         framed = Canvas(208, 138, 'white'); framed.paste(cv, 4, 4); framed.frame(0, 0, 208, 138, 'grey1')
         save(framed, n)
     save(v2.title_bg(), 'title_bg')
+    save(title_room(), 'title_room')
     save(v2.title_lamp(), 'title_lamp')
     save(v2.epilogue_wall(), 'wall_epilogue_src')
 
