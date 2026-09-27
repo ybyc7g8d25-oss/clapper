@@ -46,6 +46,15 @@ func desk_list() -> Array:
 			"show": func(): return G.st.solved.has("s4")},
 		{"id": "dont", "ic": "noteRed", "label": func(): return d.dont, "open": open_dont,
 			"show": func(): return G.flag("dontShown") and not G.flag("dontRead")},
+		{"id": "essay", "ic": "note", "label": func(): return d.essay, "open": open_essay},
+		{"id": "boat", "ic": "boat", "label": func(): return d.boat, "open": open_boat},
+		{"id": "fish", "ic": "fish", "label": func(): return d.fish, "open": open_fish},
+		{"id": "dream1", "ic": "dream", "label": func(): return G.L.dreams[0].file, "open": open_dream.bind(0),
+			"show": func(): return int(G.st.mem) >= 30},
+		{"id": "dream2", "ic": "dream", "label": func(): return G.L.dreams[1].file, "open": open_dream.bind(1),
+			"show": func(): return int(G.st.mem) >= 60},
+		{"id": "dream3", "ic": "dream", "label": func(): return G.L.dreams[2].file, "open": open_dream.bind(2),
+			"show": func(): return int(G.st.mem) >= 90},
 		{"id": "cache", "ic": "cache", "label": func(): return d.cache, "open": open_cache,
 			"show": func(): return not G.hidden_files().is_empty()},
 	]
@@ -193,6 +202,96 @@ func open_note() -> void:
 			G.set_flag("lensTut")
 			G.pix.goal("lens")
 			say(G.L.lines.lensTut))
+
+# ---------------------------------------------------------------- школьное сочинение
+func open_essay() -> void:
+	D.open_win("essay", G.L.essay.title, "note", 230, 150, func(w: OSWindow):
+		var v := UI.vbox(4)
+		v.add_child(rt(G.doc(G.L.essay.body)))
+		v.add_child(rt("[color=#a8443c]%s[/color]" % G.doc(G.L.essay.teacher)))
+		w.set_content(UI.scroll(paper(v))))
+	first("essay", G.L.lines.essay)
+
+# ---------------------------------------------------------------- побочное: «Капитан и шторм»
+func open_boat() -> void:
+	D.open_win("boat", G.L.boat.title, "boat", 222, 176, func(w: OSWindow): _boat_menu(w, ""), UI.DARK)
+	first("boatSeen", G.L.lines.boatFirst)
+
+func _boat_menu(w: OSWindow, res: String) -> void:
+	var bt = G.L.boat
+	var v := UI.vbox(5)
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(UI.label(bt.title.to_upper(), UI.AMBER2))
+	if res != "":
+		v.add_child(UI.label(res, UI.PAPER))
+	v.add_child(UI.label(bt.help, UI.GREY3, null, 8, 190))
+	v.add_child(UI.label(bt.record, UI.GREY3))
+	v.add_child(UI.button(bt.start if res == "" else bt.again, func(): _boat_play(w), "red"))
+	w.set_content(UI.panel(v, UI.DARK, Color(0, 0, 0, 0), 0, 8))
+
+func _boat_play(w: OSWindow) -> void:
+	if not is_instance_valid(w):
+		return
+	var game := BoatGame.new()
+	var holder := CenterContainer.new()
+	holder.add_child(game)
+	w.set_content(holder)
+	game.start()
+	game.finished.connect(func(n: int, dark: bool):
+		if n >= 3:
+			G.achieve("BOAT")
+			say(G.L.lines.boatWin)
+		if dark:
+			say(G.L.lines.boatDark)
+		await get_tree().create_timer(1.2, false).timeout
+		if is_instance_valid(w):
+			_boat_menu(w, G.L.boat.score % n))
+
+# ---------------------------------------------------------------- побочное: рыбка Капитан
+func open_fish() -> void:
+	D.open_win("fish", G.L.fish.title, "fish", 160, 112, func(w: OSWindow):
+		var v := UI.vbox(3)
+		v.add_child(FishTank.new())
+		var fs = G.L.fish
+		var hp := int(G.fget("fish", 100))
+		if G.flag("fishDead"):
+			v.add_child(UI.label(fs.dead, UI.RED))
+		else:
+			v.add_child(UI.label(fs.state[clampi(hp / 34, 0, 2)], UI.INK))
+			var b := UI.button(fs.feed, feed_fish)
+			b.disabled = G.flag("fedToday")
+			v.add_child(b)
+		w.set_content(paper(v, UI.LIGHT, 4)), UI.LIGHT)
+	if G.flag("fishDead"):
+		first("fishDeadSeen", G.L.lines.fishDead)
+	else:
+		first("fishSeen", G.L.lines.fishFirst)
+
+## Покормить: кормушка пищит — если кто-то рядом, это слышно.
+func feed_fish() -> void:
+	if G.flag("fishDead") or G.flag("fedToday"):
+		return
+	G.st.f["fish"] = 100
+	G.set_flag("fedToday")
+	Sfx.play("key", -2.0)
+	G.stealth.add_sus(5.0, "beep")
+	var w := D.win("fish")
+	if w:
+		w.rebuild()
+	first("fishFed", G.L.lines.fishFed)
+
+# ---------------------------------------------------------------- побочное: сны Пикселя
+func open_dream(i: int) -> void:
+	var dr = G.L.dreams[i]
+	D.open_win("dream%d" % i, dr.file, "dream", 210, 120, func(w: OSWindow):
+		w.set_content(UI.scroll(paper(rt("[color=#d9d0bd]%s[/color]" % G.esc(dr.text)), UI.DARK2))), UI.DARK2)
+	first("dreamSeen%d" % i, dr.react)
+
+# ---------------------------------------------------------------- домашка из корзины
+func open_homework() -> void:
+	D.open_win("homework", G.L.homework.title, "note", 220, 130, func(w: OSWindow):
+		w.set_content(UI.scroll(paper(rt(G.doc(G.L.homework.body))))))
+	first("homework", G.L.lines.homework)
 
 # ---------------------------------------------------------------- рисунки
 const DRAW := ["drawing_me", "drawing_tower", "drawing_family"]
@@ -563,6 +662,10 @@ func reset_chats() -> void:
 		CHATS.mama.ms.append(["05.10 22:20", G.L.chat.momPolice])
 	if G.flag("dimaNight"):
 		CHATS.dima.ms.append(["05.10 00:40", G.L.chat.dimaNight])
+	for id in G.L.msgs:
+		if G.flag(id):
+			var m = G.L.msgs[id]
+			CHATS[String(m[0])].ms.append([String(m[1]), String(m[2])])
 
 func open_chat() -> void:
 	D.open_win("chat", G.L.chat.title, "chat", 260, 150, _chat_build)
@@ -649,7 +752,7 @@ func open_bin() -> void:
 func restore(i: int) -> void:
 	var f = G.L.bin.files[i]
 	if not f.has("key"):
-		say([f.line])
+		open_homework()
 		return
 	if G.flag("restored"):
 		open_dead(false)

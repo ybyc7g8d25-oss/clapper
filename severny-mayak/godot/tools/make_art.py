@@ -314,6 +314,15 @@ def make_icons(v2):
     cv = Canvas(16, 16); cv.disc(6, 6, 4, 'robot'); cv.ring(6, 6, 5, 'grey1', 2); cv.line(10, 10, 14, 14, 'tan', 2); save(cv, 'icon_lens')
     cv = Canvas(16, 16); cv.rect(0, 1, 16, 13, 'tan'); cv.frame(0, 1, 16, 13, 'brown'); cv.rect(2, 3, 5, 4, 'paper'); cv.rect(9, 4, 5, 3, 'paper')
     cv.rect(3, 9, 6, 3, 'paper'); cv.px(4, 3, 'red'); cv.px(11, 4, 'red'); cv.px(5, 9, 'red'); cv.line(4, 4, 11, 5, 'red'); save(cv, 'icon_board')
+    cv = Canvas(16, 16); cv.rect(1, 11, 14, 3, 'brown2'); cv.rect(3, 14, 10, 1, 'brown')      # кораблик
+    cv.rect(7, 2, 1, 9, 'ink'); cv.poly([(8, 2), (14, 10), (8, 10)], 'white'); cv.poly([(6, 4), (2, 10), (6, 10)], 'paper')
+    save(cv, 'icon_boat')
+    cv = Canvas(16, 16); cv.rect(1, 3, 14, 12, 'navy'); cv.frame(0, 2, 16, 14, 'grey1'); cv.rect(1, 12, 14, 3, 'tan')   # аквариум
+    cv.rect(5, 6, 5, 3, 'orange'); cv.rect(10, 5, 2, 5, 'orange2'); cv.px(6, 7, 'ink'); cv.px(3, 4, 'cyan'); cv.px(12, 3, 'cyan')
+    save(cv, 'icon_fish')
+    cv = Canvas(16, 16); cv.rect(2, 1, 12, 14, 'grey5'); cv.frame(2, 1, 12, 14, 'grape')      # сон
+    cv.disc(8, 7, 3, 'grapehi'); cv.disc(9, 6, 2.5, 'grey5'); cv.px(5, 12, 'grapehi'); cv.px(8, 12, 'grapehi'); cv.px(11, 12, 'grapehi')
+    save(cv, 'icon_dream')
     cv = Canvas(16, 16); v2.ic_folder(cv)
     for y in range(16):
         for x in range(16):

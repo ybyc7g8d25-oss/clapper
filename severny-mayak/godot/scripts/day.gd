@@ -11,6 +11,7 @@ const FIELD := 8.0             # поиски на местности: стол�
 const HIDE_PENALTY := 15.0     # эксперт нашёл скрытую папку — это подозрительно
 
 var away := false
+var calls := 0                 # сколько звонков уже было сегодня
 var active := false            # день идёт (не заставка и не отчёт)
 var cur: TextureRect
 var copied_today: Array = []
@@ -121,8 +122,15 @@ func run() -> void:
 		await G.pix.say_wait(G.L.lines.expert)
 	if not await G.sleep(1.5):
 		return
+	# сцена дня: кто что говорит, пока Орлов идёт к компьютеру
+	var intro: Array = G.L.day.intro[clampi(d - 1, 0, G.L.day.intro.size() - 1)]
+	for l in intro:
+		G.menus.subtitle(G.L.speakers[l[0]], l[1], 2.8)
+		if not await G.sleep(3.0):
+			return
 	# Орлов заходит; stealth сам предупредит («идёт сюда») и проверит экран
 	G.house.move("cop", "desk")
+	calls = 0
 	if not await _until(func(): return G.stealth.phase == "in" and G.stealth.checked, 90.0):
 		return
 	_make_cursor()
@@ -262,14 +270,22 @@ func phone() -> void:
 	if not G.flag("awayTut"):
 		G.set_flag("awayTut")
 		G.pix.say(G.L.lines.dayAway)
+	# разговор Орлова по телефону — субтитрами, пока игрок торопится
+	var d: int = int(G.st.night)
+	var all: Array = G.L.day.calls[clampi(d - 1, 0, G.L.day.calls.size() - 1)]
+	var talk: Array = all[mini(calls, all.size() - 1)]
+	calls += 1
+	var per := AWAY_SEC / float(talk.size() + 1)
 	var t := 0.0
+	var li := 0
 	while t < AWAY_SEC:
+		if li < talk.size() and t >= li * per:
+			G.menus.subtitle(G.L.speakers.cop, String(talk[li]), per + 0.3)
+			li += 1
 		if not await G.sleep(0.25):
 			away = false
 			return
 		t += 0.25
-		if t >= AWAY_SEC - 1.5 and t < AWAY_SEC - 1.25:
-			G.house.sound(404, G.L.day.bye, UI.GREY3)
 	away = false
 	if not _alive(rid):
 		return

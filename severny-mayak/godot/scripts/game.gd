@@ -17,10 +17,10 @@ const V := 4                                  # версия сохранени�
 ## Файлы-улики: [насколько продвигают дело (поиск Лёвы), насколько выдают Пикселя].
 const FILES := {
 	"web": [10, 5], "mail": [15, 10], "log": [10, 30], "photos": [10, 5], "parental": [5, 30],
-	"diary": [20, 15], "draw": [5, 5], "tale": [10, 25], "map": [25, 0], "cipher": [25, 15],
+	"diary": [20, 15], "draw": [5, 5], "essay": [5, 10], "tale": [10, 25], "map": [25, 0], "cipher": [25, 15],
 }
 ## В каком порядке следователь смотрит файлы.
-const INV_ORDER := ["web", "mail", "log", "photos", "parental", "diary", "draw", "tale", "map", "cipher"]
+const INV_ORDER := ["web", "mail", "log", "photos", "parental", "diary", "essay", "draw", "tale", "map", "cipher"]
 ## Окна, которые принадлежат файлу (закрываются, когда файл прячут или стирают).
 const FILE_WINS := {"draw": ["draw", "dr0", "dr1", "dr2"], "photos": ["photos", "ph0", "ph1", "ph2", "ph3"],
 	"tale": ["tale", "ch0", "ch1", "ch2", "ch3"]}
@@ -49,6 +49,7 @@ var board
 var night
 var stealth
 var day
+var madness
 var pix
 var menus
 var fx

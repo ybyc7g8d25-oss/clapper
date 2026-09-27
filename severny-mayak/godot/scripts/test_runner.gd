@@ -144,7 +144,7 @@ func _play(k: String) -> bool:
 	# что спрятать/стереть до первого дня
 	match k:
 		"b": for f in ["web", "mail", "photos", "diary"]: G.docs.delete_file(f)
-		"s": for f in ["log", "parental", "tale"]: G.docs.delete_file(f)
+		"s": for f in ["log", "parental", "tale", "essay"]: G.docs.delete_file(f)
 		"x": for f in ["mail", "diary"]: G.docs.delete_file(f)
 		"a", "t":
 			G.docs.hide_file("parental")
@@ -189,6 +189,39 @@ func _play(k: String) -> bool:
 		await wait(0.2)
 		await shot("n2-phantom")
 		if not await until(func(): return G.flag("phantom1"), 30, "phantom steps"): return false
+		# все галлюцинации по очереди + папа говорит в камеру
+		G.docs.open_note()
+		for kind in ["icon", "clock", "whisper", "cursor", "msg", "doc", "thought", "phantomIn", "gaze"]:
+			G.madness.fire(kind)
+			await wait(0.25)
+			if kind in ["msg", "thought", "cursor"]:
+				await shot("n2-mad-" + kind)
+			if not await until(func(): return not G.madness.busy, 30, "madness " + kind): return false
+		G.desk.close_all()
+		G.night.script_dadTalk()
+		await wait(0.8)
+		await shot("n2-dadtalk")
+		G.docs.open_essay()
+		await wait(0.3)
+		await shot("n2-essay")
+		G.desk.close_all()
+		# побочное: рыбка (ослабла за ночь), кормление, «Капитан и шторм», домашка, сны
+		if int(G.fget("fish", 100)) >= 100:
+			errors.append("fish did not get hungry")
+		G.docs.open_fish()
+		G.docs.feed_fish()
+		await wait(0.3)
+		await shot("n2-fish")
+		G.docs.open_boat()
+		G.docs._boat_play(G.desk.win("boat"))
+		await wait(0.5)
+		await shot("n2-boat")
+		G.docs.restore(0)
+		for i in 3:
+			G.docs.open_dream(i)
+		await wait(0.3)
+		await shot("n2-dream")
+		G.desk.close_all()
 	G.st.mins = 21
 	G.night.minute()
 	if not await until(func(): return G.flag("momPolice"), 30, "mom police"): return false

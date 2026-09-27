@@ -146,7 +146,8 @@ func start_run(mode: String) -> void:
 	G.night = Night.new()
 	G.stealth = Stealth.new()
 	G.day = Day.new()
-	for n in [G.docs, G.night, G.stealth, G.day]:
+	G.madness = Madness.new()
+	for n in [G.docs, G.night, G.stealth, G.day, G.madness]:
 		world.add_child(n)
 	G.desk.add_board(G.board)
 	G.new_state()

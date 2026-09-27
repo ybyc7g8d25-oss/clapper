@@ -620,6 +620,27 @@ func callout(r: Rect2, text: String) -> void:
 		fr.queue_free()
 		lp.queue_free())
 
+## Субтитр реплики живого человека (днём — телефон Орлова, ночью — папа у камеры).
+var _sub: PanelContainer
+func subtitle(who: String, text: String, sec := 2.6) -> void:
+	if _sub and is_instance_valid(_sub):
+		_sub.queue_free()
+	_sub = PanelContainer.new()
+	_sub.add_theme_stylebox_override("panel", UI.flat(Color(UI.BLACK, 0.88), UI.GREY, 1, 5, 3))
+	var l := UI.rich("[color=#e3c983]%s:[/color] %s" % [G.esc(who), G.esc(text)], false)
+	l.custom_minimum_size = Vector2(300, 0)
+	l.fit_content = true
+	l.add_theme_color_override("default_color", UI.LIGHT)
+	_sub.add_child(l)
+	_sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_sub.position = Vector2(90, 34)
+	root.add_child(_sub)
+	var s := _sub
+	var tw := s.create_tween()
+	tw.tween_interval(sec)
+	tw.tween_property(s, "modulate:a", 0.0, 0.4)
+	tw.tween_callback(s.queue_free)
+
 func visit_flash() -> void:
 	var tw := create_tween()
 	tw.tween_property(visit_box, "position:x", visit_box.position.x + 4, 0.04)

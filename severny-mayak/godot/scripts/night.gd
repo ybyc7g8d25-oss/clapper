@@ -48,6 +48,13 @@ func start_night(fresh: bool) -> void:
 		G.save_night()
 	G.docs.reset_chats()
 	# между ночами рабочий стол меняется сам (никто, кроме Пикселя, к нему не прикасался)
+	# рыбка: каждую новую ночь слабеет, кормить можно раз за ночь
+	if fresh and n >= 2 and not G.flag("fishDead"):
+		G.st.f["fish"] = int(G.fget("fish", 100)) - 45
+		if int(G.st.f.fish) <= 0:
+			G.st.f["fishDead"] = 1
+	if fresh:
+		G.st.f.erase("fedToday")
 	for k in [["uFamily", 2], ["uLog", 3], ["uPhoto", 4]]:
 		if n >= int(k[1]) and not G.flag(k[0]):
 			G.st.f[k[0]] = 1
@@ -162,6 +169,17 @@ func _plan_phantoms(n: int) -> void:
 # ---------------------------------------------------------------- сценки
 func script_momLeft() -> void:
 	say(G.L.lines.momLeft, func(): G.pix.goal("note"))
+
+## Папа садится за компьютер и говорит прямо в камеру — Пикселю. Он в комнате: замри.
+func script_dadTalk() -> void:
+	G.hud.set_fast(false)
+	for l in G.L.scenes.dadTalk:
+		if not await G.sleep(3.2):
+			return
+		G.menus.subtitle(G.L.speakers[l[0]], l[1], 3.0)
+	if not await G.sleep(3.4):
+		return
+	G.pix.say(G.L.lines.dadTalk)
 
 func script_dadCam() -> void:
 	G.hud.set_fast(false)
@@ -469,6 +487,8 @@ func show_end(k: String) -> void:
 	G.achieve("END_" + k.to_upper())
 	if k == "t":
 		G.achieve("END_A")
+	if k in ["a", "t"] and not G.flag("fishDead") and G.flag("fishFed"):
+		G.achieve("FISH")
 	if float(G.st.sus_max) < 35.0:
 		G.achieve("GHOST")
 	G.pix.reset()

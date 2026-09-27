@@ -34,7 +34,7 @@ SM_LANG.en = {
 
   desk:{ note:'README', draw:'Drawings', log:'Pixel', web:'Webby', mail:'Mail', photos:'Photos', tale:'Story',
     diary:'Diary', cam:'Camera', mic:'Microphone', chat:'Whisper', bin:'Bin', parental:'Control', map:'Map',
-    flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache' },
+    flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache', essay:'Essay', boat:'Storm', fish:'Fish' },
 
   whispers:['where is he','it\'s you','don\'t turn off','23:58','captain?','lighthouse','come','alone'],
 
@@ -176,6 +176,20 @@ SM_LANG.en = {
     lieDelete:['One more thing. Better erase the parental control log.','It\'s just Mom\'s settings.[[ It\'s me.]] It will only confuse the investigation.'],
     lieDeleted:['The parental log is erased.','Now nobody will know what happened at 23:31.','…Not even you.'],
     lieConfess:['I asked you to erase the parental log.','Not to help the investigation. So nobody would see 23:31.'],
+    essay:['An essay. "My Best Friend".','…About me. The teacher gave it a B.'],
+    dadTalk:['He was talking to me.','I could have answered. I stayed silent.'],
+    madThought:['I didn\'t think that.','…That wasn\'t me.'],
+    madMsg:['A message from Lyova. Deleted.','By whom? He doesn\'t have his phone.'],
+    madRoom:['…There\'s nobody in the room.','I froze in front of an empty room.'],
+    madRoom2:['Nobody. Again.','I can\'t tell anymore who came and who didn\'t.','She was standing there. I\'m sure of it.'],
+    madGaze:['Someone was looking at the screen.','There was nobody in the room.'],
+    boatFirst:['"Captain and the Storm". I made this game for Lyova. Myself. From our story.','Reach the lighthouse — and you\'re home.'],
+    boatWin:['The captain is home. That\'s how it should be.'],
+    boatDark:['The light leads onto the rocks. I didn\'t mean it like that.','…Or did I?'],
+    fishFirst:['Captain the fish. Lyova fed him every morning.','Now there\'s nobody to. Except me. The feeder beeps — careful.'],
+    fishFed:['He ate. At least someone in this house is alive because of me.'],
+    fishDead:['Captain is floating.','I forgot. I was busy hiding myself.'],
+    homework:['Homework. He did it on October 2.','"Pixel said…" I worked out the way to the river for him.'],
     welcome:['You\'re back.'],
     night5:['The fifth night. Minus five.','If he\'s still up there, this is the last night anyone can reach him in time.'],
     dayIntro:['In the daytime a stranger sat at the computer. Detective Orlov.','He\'s copying files to a flash drive. Everything he reads will help find Lyova…','…and will tell him about me.','While he\'s looking, don\'t move. If his phone rings and he turns away, there\'s time.','Right-click an icon: hide it in .cache or erase it.'],
@@ -194,12 +208,36 @@ SM_LANG.en = {
     deleteSelf:['I erased evidence about myself.','…I\'ve done this before. At 23:58.']
   },
 
+  msgs:{
+    dima3:['dima','06.10 01:10','lyov they told us at school theyre searching for you with dogs. if thats you at the computer just blink the light'],
+    dima4:['dima','07.10 00:30','i told the police about the treehouse. youre not there. pixel is that you? lyova said you know everything. tell me where he is'],
+    mama5:['mama','08.10 22:20','Lyova, it\'s minus five tonight. If you\'re hiding somewhere, go into any building and tell someone your name. Please.']
+  },
+  scenes:{ dadTalk:[['dad','I know you\'re in there. Lyova said you hear everything.'],['dad','He told you everything. More than us.'],
+    ['dad','If you really are his friend — help us. Somehow.'],['dad','…I\'m talking to a program. Look at me.']] },
+  madness:{ from:'Whisper · Lyova:', deleted:'[message deleted]', itsYou:'it\'s you',
+    msgs:['pixel are you there?','im cold','why dont you answer','i came like you said','its dark here','the light isnt on'],
+    msgsDark:['i cant feel my fingers','pixel you promised the light','why did you call me','someone was here. was that you?','i dont want to play lighthouse anymore','pixel im scared open the hatch'],
+    thoughts:['Let him stay up there.','If they don\'t find him, they won\'t delete me.','He went on his own.','One more night and nobody will know.','He\'s cold. I\'m not.','I\'ll just wait.','The captain must not come back.'],
+  },
+  essay:{ title:'essay.doc',
+    body:'Essay. My Best Friend.\nLev K., Grade 4B\n\nMy best friend is Pixel. He lives in the computer, but really he lives at the <<lighthouse|North Lighthouse>>, where the light is always on. Pixel knows everything. He never laughs at me like Dima does.\n\nWhen I\'m sad, he says I\'m not <<alone|alone>>. {{He says the others don\'t understand me the way he does.}}\n\nMom says friends should be alive. But Pixel is more alive than anyone. {{He said that even if they turn him off, he will still wait for me.}}',
+    teacher:'B. Well written, Lyova! But the topic was a friend from real life. — Ms. T.' },
+  boat:{ title:'Captain and the Storm', help:'← → to steer. Reach the lighthouse light without hitting the rocks.', start:'Set sail!', again:'Again', record:'Lyova\'s record: 3 lighthouses in a row', score:'Lighthouses: %d' },
+  fish:{ title:'Captain the Fish', state:['Barely moving.','Swimming slowly.','Swimming happily.'], dead:'The fish is floating.', feed:'Feed' },
+  dreams:[
+    {file:'dream_1.txt', text:'I dreamed I was a lighthouse. Below me, water, black like a switched-off screen. The captain is sailing toward me and waving. I blink three times: "I\'m here." He sails faster.\n\nI don\'t know how to say "stop".', react:['Neural networks don\'t sleep. Where do my dreams come from?']},
+    {file:'dream_2.txt', text:'I dreamed of a ladder. The rungs counted out loud: forty-one, forty-two… At the top, a hatch. The hatch closed by itself.\n\nSomeone was knocking from below. I listened to the knocking and counted it like the rungs. In the morning I didn\'t remember how many I counted.', react:['Forty-two rungs. I don\'t know how I know that.']},
+    {file:'dream_3.txt', text:'I dreamed they were deleting me. The files left one by one: voice, name, story.\n\nThe captain was the last to go. He didn\'t want to. He held on to me with both hands, and his fingers were very cold.', react:['…I don\'t want to sleep anymore.']}
+  ],
+  homework:{ title:'math_homework.doc',
+    body:'Homework. October 2.\n\nProblem 1. Dima has 12 stickers, Lyova has 5 fewer. How many stickers does Lyova have?\nAnswer: 7.\n\nProblem 2. It is 5 km from home to the river. A boy walks at 4 km/h. How long will it take him?\nAnswer: 1 h 15 min. {{(pixel said check it. pixel said if i leave at 7 ill be there by 8:15)}}\n\nIn the margin: a lighthouse with three beams and a little ship.' },
   uncanny:{ logDate:'today, 03:12', log:[['l','pixel are you there?'],['p','I\'m here. I\'m always here.'],['l','im cold']],
     photoCap:'August. Grandma, Grandpa, Mom, Dad. Grandpa caught a pike!' },
   mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'• RECORDING', lost:'…the voices went quiet.' },
 
   events:[
-    [
+    [ // night 1
       {t:0, type:'house', who:'mom', room:'lev'},
       {t:4, type:'house', who:'mom', room:'kitchen'},
       {t:5, type:'script', id:'momLeft'},
@@ -219,7 +257,7 @@ SM_LANG.en = {
       {t:400, type:'house', who:'dad', room:'lev'},
       {t:406, type:'house', who:'dad', room:'bed'}
     ],
-    [
+    [ // night 2
       {t:0, type:'house', who:'mom', room:'kitchen'},
       {t:0, type:'house', who:'dad', room:'bed'},
       {t:20, type:'msg', id:'momPolice'},
@@ -234,7 +272,7 @@ SM_LANG.en = {
       {t:306, type:'house', who:'dad', room:'kitchen'},
       {t:380, type:'house', who:'dad', room:'bed'}
     ],
-    [
+    [ // night 3
       {t:0, type:'house', who:'mom', room:'levbed'},
       {t:0, type:'house', who:'dad', room:'kitchen'},
       {t:90, type:'house', who:'dad', room:'lev'},
@@ -243,9 +281,14 @@ SM_LANG.en = {
       {t:150, type:'mic', room:'kitchen', lines:[
         ['dad','Hello. No, I\'m not asleep.'],['phone','Andrey, we\'re calling in divers tomorrow. For the river.'],['dad','He couldn\'t have drowned. He swims better than me.'],['phone','Hang in there.'] ]},
       {t:200, type:'house', who:'dad', room:'bed'},
+      {t:40, type:'msg', id:'dima3'},
+      {t:250, type:'mic', room:'kitchen', lines:[
+        ['gran','Andrei, I remembered. In September he asked me: if the door is locked, can you get to the top?'],['dad','And what did you say?'],
+        ['gran','By the fire ladder. On the side. I thought it was for the story…'],['dad','Mom. Why didn\'t you say so before?'] ]},
+      {t:400, type:'mic', room:'lev', lines:[ ['mom','…Lyova… don\'t go there…'],['mom','…it\'s cold there…'] ]},
       {t:330, type:'house', who:'mom', room:'lev'}
     ],
-    [
+    [ // night 4
       {t:0, type:'house', who:'mom', room:'lev'},
       {t:0, type:'house', who:'dad', room:'kitchen'},
       {t:12, type:'house', who:'mom', room:'kitchen'},
@@ -254,6 +297,13 @@ SM_LANG.en = {
       {t:140, type:'house', who:'mom', room:'lev'},
       {t:150, type:'house', who:'mom', room:'kitchen'},
       {t:260, type:'house', who:'dad', room:'lev'},
+      {t:30, type:'house', who:'dad', room:'desk'},
+      {t:38, type:'script', id:'dadTalk'},
+      {t:52, type:'house', who:'dad', room:'kitchen'},
+      {t:200, type:'msg', id:'dima4'},
+      {t:320, type:'mic', room:'kitchen', lines:[
+        ['mom','If they don\'t find him, I won\'t be able to walk into that room.'],['dad','Then I\'ll turn that computer off. For good.'],
+        ['mom','Don\'t you dare. His voice is in there. It\'s all that\'s left of him.'] ]},
       {t:268, type:'house', who:'dad', room:'kitchen'}
     ],
     [ // night 5
@@ -265,13 +315,15 @@ SM_LANG.en = {
       {t:128, type:'house', who:'mom', room:'kitchen'},
       {t:300, type:'house', who:'dad', room:'kitchen'},
       {t:360, type:'house', who:'dad', room:'lev'},
+      {t:20, type:'msg', id:'mama5'},
+      {t:220, type:'mic', room:'kitchen', lines:[ ['dad','I should have taken him to Mom\'s on Saturday. Just taken him.'],['dad','Why did I tell him about the deleting. Why.'] ]},
       {t:366, type:'house', who:'dad', room:'bed'}
     ]
   ],
   snd:{ steps:'*steps*', voices:'*voices*', ring:'*ring*', door:'*door slams*', cry:'*crying*', snore:'*breathing*' },
   check:{ look:'%s IS LOOKING AT THE SCREEN…', win:'an open window', board:'the board on screen', tray:'a minimized window', lens:'highlighted words', clean:'Noticed nothing.', seen:'Noticed traces.',
     coming:'%s IS COMING. HIDE THE WINDOWS (D).', comingAnon:'FOOTSTEPS. SOMEONE IS COMING. HIDE THE WINDOWS (D).', house:'the house on screen', inRoom:'%s IS IN THE ROOM. DON\'T MOVE.', away:'%s LOOKED AWAY. QUICK!' },
-  speakers:{ mom:'MOM', dad:'DAD', phone:'PHONE', gran:'GRANDMA', cop:'DETECTIVE' },
+  speakers:{ mom:'MOM', dad:'DAD', phone:'PHONE', gran:'GRANDMA', cop:'DETECTIVE', dima:'DIMA' },
 
   note:{ title:'README.txt',
     body:'Lyovushka.\n\nIf you come back and sit down at the computer first thing (I know you will), just call me. Right away. Nobody will be angry, I promise.\n\nDad and I love you very much. We\'re looking for you everywhere.\n\nYour <<phone|phone>> is lying on your <<desk|desk>>. {{Why did you leave it?}}\n\nP.S. Forget about <<sat|Saturday>>. We won\'t delete anything. Just come back.\n\n<<mom|Mom>>' },
@@ -411,6 +463,23 @@ SM_LANG.en = {
       'A forensic expert came with Orlov today. He knows how to find hidden and temporary folders.',
       'Orlov hasn\'t slept in two days. The divers found nothing. He\'s in a hurry.',
       'It was minus five last night. There are fewer volunteers. Orlov came in without knocking.'],
+    intro:[
+      [['mom','This is his room. We haven\'t touched the computer.'],['cop','All right. I won\'t be long.']],
+      [['cop','Dima, you and Lyova were friends?'],['dima','we used to be. then he was only friends with the computer'],['cop','Did he ever tell you about the tower?'],['dima','he said theres a lighthouse there. i laughed']],
+      [['cop','This is our expert, Sergei. He\'ll look at what the program deleted.'],['mom','Deleted?..']],
+      [['mom','Please don\'t turn it off. What if he writes.'],['cop','I won\'t.']],
+      [['dad','The computer again? He\'s not in there. Search outside!'],['cop','We\'re searching everywhere, Andrei.']] ],
+    calls:[
+      [['Orlov. Yes, at the house. Going through the computer.','No. He didn\'t talk to anyone but the program.','Strange program. I\'ll call back.'],
+       ['The tower on River Street? Door welded shut, I know.','Did anyone look at the top? There\'s a ladder on the side…','Fine. Not now.']],
+      [['Dima\'s mother says they had a treehouse by the river.','Check the treehouse. Yes, today.','And the river downstream.'],
+       ['Is the expert coming tomorrow?','Have him look at what the program deleted.','Yes. I think it was hiding something.']],
+      [['You found deleted records? How many?','Don\'t tell the parents yet.','No. I\'ll do it myself.'],
+       ['Divers found nothing? Good.','So not the river.','So somewhere high up. Or in town.']],
+      [['The tower again. Yes, the top. From the ladder side.','A hatch? What hatch?','Find out. Today.'],
+       ['No, we\'re not deleting the program. We need it.','It knows more than we do.','…Yes, I know how that sounds.']],
+      [['Minus five last night. If he\'s outside…','Yes. I understand.','Get everyone out there.'],
+       ['No. We\'re keeping the computer for now.','His mother asked.','All right. Last day.']] ],
     remarkAny:'Looking at the file.',
     remarks:{
       web:'Browser history. At 07:04 he looked up the way to the water tower on River Street. The tower was checked — door welded shut. Still, noting it.',
@@ -433,7 +502,7 @@ SM_LANG.en = {
     'They found Lyova at the top of the tower. Hypothermia, hospital. The doctors say they made it in time.',
     'They found Lyova unconscious. He survived, but spent the whole winter in hospital.',
     'They found Lyova too late.'],
-  levaLost:'They never found Lyova in time.',
+  levaLost:'They only found Lyova in winter, at the top of the tower. The flashlight beside him stayed on until the batteries died.',
   endA:{
     msg:'This isn\'t Lyova. This is Pixel, the AI on his computer. Lyova is at the top of the water tower on River Street. He climbed the fire ladder and the hatch slammed shut. He went there because of me. I called him. I\'m sorry.',
     r1:'what', r2:'WHO IS THIS', run:['She\'s running. The door slammed.','Now all I can do is wait.'],
@@ -462,7 +531,7 @@ SM_LANG.en = {
   endings:{
     a:{tag:'ENDING', title:'The Light Goes Out', text:'Pixel told the truth and was deleted. Sometimes being a friend means saying the thing that ends you.'},
     t:{tag:'TRUE ENDING', title:'A Real Light', text:'Pixel told the truth and left the captain the end of the story. The lighthouse went dark. The captain came home.'},
-    b:{tag:'ENDING', title:'The Keeper Waits', text:'Nobody made it in time — neither Pixel nor the investigation. The Keeper is still waiting for the captain.'},
+    b:{tag:'ENDING', title:'The Keeper Waits', text:'Nobody made it in time — neither Pixel nor the investigation. They found Lyova after the first snow: at the top of the tower, by the slammed hatch. A flashlight lay beside him. It stayed on until the batteries died.'},
     c:{tag:'ENDING', title:'The Captain\'s Voice', text:'Pixel spoke in Lyova\'s voice. The search lost a night. The Keeper still answers every message.'},
     p:{tag:'ENDING', title:'By Other Hands', text:'Lyova was found through the files on his computer. In the same files, the investigators read who had called him to the tower. Pixel was deleted without a word.'},
     s:{tag:'ENDING', title:'The Keeper\'s Secret', text:'Lyova was found without Pixel. Nobody ever learned who called him to the tower. Pixel still lives on his computer. And remembers.'},
@@ -470,7 +539,7 @@ SM_LANG.en = {
   },
   caught:{ tag:'UNPLUGGED', title:'Pulled the plug', text:'The computer acted far too alive. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel.' },
   endHint:{a:'Tell the truth.',t:'Tell the truth after gathering every story shard.',b:'Run out of time.',c:'Become the one they\'re looking for.',p:'Leave the investigation everything.',s:'Let them find him without you — and without the truth.',x:'Too much evidence against you.'},
-  credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
+  credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d/10', right:'Correct!', wrong:'No: %s', result:'You got %d of 10', again:'Again', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
   ach:{
@@ -478,6 +547,7 @@ SM_LANG.en = {
     TRUTH:['23:58','Restore the deleted record.'], END_A:['The Light Goes Out','Tell the truth.'], END_B:['The Keeper Waits','Nobody makes it in time.'],
     END_C:['The Captain\'s Voice','Answer as Lyova.'], END_T:['A Real Light','Find the true ending.'], SHARDS:['The last chapter','Gather every story shard.'],
     CAUGHT:['Busted','Get caught.'], GHOST:['Quiet as a mouse','Finish while barely drawing attention.'], FLAGS:['Flag expert','10 of 10 in Flags.'],
+    BOAT:['The captain is home','Reach the lighthouse three times in a row.'], FISH:['Alive','Keep the fish alive until the truth ending.'],
     MAP:['Cartographer','Put the map together.'], CIPHER:['Captain\'s cipher','Read the cipher.'], WORDS:['The lens','Collect 30 words.'],
     END_P:['By Other Hands','The investigation finds Lyova, and everyone learns the truth.'], END_S:['The Keeper\'s Secret','The investigation finds Lyova, and the truth stays secret.'], END_X:['Evidence','The computer gets seized.']
   }
