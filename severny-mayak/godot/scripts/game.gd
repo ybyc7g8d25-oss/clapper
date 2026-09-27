@@ -11,6 +11,19 @@ const META_PATH := "user://meta.json"
 const SET_PATH := "user://settings.json"
 const NIGHT_START := 22 * 60                  # ночь начинается в 22:00
 const NIGHT_LEN := 480                        # и длится 8 часов (до 06:00)
+const DAY_START := 13 * 60                    # днём следователь приходит в 13:00
+const DEADLINE := 119                         # столько часов Лёва продержится наверху башни
+const V := 4                                  # версия сохранений
+## Файлы-улики: [насколько продвигают дело (поиск Лёвы), насколько выдают Пикселя].
+const FILES := {
+	"web": [10, 5], "mail": [15, 10], "log": [10, 30], "photos": [10, 5], "parental": [5, 30],
+	"diary": [20, 15], "draw": [5, 5], "tale": [10, 25], "map": [25, 0], "cipher": [25, 15],
+}
+## В каком порядке следователь смотрит файлы.
+const INV_ORDER := ["web", "mail", "log", "photos", "parental", "diary", "draw", "tale", "map", "cipher"]
+## Окна, которые принадлежат файлу (закрываются, когда файл прячут или стирают).
+const FILE_WINS := {"draw": ["draw", "dr0", "dr1", "dr2"], "photos": ["photos", "ph0", "ph1", "ph2", "ph3"],
+	"tale": ["tale", "ch0", "ch1", "ch2", "ch3"]}
 
 var L: Dictionary = {}
 var LANGS := {}
@@ -35,6 +48,7 @@ var docs
 var board
 var night
 var stealth
+var day
 var pix
 var menus
 var fx
@@ -99,8 +113,9 @@ func set_lang(code: String) -> void:
 
 # ---------------------------------------------------------------- прохождение
 func new_state() -> void:
-	st = {"v": 3, "night": 1, "mins": 0, "stage": 0, "f": {}, "words": [], "blanks": {}, "solved": [], "mem": 0,
-		"shards": [], "sus": 0.0, "sus_max": 0.0, "ng": false, "mom_online": false}
+	st = {"v": V, "night": 1, "mins": 0, "stage": 0, "f": {}, "words": [], "blanks": {}, "solved": [], "mem": 0,
+		"shards": [], "sus": 0.0, "sus_max": 0.0, "ng": false, "mom_online": false,
+		"phase": "night", "case": 0.0, "pix": 0.0, "files": {}, "copied": [], "found_h": -1}
 
 func flag(k: String) -> bool:
 	return st.f.has(k) and bool(st.f[k])
@@ -122,11 +137,11 @@ func save_night() -> void:
 
 func load_game() -> Dictionary:
 	var d := _read(SAVE_PATH)
-	return d if int(d.get("v", 0)) == 3 else {}
+	return d if int(d.get("v", 0)) == V else {}
 
 func load_night() -> Dictionary:
 	var d := _read(NIGHT_PATH)
-	return d if int(d.get("v", 0)) == 3 else {}
+	return d if int(d.get("v", 0)) == V else {}
 
 func has_save() -> bool:
 	return not load_game().is_empty()
@@ -145,12 +160,54 @@ func sleep(sec: float) -> bool:
 func stage() -> int:
 	return int(st.stage)
 
+func is_day() -> bool:
+	return st.phase == "day"
+
 func clock() -> String:
-	var m := (NIGHT_START + int(st.mins)) % (24 * 60)
+	var m := ((DAY_START if is_day() else NIGHT_START) + int(st.mins)) % (24 * 60)
 	return "%02d:%02d" % [m / 60, m % 60]
 
+## Сколько часов нет Лёвы (ушёл 4 октября в 07:04). Ночь n начинается в 22:00, день после неё — в 13:00.
+func hours_at(night: int, day: bool, mins := 0) -> int:
+	return 15 + 24 * (night - 1) + (15 if day else 0) + mins / 60
+
 func hours_gone() -> int:
-	return int(L.nights[clampi(int(st.night) - 1, 0, 3)].hours) + int(st.mins) / 60
+	return hours_at(int(st.night), is_day(), int(st.mins))
+
+## Каким найдут Лёву через h часов: 0 — замёрз, но цел; 1 — больница; 2 — без сознания; 3 — поздно.
+func leva_idx(h: int) -> int:
+	if h < 47: return 0
+	if h < 71: return 1
+	if h < 95: return 2
+	return 3
+
+## Дата: ночь n — (3+n) октября, день после ночи n — (4+n) октября.
+func date_str(n: int, day := false) -> String:
+	return L.ui.date % (3 + n + (1 if day else 0))
+
+func night_info(n: int) -> Dictionary:
+	return L.nights[clampi(n - 1, 0, L.nights.size() - 1)]
+
+# ---------------------------------------------------------------- файлы-улики
+func file_state(id: String) -> String:
+	return String(st.files.get(id, ""))
+
+func hidden_files() -> Array:
+	var out := []
+	for id in INV_ORDER:
+		if file_state(id) == "hidden":
+			out.append(id)
+	return out
+
+func add_case(n: float) -> void:
+	st.case = clampf(float(st.case) + n, 0.0, 100.0)
+	if hud:
+		hud.refresh()
+
+func add_pix(n: float) -> void:
+	st.pix = clampf(float(st.pix) + n, 0.0, 100.0)
+	if hud:
+		hud.refresh()
 
 # ---------------------------------------------------------------- тексты и разметка
 func esc(s: String) -> String:

@@ -27,12 +27,21 @@ func resume(s: Dictionary, from_start := false) -> void:
 		return
 	G._merge(G.st, s)
 	G.st.mom_online = false
+	if G.st.phase == "day":
+		# день всегда начинается заново с контрольной точки
+		var cp := G.load_night()
+		if not cp.is_empty():
+			G._merge(G.st, cp)
+		G.st.mom_online = false
+		G.day.run()
+		return
 	start_night(from_start)
 
 func start_night(fresh: bool) -> void:
 	G.in_game = true
 	G.ending = ""
 	var n: int = int(G.st.night)
+	G.st.phase = "night"
 	if fresh:
 		G.st.mins = 0
 		G.save_night()
@@ -43,7 +52,7 @@ func start_night(fresh: bool) -> void:
 	G.stealth.render()
 	await G.menus.night_card(n)
 	# события ночи по порядку; всё, что уже прошло, применяется сразу
-	events = G.L.events[n - 1].duplicate(true)
+	events = G.L.events[clampi(n - 1, 0, G.L.events.size() - 1)].duplicate(true)
 	events.sort_custom(func(a, b): return a.t < b.t)
 	ev_i = 0
 	var pos := {}
@@ -54,6 +63,8 @@ func start_night(fresh: bool) -> void:
 		ev_i += 1
 	for who in ["mom", "dad"]:
 		G.house.place(who, pos.get(who, "bed"))
+	G.house.place("cop", "out")
+	G.house.set_day(false)
 	Sfx.set_drone(G.stage())
 	G.pix.show_pix(true)
 	G.pix.goal(String(G.fget("goal", "")))
@@ -64,6 +75,9 @@ func start_night(fresh: bool) -> void:
 			2: say(G.L.lines.night2, func(): G.pix.goal("night2"))
 			3: say(G.L.lines.night3)
 			4: say(G.L.lines.night4)
+			_: say(G.L.lines.night5)
+		if G.flag("seize"):
+			say(G.L.lines.seizeWarn)
 	else:
 		say(G.L.lines.welcome)
 		if G.flag("revealed"):
@@ -206,14 +220,10 @@ func end_night() -> void:
 	G.desk.close_all()
 	G.board.toggle(false)
 	await G.menus.report(n)
-	if n >= 4:
-		G.ending = "pending"
-		show_end("b")
+	if G.ending != "":
 		return
-	G.st.night = n + 1
-	G.st.mins = 0
-	G.st.sus = maxf(0.0, float(G.st.sus) - 30.0)
-	start_night(true)
+	# днём за компьютер садится следователь
+	G.day.run()
 
 # ---------------------------------------------------------------- развязка
 func reveal() -> void:
@@ -276,7 +286,7 @@ func ending_tell() -> void:
 	await G.pix.say_wait(a.run)
 	if not await G.sleep(3.0): return
 	G.fx.flash(0.5, 0.4)
-	var idx := clampi(int(G.st.night) - 1, 0, 3)
+	var idx := G.leva_idx(G.hours_gone())
 	D.CHATS.mama.on = true
 	Sfx.play("msg")
 	D.push_msg("mama", "06:15", a.found[idx])
@@ -360,7 +370,11 @@ func ending_silent() -> void:
 	G.docs.CHATS.mama.on = false
 	G.docs.push_msg("mama", "st", G.L.chat.momOff)
 	await _pass_days(["…", "…", "…"])
-	show_end("b")
+	# дальше ищут без Пикселя: успеет ли следствие
+	if G.day.simulate() == "police":
+		show_end("p" if float(G.st.pix) >= 50.0 else "s")
+	else:
+		show_end("b")
 
 func ending_pretend() -> void:
 	_lock()
@@ -412,7 +426,7 @@ func show_end(k: String) -> void:
 	G.meta.endings[k] = G.meta.endings.get(k, Time.get_unix_time_from_system())
 	G.save_meta()
 	G.clear_save()
-	G.achieve({"a": "END_A", "b": "END_B", "c": "END_C", "t": "END_T"}[k])
+	G.achieve("END_" + k.to_upper())
 	if k == "t":
 		G.achieve("END_A")
 	if float(G.st.sus_max) < 35.0:

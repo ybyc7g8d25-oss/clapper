@@ -13,12 +13,13 @@ var _cam := 0.0
 var _gen := 0
 var found := 0
 var checking := false
+var checked := false        # проверка экрана при входе уже прошла
 
 func active() -> bool:
 	return G.in_game and G.ending == "" and not G.st.mom_online
 
 func frozen() -> bool:
-	return phase == "in"
+	return phase == "in" and not (G.day and G.day.away)
 
 func render() -> void:
 	if G.hud:
@@ -68,6 +69,7 @@ func _process(delta: float) -> void:
 		G.menus.visit_banner("in", G.L.speakers[inside[0]])
 		Sfx.play("door", -6.0)
 		found = 0
+		checked = false
 		_check(String(inside[0]))
 	# вышел
 	if phase == "in" and inside.is_empty():
@@ -106,6 +108,7 @@ func _check(who: String) -> void:
 	if g != _gen or phase != "in":
 		return
 	checking = true
+	checked = false
 	var ck = G.L.check
 	G.menus.visit_text(ck.look % G.L.speakers[who])
 	var traces: Array = []
@@ -137,10 +140,21 @@ func _check(who: String) -> void:
 		if int(x) % 96 < 7:
 			Sfx.play("heart", -8.0)
 	G.menus.gaze(-1)
-	G.menus.visit_text((ck.seen if found > 0 else ck.clean) % "")
+	G.menus.visit_text(ck.seen if found > 0 else ck.clean)
 	await get_tree().create_timer(1.6, false).timeout
+	if g != _gen:
+		return
 	checking = false
+	checked = true
 	G.house.release()
+	if phase == "in":
+		G.menus.visit_banner("in", G.L.speakers[who])
+
+## Человек снова смотрит на экран (следователь повернулся после звонка).
+func recheck(who: String) -> void:
+	found = 0
+	checked = false
+	_check(who)
 
 func reset_visits() -> void:
 	_gen += 1
@@ -156,7 +170,7 @@ func reset_visits() -> void:
 		G.menus.visit_banner("", "")
 
 func _input(e: InputEvent) -> void:
-	if phase != "in" or get_tree().paused:
+	if phase != "in" or get_tree().paused or not frozen():
 		return
 	if e is InputEventKey and e.keycode == KEY_ESCAPE:
 		return

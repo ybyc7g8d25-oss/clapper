@@ -73,12 +73,12 @@ ROOMS = {  # x-диапазоны комнат
 FLOOR = 66
 
 
-def house_base():
+def house_base(day=False):
     cv = Canvas(480, 72, '#121115')
-    # стены комнат
+    # стены комнат (днём — серый пасмурный свет из окон)
     for name, (x0, x1) in ROOMS.items():
-        cv.rect(x0, 6, x1 - x0, 60, '#1d1b21')
-        cv.dither(x0, 6, x1 - x0, 60, '#221f26', .25)
+        cv.rect(x0, 6, x1 - x0, 60, '#2b2a2f' if day else '#1d1b21')
+        cv.dither(x0, 6, x1 - x0, 60, '#343238' if day else '#221f26', .25)
     # потолок и пол
     cv.rect(0, 0, 480, 6, '#0d0c10')
     cv.rect(0, FLOOR, 480, 6, '#2a2621')
@@ -88,6 +88,18 @@ def house_base():
         cv.rect(x, 6, 2, 26, '#0d0c10')
     # окна с ночным небом
     def window(x, y, w=22, h=18, moon=False):
+        if day:
+            cv.rect(x, y, w, h, '#7f8a94')
+            cv.dither(x, y, w, h, '#98a2aa', .35)
+            cv.rect(x, y + h - 5, w, 5, '#4d5358')  # крыши напротив
+            cv.frame(x - 1, y - 1, w + 2, h + 2, '#45414d')
+            cv.rect(x + w // 2, y, 1, h, '#45414d')
+            cv.rect(x - 2, y + h + 1, w + 4, 1, '#5a5560')
+            for yy in range(y + h + 2, min(y + h + 30, 66)):   # полоса света на полу/стене
+                for xx in range(x - 2, x + w + 2):
+                    if bayer(xx, yy) < .18 * (1 - (yy - y - h) / 30):
+                        cv.px(xx, yy, '#4a4850')
+            return
         cv.rect(x, y, w, h, '#1e2533')
         cv.dither(x, y, w, h, '#26314a', .3)
         rnd = random.Random(x)
@@ -165,6 +177,15 @@ def person(kind, frame):
         cv.rect(4, top + 8, 5, 8, body); cv.rect(4, top + 16, 7, 3, body); cv.rect(9, top + 16, 2, 8, body)
         cv.px(8, top + 4, rim)
         return cv
+    if kind == 'cop':
+        h = 26; top = 0
+        cv.disc(6, top + 3.5, 3, body)
+        cv.poly([(3, top + 7), (9, top + 7), (10, top + 20), (2, top + 20)], body)   # длинное пальто
+        leg = [(4, 7), (3, 8), (5, 7)][frame if isinstance(frame, int) else 0]
+        cv.rect(leg[0], top + 20, 2, 6, body); cv.rect(leg[1] + 3, top + 20, 2, 6, body)
+        cv.rect(10, top + 11, 2, 5, '#6b5a3f')                                        # папка с делом
+        cv.px(8, top + 2, rim); cv.px(9, top + 4, rim); cv.rect(9, top + 8, 1, 10, rim)
+        return cv
     cv.disc(6, top + 3.5, 3, body)
     if kind == 'mom':
         cv.rect(3, top + 3, 2, 8, body); cv.rect(8, top + 3, 1, 6, body)   # волосы
@@ -180,11 +201,12 @@ def person(kind, frame):
 
 def make_house():
     save(house_base(), 'house')
+    save(house_base(True), 'house_day')
     for r in ROOMS:
         save(room_light(r), 'light_' + r)
     save(monitor_glow('#6c86a0'), 'glow_mon')
     save(monitor_glow('#cf3f4f'), 'glow_mon_red')
-    for k in ('mom', 'dad'):
+    for k in ('mom', 'dad', 'cop'):
         for f in (0, 1, 2, 'sit', 'lie'):
             save(person(k, f), f'p_{k}_{f}')
 
@@ -285,6 +307,12 @@ def make_icons(v2):
     cv = Canvas(16, 16); cv.disc(6, 6, 4, 'robot'); cv.ring(6, 6, 5, 'grey1', 2); cv.line(10, 10, 14, 14, 'tan', 2); save(cv, 'icon_lens')
     cv = Canvas(16, 16); cv.rect(0, 1, 16, 13, 'tan'); cv.frame(0, 1, 16, 13, 'brown'); cv.rect(2, 3, 5, 4, 'paper'); cv.rect(9, 4, 5, 3, 'paper')
     cv.rect(3, 9, 6, 3, 'paper'); cv.px(4, 3, 'red'); cv.px(11, 4, 'red'); cv.px(5, 9, 'red'); cv.line(4, 4, 11, 5, 'red'); save(cv, 'icon_board')
+    cv = Canvas(16, 16); v2.ic_folder(cv)
+    for y in range(16):
+        for x in range(16):
+            if (x + y) % 2 == 0 and cv.im.getpixel((x, y))[3] > 0:
+                cv.im.putpixel((x, y), (0, 0, 0, 0))
+    save(cv, 'icon_cache')
     cv = Canvas(16, 16); cv.rect(0, 0, 16, 16, 'grey5'); cv.frame(0, 0, 16, 16, 'grey3'); cv.rect(3, 7, 10, 2, 'red')
     cv.rect(3, 3, 2, 2, 'grey2'); cv.rect(7, 3, 2, 2, 'grey2'); save(cv, 'icon_flags')
 

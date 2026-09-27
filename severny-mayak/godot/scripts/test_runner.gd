@@ -44,14 +44,15 @@ func _run() -> void:
 		await wait(0.4)
 		await shot("settings")
 		G.menus.panel.visible = false
-	for k in ["a", "t", "b", "c"]:
+	for k in ["a", "t", "b", "c", "p", "s", "x"]:
 		if only != "" and only != k:
 			continue
 		scen = k
 		errors.clear()
 		var ok = await _play(k)
 		if ok and errors.is_empty():
-			print("OK   %s ending %s: %s (night %d, палево max %d)" % [G.settings.lang, k, G.L.endings[k].title, int(G.st.night), int(G.st.sus_max)])
+			print("OK   %s ending %s: %s (night %d, палево max %d, дело %d, улики %d, Лёва %d ч)" % [G.settings.lang, k, G.L.endings[k].title,
+				int(G.st.night), int(G.st.sus_max), int(G.st.case), int(G.st.pix), int(G.st.found_h)])
 		else:
 			failed += 1
 			print("FAIL %s ending %s: %s" % [G.settings.lang, k, str(errors)])
@@ -124,9 +125,37 @@ func _play(k: String) -> bool:
 	if not await until(func(): return G.stealth.phase == "", 60, "visit end"): return false
 	if not float(G.st.sus_max) > s0:
 		errors.append("moving during visit did not raise exposure")
-	# конец ночи 1
+	# что спрятать/стереть до первого дня
+	match k:
+		"b": for f in ["web", "mail", "photos", "diary"]: G.docs.delete_file(f)
+		"s": for f in ["log", "parental", "tale"]: G.docs.delete_file(f)
+		"x": for f in ["mail", "diary"]: G.docs.delete_file(f)
+		"a", "t":
+			G.docs.hide_file("parental")
+			G.docs.open_cache()
+			await wait(0.3)
+			await shot("n1-cache")
+			G.desk.close_all()
+	# конец ночи 1 → день 1: следователь
 	to_night_end()
-	if not await until(func(): return int(G.st.night) == 2 and G.night.running, 60, "night 2"): return false
+	if not await until(func(): return G.is_day() and G.stealth.phase == "in", 120, "day 1 cop in"): return false
+	await wait(0.2)
+	await shot("d1-check")
+	if not await until(func(): return G.desk.win("inv") != null, 60, "day 1 inspect"): return false
+	await wait(0.2)
+	await shot("d1-copy")
+	if k in ["a", "t"]:
+		# звонок: курсор уже на почте — прячем её прямо из-под носа
+		if not await until(func(): return G.day.away, 60, "day 1 away"): return false
+		await shot("d1-away")
+		G.docs.hide_file("log")
+	if not await until(func(): return int(G.st.night) == 2 and G.night.running, 180, "night 2"): return false
+	if G.st.copied.is_empty() or float(G.st.case) <= 0:
+		errors.append("day 1 copied nothing")
+	if k in ["a", "t"] and (G.st.copied.has("log") or G.st.copied.has("parental")):
+		errors.append("hidden file was copied: %s" % str(G.st.copied))
+	if k in ["p", "s", "x"]:
+		return await _police_run(k)
 	await shot("n2-start")
 	G.st.mins = 21
 	G.night.minute()
@@ -143,6 +172,8 @@ func _play(k: String) -> bool:
 	G.docs.map_click(8)
 	if not G.flag("map"):
 		errors.append("map not solved")
+	if k == "b":
+		G.docs.delete_file("map")
 	G.docs.open_diary()
 	G.docs.try_diary("северный маяк")
 	await wait(0.3)
@@ -173,6 +204,8 @@ func _play(k: String) -> bool:
 		G.docs.cipher_turn()
 	if not G.flag("cipher"):
 		errors.append("cipher not solved")
+	if k == "b":
+		G.docs.delete_file("cipher")
 	G.docs.open_parental()
 	solve("s6")
 	if int(G.st.mem) < 100:
@@ -209,6 +242,25 @@ func _play(k: String) -> bool:
 		await wait(0.3)
 		await shot("epilogue")
 	if not await until(func(): return G.ending == k, 120, "ending " + k): return false
+	await wait(1.2)
+	await shot("end")
+	return true
+
+## Сценарии, где Лёву находит следствие (p, s) или компьютер изымают (x): ночи просто проходят.
+func _police_run(k: String) -> bool:
+	for i in 4:
+		if G.ending != "" and G.ending != "pending":
+			break
+		if not await until(func(): return G.night.running or G.ending in ["p", "s", "x", "b"], 180, "night"): return false
+		if G.ending in ["p", "s", "x", "b"]:
+			break
+		if k == "x" and int(G.st.night) == 3:
+			await wait(0.3)
+			await shot("n3-seize")
+		to_night_end()
+		if not await until(func(): return G.is_day() or G.ending != "", 120, "day"): return false
+		if not await until(func(): return int(G.st.night) > 1 and (G.night.running or G.ending in ["p", "s", "x", "b"]), 240, "day end"): return false
+	if not await until(func(): return G.ending == k, 240, "ending " + k + " (got " + G.ending + ")"): return false
 	await wait(1.2)
 	await shot("end")
 	return true

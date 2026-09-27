@@ -7,6 +7,8 @@ var night_l: Label
 var clock_l: Label
 var sus_bar: ColorRect
 var sus_box: Control
+var case_bar: ColorRect
+var pix_bar: ColorRect
 var gone_l: Label
 var mem_l: Label
 var btn_board: Button
@@ -31,22 +33,41 @@ func build() -> void:
 	line.size = Vector2(480, 1)
 	add_child(line)
 	night_l = _lab(4, UI.LIGHT)
-	clock_l = _lab(128, UI.AMBER2)
-	var sl := _lab(170, UI.GREY3)
+	clock_l = _lab(96, UI.AMBER2)
+	var sl := _lab(126, UI.GREY3)
 	sl.text = G.L.ui.exposure
 	sus_box = Control.new()
-	sus_box.position = Vector2(208, 76)
+	sus_box.position = Vector2(160, 76)
 	add_child(sus_box)
 	var sb_bg := ColorRect.new()
 	sb_bg.color = UI.DARK3
-	sb_bg.size = Vector2(42, 4)
+	sb_bg.size = Vector2(34, 4)
 	sus_box.add_child(sb_bg)
 	sus_bar = ColorRect.new()
 	sus_bar.color = UI.GREEN2
 	sus_bar.size = Vector2(0, 4)
 	sus_box.add_child(sus_bar)
-	gone_l = _lab(262, UI.RED2)
-	mem_l = _lab(376, UI.PURPLE2)
+	# «Дело»: синяя полоса — как близко следствие к Лёве; красная ниточка под ней — улики против Пикселя
+	var cl := _lab(202, UI.GREY3)
+	cl.text = G.L.ui.case
+	var cb := Control.new()
+	cb.position = Vector2(226, 76)
+	add_child(cb)
+	var cb_bg := ColorRect.new()
+	cb_bg.color = UI.DARK3
+	cb_bg.size = Vector2(40, 5)
+	cb.add_child(cb_bg)
+	case_bar = ColorRect.new()
+	case_bar.color = UI.BLUE2
+	case_bar.size = Vector2(0, 3)
+	cb.add_child(case_bar)
+	pix_bar = ColorRect.new()
+	pix_bar.color = UI.RED2
+	pix_bar.position = Vector2(0, 4)
+	pix_bar.size = Vector2(0, 1)
+	cb.add_child(pix_bar)
+	gone_l = _lab(278, UI.RED2)
+	mem_l = _lab(390, UI.PURPLE2)
 	# кнопки внизу
 	var bot := ColorRect.new()
 	bot.color = UI.BLACK
@@ -118,7 +139,10 @@ func set_fast(on: bool) -> void:
 
 func refresh() -> void:
 	var n: int = int(G.st.night)
-	night_l.text = "%s %d · %s" % [G.L.ui.night, n, G.L.nights[clampi(n - 1, 0, 3)].date]
+	var day := G.is_day()
+	night_l.text = "%s %d · %s" % [G.L.ui.day if day else G.L.ui.night, n, G.date_str(n, day)]
+	case_bar.size.x = 40.0 * float(G.st.case) / 100.0
+	pix_bar.size.x = 40.0 * float(G.st.pix) / 100.0
 	clock_l.text = G.clock()
 	gone_l.text = "%s %s" % [G.L.ui.gone, G.L.ui.hours % G.hours_gone()]
 	mem_l.text = "%s %d%%" % [G.L.ui.memory, int(G.st.mem)]

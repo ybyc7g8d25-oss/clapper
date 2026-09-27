@@ -256,7 +256,7 @@ func _settings(v: VBoxContainer, in_game: bool) -> void:
 
 func _endings(v: VBoxContainer) -> void:
 	v.add_child(UI.label(G.L.ui.endings.to_upper(), UI.PAPER, UI.logo, 8))
-	for k in ["a", "t", "b", "c"]:
+	for k in ENDS:
 		var seen: bool = G.meta.endings.has(k)
 		var e = G.L.endings[k]
 		v.add_child(UI.label(e.title if seen else G.L.ui.endLocked, UI.AMBER2 if seen else UI.GREY2))
@@ -338,11 +338,11 @@ func _unhandled_input(e: InputEvent) -> void:
 # ---------------------------------------------------------------- заставка ночи: газета
 func night_card(n: int) -> void:
 	_clear(card)
-	var nt = G.L.nights[n - 1]
+	var nt = G.night_info(n)
 	var big := UI.label("%s %d" % [G.L.ui.night, n], UI.PAPER, UI.logo, 16)
 	big.position = Vector2(24, 22)
 	card.add_child(big)
-	var d := UI.label(String(nt.date), UI.GREY3, UI.logo, 8)
+	var d := UI.label(G.date_str(n), UI.GREY3, UI.logo, 8)
 	d.position = Vector2(24, 44)
 	card.add_child(d)
 	var paper := PanelContainer.new()
@@ -355,7 +355,7 @@ func night_card(n: int) -> void:
 	paper.position = Vector2(150, 70)
 	paper.rotation = -0.03
 	var v := UI.vbox(4)
-	v.add_child(UI.label("ГОРОДСКИЕ ВЕСТИ" if G.settings.lang == "ru" else "CITY NEWS", UI.INK2))
+	v.add_child(UI.label(G.L.ui.news, UI.INK2))
 	var line := ColorRect.new()
 	line.color = UI.INK
 	line.custom_minimum_size = Vector2(0, 1)
@@ -364,9 +364,13 @@ func night_card(n: int) -> void:
 	v.add_child(UI.label(String(nt.paperText), UI.INK, null, 8, 220))
 	paper.add_child(v)
 	card.add_child(paper)
-	var gone := UI.label(G.L.ui.gone + " " + G.L.ui.hours % int(nt.hours), UI.RED2)
+	var gone := UI.label(G.L.ui.gone + " " + G.L.ui.hours % G.hours_at(n, false), UI.RED2)
 	gone.position = Vector2(24, 60)
 	card.add_child(gone)
+	if G.flag("seize"):
+		var sz := UI.label(G.L.day.seizeCard, UI.ALARM, null, 8, 110)
+		sz.position = Vector2(24, 80)
+		card.add_child(sz)
 	_show(card, 0.6)
 	Sfx.play("paper")
 	var t := 0.0
@@ -378,6 +382,97 @@ func night_card(n: int) -> void:
 			break
 	_hide(card, 0.6)
 	await get_tree().create_timer(0.05 if G.TEST else 0.6, false).timeout
+
+## Скриншот для автотеста (только с --shots): заставки мелькают слишком быстро, чтобы поймать их снаружи.
+func _test_shot(n: String) -> void:
+	if not G.TEST or G.shots_dir == "" or DisplayServer.get_name() == "headless":
+		return
+	await get_tree().create_timer(0.7, false).timeout
+	await RenderingServer.frame_post_draw
+	G.screen.get_texture().get_image().save_png("%s/%s-card-%s.png" % [G.shots_dir, G.settings.lang, n])
+
+# ---------------------------------------------------------------- заставка дня: протокол
+func day_card(d: int, seize := false) -> void:
+	_clear(card)
+	var dd = G.L.day
+	var big := UI.label("%s %d" % [G.L.ui.day, d], UI.PAPER, UI.logo, 16)
+	big.position = Vector2(24, 22)
+	card.add_child(big)
+	var dt := UI.label(G.date_str(d, true) + " · 13:00", UI.GREY3, UI.logo, 8)
+	dt.position = Vector2(24, 44)
+	card.add_child(dt)
+	var gone := UI.label(G.L.ui.gone + " " + G.L.ui.hours % G.hours_at(d, true), UI.RED2)
+	gone.position = Vector2(24, 60)
+	card.add_child(gone)
+	var paper := PanelContainer.new()
+	var st := StyleBoxTexture.new()
+	st.texture = UI.tex("tex_paper")
+	st.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+	st.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+	st.set_content_margin_all(8)
+	paper.add_theme_stylebox_override("panel", st)
+	paper.position = Vector2(150, 64)
+	paper.rotation = 0.02
+	var v := UI.vbox(4)
+	v.add_child(UI.label(dd.caseNo, UI.INK2))
+	var line := ColorRect.new()
+	line.color = UI.INK
+	line.custom_minimum_size = Vector2(0, 1)
+	v.add_child(line)
+	var txt: String = dd.seizeText if seize else String(dd.cards[clampi(d - 1, 0, dd.cards.size() - 1)])
+	v.add_child(UI.label(dd.seizeHead if seize else dd.head, UI.INK, UI.tiny, 16, 220))
+	v.add_child(UI.label(txt, UI.INK, null, 8, 220))
+	v.add_child(UI.label(dd.caseLine % int(G.st.case), UI.BLUE))
+	paper.add_child(v)
+	card.add_child(paper)
+	_show(card, 0.6)
+	Sfx.play("paper")
+	await _test_shot("daycard%d" % d)
+	var t := 0.0
+	var lim := 0.2 if G.TEST else 7.0
+	while t < lim:
+		await get_tree().create_timer(0.1, false).timeout
+		t += 0.1
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and t > 1.0:
+			break
+	_hide(card, 0.6)
+	await get_tree().create_timer(0.05 if G.TEST else 0.6, false).timeout
+
+## Итог дня: что скопировали, что не нашли, как продвинулось дело, что думают про Пикселя.
+func day_report(d: int, copied: Array, missed: Array) -> void:
+	_clear(card)
+	var r = G.L.day.report
+	var v := _col(card, 110, 30, 260, 3)
+	v.add_child(UI.label(r.title % d, UI.PAPER, UI.logo, 8))
+	var sep := ColorRect.new()
+	sep.color = UI.GREY
+	sep.custom_minimum_size = Vector2(260, 1)
+	v.add_child(sep)
+	if copied.is_empty():
+		v.add_child(UI.label(r.none, UI.GREY3))
+	for f in copied:
+		v.add_child(UI.label(r.copied % [G.docs.file_label(f), int(G.FILES[f][0])], UI.BLUE2, null, 8, 260))
+	for f in missed:
+		v.add_child(UI.label(r.missed % G.docs.file_label(f), UI.GREEN2, null, 8, 260))
+	v.add_child(UI.label(r.field % int(G.day.FIELD), UI.GREY3))
+	v.add_child(UI.label(r.case % int(G.st.case), UI.LIGHT))
+	var p := float(G.st.pix)
+	var vi := 0 if p < 30 else (1 if p < 60 else (2 if p < 100 else 3))
+	v.add_child(UI.label(String(r.version[vi]), UI.RED2 if vi >= 2 else UI.GREY3, null, 8, 260))
+	v.add_child(UI.label(r.gone % G.hours_at(d, true), UI.RED2))
+	var go := [false]
+	var nx := item(r.next, func(): go[0] = true)
+	v.add_child(nx)
+	_show(card, 0.6)
+	Sfx.play("paper")
+	nx.call_deferred("grab_focus")
+	await _test_shot("dayreport%d" % d)
+	var t := 0.0
+	while not go[0] and t < (0.3 if G.TEST else 600.0):
+		await get_tree().create_timer(0.1, false).timeout
+		t += 0.1
+	_hide(card, 0.4)
+	await get_tree().create_timer(0.05 if G.TEST else 0.4, false).timeout
 
 # ---------------------------------------------------------------- отчёт ночи
 func report(n: int) -> void:
@@ -393,7 +488,8 @@ func report(n: int) -> void:
 	v.add_child(UI.label(r.board % [G.st.solved.size(), G.L.board.sections.size()], UI.LIGHT))
 	v.add_child(UI.label(r.memory % int(G.st.mem), UI.PURPLE2))
 	v.add_child(UI.label(r.exposure % int(G.st.sus), UI.AMBER2))
-	v.add_child(UI.label(String(r.house[clampi(n - 1, 0, 3)]), UI.GREY3, null, 8, 240))
+	v.add_child(UI.label(r.case % int(G.st.case), UI.BLUE2))
+	v.add_child(UI.label(String(r.house[clampi(n - 1, 0, r.house.size() - 1)]), UI.GREY3, null, 8, 240))
 	var go := [false]
 	var nx := item(r.next, func(): go[0] = true)
 	v.add_child(nx)
@@ -408,9 +504,16 @@ func report(n: int) -> void:
 	await get_tree().create_timer(0.05 if G.TEST else 0.4, false).timeout
 
 # ---------------------------------------------------------------- финалы
+const ENDS := ["a", "t", "b", "c", "p", "s", "x"]
+
 func show_end(k: String) -> void:
 	var e = G.L.endings[k]
-	_end_screen(e.tag, e.title, e.text, false)
+	var text: String = e.text
+	# как нашли Лёву — зависит от того, сколько часов прошло
+	if k in ["p", "s", "x"]:
+		var h := int(G.st.found_h)
+		text += "\n\n" + (String(G.L.leva[G.leva_idx(h)]) if h >= 0 else String(G.L.levaLost))
+	_end_screen(e.tag, e.title, text, false)
 
 func show_caught() -> void:
 	var c = G.L.caught
@@ -420,10 +523,10 @@ func _end_screen(tag: String, head: String, text: String, caught: bool) -> void:
 	_clear(end_o)
 	var v := _col(end_o, 90, 70, 300, 6)
 	var n := 0
-	for k in ["a", "b", "c", "t"]:
+	for k in ENDS:
 		if G.meta.endings.has(k):
 			n += 1
-	v.add_child(UI.label(tag + ("" if caught else "  %d/4" % n), UI.RED2 if caught else UI.AMBER, UI.logo, 8))
+	v.add_child(UI.label(tag + ("" if caught else "  %d/%d" % [n, ENDS.size()]), UI.RED2 if caught else UI.AMBER, UI.logo, 8))
 	v.add_child(UI.label(head, UI.PAPER, UI.tiny, 16, 300))
 	v.add_child(UI.label(text, UI.GREY3, null, 8, 300))
 	var first: Button
@@ -457,12 +560,10 @@ func visit_banner(kind: String, who: String) -> void:
 	if kind == "":
 		return
 	var red := kind == "in"
-	visit_box.add_theme_stylebox_override("panel", UI.flat(Color(UI.BLACK, 0.9), UI.ALARM if red else UI.AMBER, 1, 5, 3))
-	if G.settings.lang == "ru":
-		visit_l.text = ("%s В КОМНАТЕ. НЕ ДВИГАЙСЯ." if red else "%s ИДЁТ СЮДА. СПРЯЧЬ ОКНА (D).") % who
-	else:
-		visit_l.text = ("%s IS IN THE ROOM. DON'T MOVE." if red else "%s IS COMING. HIDE THE WINDOWS (D).") % who
-	visit_l.add_theme_color_override("font_color", UI.RED2 if red else UI.AMBER2)
+	var ck = G.L.check
+	visit_box.add_theme_stylebox_override("panel", UI.flat(Color(UI.BLACK, 0.9), UI.ALARM if red else (UI.GREEN if kind == "away" else UI.AMBER), 1, 5, 3))
+	visit_l.text = String(ck.inRoom if red else (ck.away if kind == "away" else ck.coming)) % who
+	visit_l.add_theme_color_override("font_color", UI.RED2 if red else (UI.GREEN2 if kind == "away" else UI.AMBER2))
 	visit_box.reset_size()
 	visit_box.position.x = 240 - visit_box.get_combined_minimum_size().x / 2
 

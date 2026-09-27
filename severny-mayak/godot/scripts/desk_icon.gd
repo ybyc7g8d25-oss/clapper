@@ -3,6 +3,7 @@ extends Control
 ## Значок на столе: тёмная подложка, картинка 16x16, подпись. Двойной щелчок — открыть.
 
 signal open_requested(id: String)
+signal menu_requested(id: String)
 
 var id := ""
 var plate: ColorRect
@@ -48,4 +49,9 @@ func _gui_input(e: InputEvent) -> void:
 		set_sel(true)
 		if e.double_click:
 			open_requested.emit(id)
+		accept_event()
+	elif e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
+		get_tree().call_group("icons", "set_sel", false)
+		set_sel(true)
+		menu_requested.emit(id)
 		accept_event()

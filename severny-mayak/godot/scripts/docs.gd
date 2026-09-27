@@ -46,7 +46,89 @@ func desk_list() -> Array:
 			"show": func(): return G.st.solved.has("s4")},
 		{"id": "dont", "ic": "noteRed", "label": func(): return d.dont, "open": open_dont,
 			"show": func(): return G.flag("dontShown") and not G.flag("dontRead")},
+		{"id": "cache", "ic": "cache", "label": func(): return d.cache, "open": open_cache,
+			"show": func(): return not G.hidden_files().is_empty()},
 	]
+
+func entry(id: String) -> Dictionary:
+	for e in desk_list():
+		if e.id == id:
+			return e
+	return {}
+
+func file_label(id: String) -> String:
+	var e := entry(id)
+	return String(e.label.call()) if e else id
+
+# ---------------------------------------------------------------- спрятать / стереть
+func _close_file_wins(id: String) -> void:
+	for wid in G.FILE_WINS.get(id, [id]):
+		D.close_win(wid)
+
+## Спрятать файл в скрытую папку .кэш: следователь его не увидит (пока не придёт эксперт). Пиксель — может открыть.
+func hide_file(id: String) -> void:
+	if G.file_state(id) != "":
+		return
+	G.st.files[id] = "hidden"
+	_close_file_wins(id)
+	Sfx.play("paper")
+	D.refresh_icons()
+	D.changed.emit()
+	G.save_game()
+	first("hideFirst", G.L.lines.hideFirst)
+
+func unhide_file(id: String) -> void:
+	G.st.files.erase(id)
+	D.refresh_icons()
+	var w := D.win("cache")
+	if w:
+		if G.hidden_files().is_empty():
+			w.close()
+		else:
+			w.rebuild()
+	G.save_game()
+
+func ask_delete(id: String) -> void:
+	G.menus.confirm(G.L.ui.delConfirm % file_label(id), func(): delete_file(id))
+
+## Стереть навсегда: ни следователь, ни Пиксель больше не прочитают. Слова, уже собранные в банк, остаются.
+func delete_file(id: String) -> void:
+	if G.file_state(id) == "deleted":
+		return
+	G.st.files[id] = "deleted"
+	_close_file_wins(id)
+	Sfx.play("err", -8.0)
+	G.fx.glitch()
+	D.refresh_icons()
+	var w := D.win("cache")
+	if w:
+		if G.hidden_files().is_empty():
+			w.close()
+		else:
+			w.rebuild()
+	D.changed.emit()
+	G.save_game()
+	if int(G.FILES[id][1]) >= 15 and not G.flag("revealed"):
+		first("deleteSelf", G.L.lines.deleteSelf)
+	else:
+		first("deleteFirst", G.L.lines.deleteFirst)
+
+func open_cache() -> void:
+	D.open_win("cache", G.L.ui.cacheTitle, "cache", 220, 90, func(w: OSWindow):
+		var v := UI.vbox(2)
+		v.add_child(UI.label(G.L.ui.cacheHint, UI.INK2, null, 8, 200))
+		for id in G.hidden_files():
+			var row := UI.hbox(2)
+			row.mouse_filter = Control.MOUSE_FILTER_PASS
+			var n := UI.label(file_label(id), UI.INK)
+			n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(n)
+			var e := entry(id)
+			row.add_child(UI.button(G.L.ui.fileOpen, func(): e.open.call()))
+			row.add_child(UI.button(G.L.ui.fileBack, func(): unhide_file(id)))
+			row.add_child(UI.button(G.L.ui.fileDel, func(): ask_delete(id), "red"))
+			v.add_child(row)
+		w.set_content(UI.scroll(paper(v))))
 
 # ---------------------------------------------------------------- общие детали
 ## Текст документа с поддержкой лупы.

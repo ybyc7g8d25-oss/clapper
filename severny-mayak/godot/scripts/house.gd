@@ -8,20 +8,21 @@ signal arrived(who: String, room: String)
 const FLOOR := 66
 const SPOTS := {        # где человек стоит/сидит/лежит в комнате
 	"kitchen": [88, "sit"], "bed": [196, "lie"], "hall": [282, "stand"], "lev": [404, "stand"],
-	"levbed": [340, "lie"], "out": [250, "out"], "door": [250, "stand"],
+	"levbed": [340, "lie"], "out": [250, "out"], "door": [250, "stand"], "desk": [434, "sit"],
 }
 const ROOM_X := {"kitchen": [0, 116], "bed": [118, 236], "hall": [238, 326], "lev": [328, 480]}
 var actors := {}          # who → {node, x, target, room, pose, walking}
 var lights := {}
 var glow: TextureRect
 var sounds: Control
+var base: TextureRect
 
 func build() -> void:
 	position = Vector2.ZERO
 	size = Vector2(480, 72)
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var base := TextureRect.new()
+	base = TextureRect.new()
 	base.texture = UI.tex("house")
 	add_child(base)
 	for r in ROOM_X:
@@ -33,7 +34,7 @@ func build() -> void:
 	glow = TextureRect.new()
 	glow.texture = UI.tex("glow_mon")
 	add_child(glow)
-	for who in ["mom", "dad"]:
+	for who in ["mom", "dad", "cop"]:
 		var s := Sprite2D.new()
 		s.centered = false
 		s.texture = UI.tex("p_%s_0" % who)
@@ -43,6 +44,10 @@ func build() -> void:
 	sounds = Control.new()
 	sounds.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(sounds)
+
+## Днём дом серый, пасмурный; ночью — тёмный.
+func set_day(on: bool) -> void:
+	base.texture = UI.tex("house_day" if on else "house")
 
 func set_stage(n: int) -> void:
 	glow.texture = UI.tex("glow_mon_red" if n >= 3 else "glow_mon")
@@ -66,7 +71,7 @@ func move(who: String, room: String) -> void:
 	var a: Dictionary = actors[who]
 	if a.room == room:
 		return
-	if a.room == "lev" and G.stealth and G.stealth.checking:
+	if a.room in ["lev", "desk"] and G.stealth and G.stealth.checking:
 		pending[who] = room
 		return
 	if a.room == "out" or a.room == "":

@@ -147,10 +147,11 @@ func advance() -> void:
 		_next()
 
 func _process(delta: float) -> void:
-	if hold:
+	if hold and not G.is_day():
 		root.modulate.a = move_toward(root.modulate.a, 0.15, delta * 3)
 		return
-	root.modulate.a = move_toward(root.modulate.a, 1.0, delta * 3)
+	# днём Пиксель думает «шёпотом»: мысли идут, но еле видны
+	root.modulate.a = move_toward(root.modulate.a, 0.55 if hold else 1.0, delta * 3)
 	if typing:
 		var sp: float = SPEED[G.settings.text] * (1.5 if G.stage() >= 3 else 1.0)
 		_acc += delta

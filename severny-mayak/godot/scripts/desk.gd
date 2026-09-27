@@ -62,15 +62,57 @@ func build_icons(list: Array) -> void:
 	for d in list:
 		if d.has("show") and not d.show.call():
 			continue
+		if G.file_state(d.id) != "":
+			continue
 		var ic := DeskIcon.new()
 		ic.setup(d.id, d.ic, d.label.call())
 		ic.position = Vector2(3 + int(i / 6) * 44, 3 + (i % 6) * 28)
 		ic.open_requested.connect(func(_id):
 			if G.ending == "" and not G.stealth.frozen():
 				d.open.call())
+		ic.menu_requested.connect(func(_id):
+			if G.ending == "" and not G.stealth.frozen():
+				file_menu(d, ic.position + icons_box.position + Vector2(20, 14)))
 		icons_box.add_child(ic)
 		icon_nodes[d.id] = ic
 		i += 1
+
+# ---------------------------------------------------------------- меню файла (правый щелчок)
+var _menu: Control
+
+func close_menu() -> void:
+	if _menu and is_instance_valid(_menu):
+		_menu.queue_free()
+	_menu = null
+
+## Открыть / спрятать в .кэш / стереть навсегда. Прятать и стирать можно только файлы-улики.
+func file_menu(d: Dictionary, at: Vector2) -> void:
+	close_menu()
+	var id: String = d.id
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", UI.flat(UI.DARK2, UI.GREY, 1, 2, 0))
+	var v := UI.vbox(1)
+	p.add_child(v)
+	var add := func(text: String, cb: Callable, style := "dark"):
+		var b := UI.button(text, func():
+			close_menu()
+			cb.call(), style)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		v.add_child(b)
+	add.call(G.L.ui.fileOpen, d.open)
+	if G.FILES.has(id):
+		add.call(G.L.ui.fileHide, func(): G.docs.hide_file(id))
+		add.call(G.L.ui.fileDel, func(): G.docs.ask_delete(id), "red")
+	win_layer.add_child(p)
+	p.reset_size()
+	p.position = Vector2(clampf(at.x, 2, 478 - p.size.x), clampf(at.y, TOP, BOTTOM - p.size.y))
+	_menu = p
+
+func _input(e: InputEvent) -> void:
+	if _menu and e is InputEventMouseButton and e.pressed:
+		var m := get_global_mouse_position()
+		if not Rect2(_menu.global_position, _menu.size).has_point(m):
+			close_menu.call_deferred()
 
 func refresh_icons() -> void:
 	build_icons(LIST)

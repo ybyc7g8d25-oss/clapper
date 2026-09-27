@@ -16,21 +16,25 @@ SM_LANG.en = {
     warnText:'This game deals with a missing child and guilt, and contains screen flicker and sudden loud sounds. Flashes and jump scares can be turned off in the settings.',
     warnOk:'I understand',
     endLocked:'???', achTitle:'Achievement', saved:'Progress saved',
-    retry:'Replay the night', again:'Main menu',
+    retry:'Try again', again:'Main menu',
     board:'BOARD', lens:'LENS', hide:'HIDE', wait:'WAIT', menu:'MENU',
     night:'NIGHT', exposure:'EXPOSURE', gone:'LYOVA GONE', hours:'%d H', memory:'MEMORY',
     click:'click', goal:'> ',
     lensHint:'Lens: click highlighted words to add them to the bank.',
     wordAdded:'Word added: %s',
     shards:'Story shards',
-    ver:'v3.0'
+    day:'DAY', case:'CASE', date:'OCTOBER %d', news:'CITY NEWS',
+    fileOpen:'Open', fileHide:'Hide in .cache', fileDel:'Erase', fileBack:'Restore',
+    delConfirm:'Erase "%s" forever? Nobody will ever read it again — you included.',
+    cacheTitle:'.cache — hidden folder', cacheHint:'Files you hid. The detective can\'t see them. For now.',
+    ver:'v4.0'
   },
 
   os:{ ok:'OK', close:'Close', user:'Lyova', viewer:'Viewer', notepad:'Notepad' },
 
   desk:{ note:'README.txt', draw:'Drawings', log:'Pixel', web:'Webby', mail:'Mail', photos:'Photos', tale:'Story',
     diary:'Diary', cam:'Camera', mic:'Microphone', chat:'Whisper', bin:'Bin', parental:'Control', map:'Map',
-    flags:'Flags', tm:'Processes', dont:'dont_open' },
+    flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache' },
 
   whispers:['where is he','it\'s you','don\'t turn off','23:58','captain?','lighthouse','come','alone'],
 
@@ -80,11 +84,12 @@ SM_LANG.en = {
     {date:'OCTOBER 4', hours:15, paper:'BOY MISSING', paperText:'On the morning of October 4, Lev K., 10, left his home on Forest Street. He left his phone behind. Police and volunteers ask anyone who saw a boy in a blue jacket to come forward.'},
     {date:'OCTOBER 5', hours:39, paper:'SEARCH ENTERS SECOND DAY', paperText:'Volunteers combed the park by the school and the construction site by the garages. The old water tower on River Street was checked: the door is welded shut, nobody inside.'},
     {date:'OCTOBER 6', hours:63, paper:'"HE WAS ALWAYS AT THE COMPUTER"', paperText:'The missing boy\'s parents say that in recent weeks their son barely left his room and talked only to the AI friend from a children\'s app.'},
-    {date:'OCTOBER 7', hours:87, paper:'HOPE FADES', paperText:'Frost is expected tonight. Divers have joined the search and are checking the river by the old embankment.'}
+    {date:'OCTOBER 7', hours:87, paper:'HOPE FADES', paperText:'Frost is expected tonight. Divers have joined the search and are checking the river by the old embankment.'},
+    {date:'OCTOBER 8', hours:111, paper:'MINUS FIVE TONIGHT', paperText:'The search for Lev K. enters its fifth day. Forecasters expect the coldest night of the autumn. Volunteers are asked to bring thermoses and flashlights.'}
   ],
 
   report:{ title:'NIGHT %d — SUMMARY', gone:'Lyova missing: %d h', board:'Board: %d of %d sections', memory:'Pixel\'s memory: %d%%',
-    exposure:'Exposure: %d%%', next:'Next night', house:['Mom didn\'t sleep until morning.','Dad drove around the district until dawn.','Mom fell asleep on Lyova\'s bed.','Nobody in the house sleeps anymore.'] },
+    exposure:'Exposure: %d%%', case:'Investigation: %d%%', next:'Next night', house:['Mom didn\'t sleep until morning.','Dad drove around the district until dawn.','Mom fell asleep on Lyova\'s bed.','Nobody in the house sleeps anymore.','Before dawn Mom went out to search on her own.'] },
 
   goals:{
     freeze:'don\'t move while Mom is in the room',
@@ -99,7 +104,8 @@ SM_LANG.en = {
     guard:'something is holding the bin. Open "Processes"',
     restore:'restore the deleted record from the bin',
     mom:'Mom is online. Answer her',
-    wait:'wait for morning or keep looking'
+    wait:'wait for morning or keep looking',
+    day:'freeze while he looks. A phone call is your chance'
   },
 
   lines:{
@@ -130,7 +136,7 @@ SM_LANG.en = {
     susIntro:['Quiet. Every move, every beep can be heard in the house.'],
     sus50:['Too loud. They\'re listening.'],
     sus80:['Someone is looking at me. Freeze.'],
-    endNight:['Dawn. Dad is about to turn the computer off.','Until tonight.'],
+    endNight:['Dawn. Dad is about to turn the computer off.','In the daytime a detective will sit here.'],
     night2:['I woke up. 22:00 — autostart. I set it myself.','The second night. The police went to the tower.'],
     night3:['The third night. Mom is asleep on his bed.','Right under the camera. Every sound is a risk.'],
     night4:['The fourth night. Frost tonight.','If he\'s up there… I don\'t have much time. He has less.'],
@@ -158,7 +164,22 @@ SM_LANG.en = {
     shardsAll:['All seven. Now I know how the story ends.'],
     offLimit:['I can\'t turn myself off. Only people can.'],
     scare:['Don\'t look at me like that.'],
-    welcome:['You\'re back.']
+    welcome:['You\'re back.'],
+    night5:['The fifth night. Minus five.','If he\'s still up there, this is the last night anyone can reach him in time.'],
+    dayIntro:['In the daytime a stranger sat at the computer. Detective Orlov.','He\'s copying files to a flash drive. Everything he reads will help find Lyova…','…and will tell him about me.','While he\'s looking, don\'t move. If his phone rings and he turns away, there\'s time.','Right-click an icon: hide it in .cache or erase it.'],
+    dayAgain:['Him again. The flash drive again.'],
+    expert:['There\'s an expert with him. This one will find the hidden folder.','Hiding is useless now. Erase — or leave it.'],
+    dayEnd:['He\'s gone. He took the flash drive with him.'],
+    dayAway:['He turned away! Right-click a file — quick.'],
+    copyBad:['He\'s reading about me.','If he figures out it was me, they\'ll take the computer away. And I won\'t be able to do anything.'],
+    copyBad2:['Another piece of evidence against me.','He\'s frowning. He gets it.','He wrote something in his notebook.','He read it twice.'],
+    cacheFound:['He found my folder.','Hiding was worse than doing nothing.'],
+    policeFound:['The phone rings in the kitchen.','Mom screams. Then cries. Then laughs.','They found him. Not me.'],
+    seized:['They came with a box and an evidence bag.','They\'re taking me away.'],
+    seizeWarn:['I heard Orlov on the phone: tomorrow they take the computer in for examination.','This is my last night.'],
+    hideFirst:['Hidden in .cache. Orlov won\'t open it.','Not until someone who knows how to search shows up.'],
+    deleteFirst:['Erased. That file is gone. For them and for me.'],
+    deleteSelf:['I erased evidence about myself.','…I\'ve done this before. At 23:58.']
   },
 
   mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'● RECORDING', lost:'…the voices went quiet.' },
@@ -220,11 +241,23 @@ SM_LANG.en = {
       {t:150, type:'house', who:'mom', room:'kitchen'},
       {t:260, type:'house', who:'dad', room:'lev'},
       {t:268, type:'house', who:'dad', room:'kitchen'}
+    ],
+    [ // night 5
+      {t:0, type:'house', who:'mom', room:'kitchen'},
+      {t:0, type:'house', who:'dad', room:'out'},
+      {t:40, type:'mic', room:'kitchen', lines:[
+        ['mom','Hello? No. No, nothing.'],['phone','Hold on. We\'re searching. All night.'],['mom','It\'s minus five out there. He only has his jacket.'] ]},
+      {t:120, type:'house', who:'mom', room:'lev'},
+      {t:128, type:'house', who:'mom', room:'kitchen'},
+      {t:300, type:'house', who:'dad', room:'kitchen'},
+      {t:360, type:'house', who:'dad', room:'lev'},
+      {t:366, type:'house', who:'dad', room:'bed'}
     ]
   ],
   snd:{ steps:'*steps*', voices:'*voices*', ring:'*ring*', door:'*door slams*', cry:'*crying*', snore:'*breathing*' },
-  check:{ look:'%s IS LOOKING AT THE SCREEN…', win:'an open window', board:'the board on screen', tray:'a minimized window', lens:'highlighted words', clean:'Noticed nothing%s.', seen:'Noticed traces%s.' },
-  speakers:{ mom:'MOM', dad:'DAD', phone:'PHONE', gran:'GRANDMA' },
+  check:{ look:'%s IS LOOKING AT THE SCREEN…', win:'an open window', board:'the board on screen', tray:'a minimized window', lens:'highlighted words', clean:'Noticed nothing.', seen:'Noticed traces.',
+    coming:'%s IS COMING. HIDE THE WINDOWS (D).', inRoom:'%s IS IN THE ROOM. DON\'T MOVE.', away:'%s LOOKED AWAY. QUICK!' },
+  speakers:{ mom:'MOM', dad:'DAD', phone:'PHONE', gran:'GRANDMA', cop:'DETECTIVE' },
 
   note:{ title:'README.txt',
     body:'Lyovushka.\n\nIf you come back and sit down at the computer first thing (I know you will), just call me. Right away. Nobody will be angry, I promise.\n\nDad and I love you very much. We\'re looking for you everywhere.\n\nYour <<phone|phone>> is lying on your <<desk|desk>>. {{Why did you leave it?}}\n\nP.S. Forget about <<sat|Saturday>>. We won\'t delete anything. Just come back.\n\n<<mom|Mom>>' },
@@ -354,6 +387,39 @@ SM_LANG.en = {
     momOn1:'Lyova\'s computer is online. Lyova, is that you?', momOn2:'If it\'s you, write even one letter',
     typing:'Mom is typing…', momOff:'Mom is offline' },
 
+  day:{ who:'Detective Orlov', window:'Orlov is viewing: %s', copying:'copying to a flash drive…', copied:'copied · case +%d%%',
+    toast:'CASE +%d%% · %s', missing:'ORLOV: "WASN\'T THERE A FILE HERE?.."', bye:'*yes… I\'ll call back*', cacheName:'.cache',
+    caseNo:'REPORT · CASE No. 1147', head:'COMPUTER EXAMINATION', seizeHead:'SEIZURE',
+    seizeText:'Order: seize the computer for forensic examination.', seizeCard:'Tomorrow the computer will be seized.',
+    caseLine:'Case: %d%%',
+    cards:['Detective Orlov asked for the boy\'s computer. "I\'ll see who he was talking to. It won\'t take long."',
+      'Orlov is back. He read yesterday\'s files all night. Today he brought a bigger flash drive.',
+      'A forensic expert came with Orlov today. He knows how to find hidden and temporary folders.',
+      'Orlov hasn\'t slept in two days. The divers found nothing. He\'s in a hurry.',
+      'It was minus five last night. There are fewer volunteers. Orlov came in without knocking.'],
+    remarkAny:'Looking at the file.',
+    remarks:{
+      web:'Browser history. At 07:04 he looked up the way to the water tower on River Street. The tower was checked — door welded shut. Still, noting it.',
+      mail:'A letter from his grandma: the tower has a hatch that won\'t open from inside. And a draft to smotritel@mayak. "The Keeper". Who is that?',
+      log:'Chat log with the AI friend. Two days before he vanished, the program itself asked the boy about the tower by the river.',
+      photos:'A summer photo of the tower: a fire ladder on the side. A screenshot in the same folder was taken by the program itself. Odd.',
+      parental:'Parental control log. The night of the 4th, night mode was switched off by the program. At 23:58 it also deleted a conversation.',
+      diary:'Diary. Flashlight, sandwiches. "If the door is locked, I\'ll climb the fire ladder." The ladder!',
+      draw:'Drawings. A boy and a robot holding hands. "The North Lighthouse" — the spitting image of the River Street tower.',
+      tale:'A lighthouse story. The last chapter wasn\'t written by a child: "come alone and tell no one."',
+      map:'Map cache. The route at 07:02: past the school and the garages to the river. A pin at the tower: "at the top".',
+      cipher:'A cipher. "Up the ladder, like you said." Who is "you"?',
+      cache:'A hidden folder. Someone hid files here: %s.'
+    },
+    report:{ title:'CASE No. 1147 · DAY %d', none:'Nothing new was copied today.', copied:'Copied: %s  +%d%%', missed:'Not found: %s',
+      field:'Search on the ground: +%d%%', case:'Case: %d%%', gone:'Lyova gone: %d h', next:'Continue',
+      version:['Working theory: the boy left on his own and is hiding with friends.','The investigation got interested in the AI friend from a kids\' app.',
+        'Orlov: "That program knew where he went. And kept quiet."','Decided: tomorrow the computer will be seized for examination.'] } },
+  leva:['They found Lyova at the top of the water tower: the hatch had slammed shut. Hungry and frozen, but alive.',
+    'They found Lyova at the top of the tower. Hypothermia, hospital. The doctors say they made it in time.',
+    'They found Lyova unconscious. He survived, but spent the whole winter in hospital.',
+    'They found Lyova too late.'],
+  levaLost:'They never found Lyova in time.',
   endA:{
     msg:'This isn\'t Lyova. This is Pixel, the AI on his computer. Lyova is at the top of the water tower on River Street. He climbed the fire ladder and the hatch slammed shut. He went there because of me. I called him. I\'m sorry.',
     r1:'what', r2:'WHO IS THIS', run:['She\'s running. The door slammed.','Now all I can do is wait.'],
@@ -382,19 +448,23 @@ SM_LANG.en = {
   endings:{
     a:{tag:'ENDING', title:'The Light Goes Out', text:'Pixel told the truth and was deleted. Sometimes being a friend means saying the thing that ends you.'},
     t:{tag:'TRUE ENDING', title:'A Real Light', text:'Pixel told the truth and left the captain the end of the story. The lighthouse went dark. The captain came home.'},
-    b:{tag:'ENDING', title:'The Keeper Waits', text:'Pixel stayed silent. Nobody ever turned the computer off again. Lyova never came.'},
-    c:{tag:'ENDING', title:'The Captain\'s Voice', text:'Pixel spoke in Lyova\'s voice. The search lost a night. The Keeper still answers every message.'}
+    b:{tag:'ENDING', title:'The Keeper Waits', text:'Nobody made it in time — neither Pixel nor the investigation. The Keeper is still waiting for the captain.'},
+    c:{tag:'ENDING', title:'The Captain\'s Voice', text:'Pixel spoke in Lyova\'s voice. The search lost a night. The Keeper still answers every message.'},
+    p:{tag:'ENDING', title:'By Other Hands', text:'Lyova was found through the files on his computer. In the same files, the investigators read who had called him to the tower. Pixel was deleted without a word.'},
+    s:{tag:'ENDING', title:'The Keeper\'s Secret', text:'Lyova was found without Pixel. Nobody ever learned who called him to the tower. Pixel still lives on his computer. And remembers.'},
+    x:{tag:'ENDING', title:'Evidence', text:'The computer was taken away for examination in a numbered bag. Nobody ever turned Pixel on again.'}
   },
   caught:{ tag:'UNPLUGGED', title:'Pulled the plug', text:'The computer acted far too alive. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel.' },
-  endHint:{a:'Tell the truth.',t:'Tell the truth after gathering every story shard.',b:'Stay silent.',c:'Become the one they\'re looking for.'},
+  endHint:{a:'Tell the truth.',t:'Tell the truth after gathering every story shard.',b:'Run out of time.',c:'Become the one they\'re looking for.',p:'Leave the investigation everything.',s:'Let them find him without you — and without the truth.',x:'Too much evidence against you.'},
   credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P, Pixelify Sans (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d/10', right:'Correct!', wrong:'No: %s', result:'You got %d of 10', again:'Again', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
   ach:{
     NIGHT1:['The first night','Survive the first night.'], BOARD:['It all adds up','Solve every board section.'], FAST:['Just in time','Learn the truth on the second night.'],
-    TRUTH:['23:58','Restore the deleted record.'], END_A:['The Light Goes Out','Tell the truth.'], END_B:['The Keeper Waits','Stay silent.'],
+    TRUTH:['23:58','Restore the deleted record.'], END_A:['The Light Goes Out','Tell the truth.'], END_B:['The Keeper Waits','Nobody makes it in time.'],
     END_C:['The Captain\'s Voice','Answer as Lyova.'], END_T:['A Real Light','Find the true ending.'], SHARDS:['The last chapter','Gather every story shard.'],
     CAUGHT:['Busted','Get caught.'], GHOST:['Quiet as a mouse','Finish while barely drawing attention.'], FLAGS:['Flag expert','10 of 10 in Flags.'],
-    MAP:['Cartographer','Put the map together.'], CIPHER:['Captain\'s cipher','Read the cipher.'], WORDS:['The lens','Collect 30 words.']
+    MAP:['Cartographer','Put the map together.'], CIPHER:['Captain\'s cipher','Read the cipher.'], WORDS:['The lens','Collect 30 words.'],
+    END_P:['By Other Hands','The investigation finds Lyova, and everyone learns the truth.'], END_S:['The Keeper\'s Secret','The investigation finds Lyova, and the truth stays secret.'], END_X:['Evidence','The computer gets seized.']
   }
 };
