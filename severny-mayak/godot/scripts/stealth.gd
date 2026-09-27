@@ -161,6 +161,27 @@ func recheck(who: String) -> void:
 	checked = false
 	_check(who)
 
+## Шаги, которых нет. Закрыт дом — тревога как при настоящем визите, только никто не приходит.
+func phantom() -> void:
+	if phase != "" or not active():
+		return
+	Sfx.play("step", -4.0)
+	G.house.sound(300, G.L.snd.steps)
+	if G.house.visible:
+		G.pix.say(G.L.lines.phantomSeen)
+		return
+	G.menus.visit_banner("warn", "")
+	G.hud.set_fast(false)
+	await get_tree().create_timer(5.0, false).timeout
+	if phase == "":
+		G.menus.visit_banner("", "")
+		if not G.flag("phantom1"):
+			G.set_flag("phantom1")
+			G.pix.say(G.L.lines.phantom1)
+		else:
+			var pn: Array = G.L.lines.phantomN
+			G.pix.say(pn[randi() % pn.size()])
+
 func reset_visits() -> void:
 	_gen += 1
 	checking = false

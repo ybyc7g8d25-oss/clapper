@@ -215,7 +215,7 @@ func open_drawing(i: int) -> void:
 	D.open_win("dr%d" % i, dr.names[i], "note", 250, 196, func(w: OSWindow):
 		var v := UI.vbox(2)
 		var t := TextureRect.new()
-		t.texture = UI.tex(DRAW[i])
+		t.texture = UI.tex("drawing_family_x" if i == 2 and G.flag("uFamily") else DRAW[i])
 		t.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		t.custom_minimum_size = Vector2(240, 168 if i > 0 else 125)
 		v.add_child(t)
@@ -230,18 +230,26 @@ func open_drawing(i: int) -> void:
 		if G.menus.scare():
 			say(G.L.lines.scare)
 	first("draw%d" % i, dr.react[i])
+	if i == 2 and G.flag("uFamily"):
+		first("uFamilySeen", G.L.lines.uFamily)
 
 # ---------------------------------------------------------------- журнал бесед
 func open_log() -> void:
 	D.open_win("log", G.L.log.title, "pixel", 230, 160, func(w: OSWindow):
 		var bb := ""
-		for d in G.L.log.days:
+		var days: Array = G.L.log.days.duplicate()
+		if G.flag("uLog"):
+			# запись, которой не было: «сегодня, 03:12»
+			days.append([G.L.uncanny.logDate, G.L.uncanny.log])
+		for d in days:
 			bb += "[color=#554b45]— %s —[/color]\n" % G.doc(d[0])
 			for m in d[1]:
 				var l := chat_line(m[0], m[1])
 				if l != "":
 					bb += l + "\n"
 		w.set_content(UI.scroll(paper(rt(bb)))))
+	if G.flag("uLog"):
+		first("uLogSeen", G.L.lines.uLog)
 
 # ---------------------------------------------------------------- браузер
 func open_web() -> void:
@@ -364,9 +372,12 @@ func open_photo(i: int) -> void:
 		t.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		t.custom_minimum_size = Vector2(208, 138)
 		v.add_child(t)
-		v.add_child(rt(G.doc(it.cap), UI.PAPER))
+		var cap: String = G.L.uncanny.photoCap if i == 0 and G.flag("uPhoto") else String(it.cap)
+		v.add_child(rt(G.doc(cap), UI.PAPER))
 		w.set_content(paper(v, UI.DARK2, 3)), UI.DARK2)
 	first("photo%d" % i, G.L.photos.react[i])
+	if i == 0 and G.flag("uPhoto"):
+		first("uPhotoSeen", G.L.lines.uPhoto)
 
 # ---------------------------------------------------------------- сказка
 func tale_count() -> int:
@@ -615,6 +626,10 @@ func open_parental() -> void:
 			bb += "[color=#554b45]%s[/color]  %s\n" % [G.doc(r[0]), G.doc(r[1])]
 		w.set_content(UI.scroll(paper(rt(bb), Color("#e7dfcc")))))
 	first("parental", G.L.lines.parental)
+	# Пиксель соврал, что здесь ничего нет
+	if G.fget("goal", "") == "lie":
+		G.pix.goal("board")
+		first("lieCaught", G.L.lines.lieCaught)
 
 # ---------------------------------------------------------------- корзина и сторож
 func open_bin() -> void:

@@ -170,9 +170,25 @@ func _play(k: String) -> bool:
 		errors.append("day 1 copied nothing")
 	if k in ["a", "t"] and (G.st.copied.has("log") or G.st.copied.has("parental")):
 		errors.append("hidden file was copied: %s" % str(G.st.copied))
+	if k == "p" and not G.flag("lieDelete"):
+		errors.append("Pixel did not lie about the parental log")
 	if k in ["p", "s", "x"]:
 		return await _police_run(k)
 	await shot("n2-start")
+	if k == "a":
+		# рабочий стол изменился сам; шаги, которых нет
+		if not G.flag("uFamily"):
+			errors.append("family drawing did not change")
+		if G.night.phantoms.is_empty():
+			errors.append("no phantom steps planned for night 2")
+		G.docs.open_drawing(2)
+		await wait(0.3)
+		await shot("n2-family")
+		G.desk.close_all()
+		G.stealth.phantom()
+		await wait(0.2)
+		await shot("n2-phantom")
+		if not await until(func(): return G.flag("phantom1"), 30, "phantom steps"): return false
 	G.st.mins = 21
 	G.night.minute()
 	if not await until(func(): return G.flag("momPolice"), 30, "mom police"): return false

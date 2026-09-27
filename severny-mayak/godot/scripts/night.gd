@@ -8,6 +8,7 @@ var running := false
 var events: Array = []
 var ev_i := 0
 var _acc := 0.0
+var phantoms: Array = []       # минуты ночи, когда Пикселю послышатся шаги, которых нет
 
 func say(lines, cb := Callable()) -> void:
 	G.pix.say(lines, cb)
@@ -46,6 +47,10 @@ func start_night(fresh: bool) -> void:
 		G.st.mins = 0
 		G.save_night()
 	G.docs.reset_chats()
+	# между ночами рабочий стол меняется сам (никто, кроме Пикселя, к нему не прикасался)
+	for k in [["uFamily", 2], ["uLog", 3], ["uPhoto", 4]]:
+		if n >= int(k[1]) and not G.flag(k[0]):
+			G.st.f[k[0]] = 1
 	G.desk.build_icons(G.docs.desk_list())
 	update_stage(true)
 	G.hud.refresh()
@@ -55,6 +60,7 @@ func start_night(fresh: bool) -> void:
 	events = G.L.events[clampi(n - 1, 0, G.L.events.size() - 1)].duplicate(true)
 	events.sort_custom(func(a, b): return a.t < b.t)
 	ev_i = 0
+	_plan_phantoms(n)
 	var pos := {}
 	while ev_i < events.size() and int(events[ev_i].t) <= int(G.st.mins):
 		var e: Dictionary = events[ev_i]
@@ -78,6 +84,9 @@ func start_night(fresh: bool) -> void:
 			_: say(G.L.lines.night5)
 		if G.flag("seize"):
 			say(G.L.lines.seizeWarn)
+		if G.flag("lieDelete") and G.file_state("parental") == "deleted" and not G.flag("lieDeletedSaid"):
+			G.set_flag("lieDeletedSaid")
+			say(G.L.lines.lieDeleted)
 	else:
 		say(G.L.lines.welcome)
 		if G.flag("revealed"):
@@ -103,6 +112,8 @@ func minute() -> void:
 	while ev_i < events.size() and int(events[ev_i].t) <= int(G.st.mins):
 		fire(events[ev_i])
 		ev_i += 1
+	if phantoms.has(int(G.st.mins)):
+		G.stealth.phantom()
 	if int(G.st.mins) % 5 == 0:
 		G.save_game()
 	if int(G.st.mins) >= G.NIGHT_LEN and not G.st.mom_online and not G.flag("revealed"):
@@ -125,6 +136,28 @@ func fire(e: Dictionary) -> void:
 			G.hud.set_fast(false)
 		"script":
 			call("script_" + String(e.id))
+
+## Со второй ночи Пиксель иногда слышит шаги, которых нет. Не рядом с настоящими визитами.
+func _plan_phantoms(n: int) -> void:
+	phantoms.clear()
+	if n < 2:
+		return
+	var busy := []
+	for e in events:
+		if e.type == "house" and String(e.room) in ["lev", "levbed"]:
+			busy.append(int(e.t))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = n * 7919 + int(G.meta.runs)
+	var tries := 0
+	while phantoms.size() < mini(n - 1, 3) and tries < 200:
+		tries += 1
+		var m := rng.randi_range(40, 440)
+		var ok := true
+		for b in busy + phantoms:
+			if absi(int(b) - m) < 25:
+				ok = false
+		if ok:
+			phantoms.append(m)
 
 # ---------------------------------------------------------------- сценки
 func script_momLeft() -> void:
@@ -204,6 +237,10 @@ func on_solved(sid: String) -> void:
 		"s4":
 			G.desk.refresh_icons()
 			G.desk.blink_icon("cipher")
+		"s5":
+			# Пиксель понял, что главу написал он, — и уводит от журнала контроля
+			if not G.st.solved.has("s6") and not G.flag("lieCaught"):
+				G.pix.goal("lie")
 	if int(G.st.mem) >= 100:
 		G.pix.goal("guard")
 		G.desk.blink_icon("tm")
@@ -233,7 +270,10 @@ func reveal() -> void:
 	if int(G.st.night) <= 2:
 		G.achieve("FAST")
 	update_stage()
-	say(G.L.lines.reveal, mom_online)
+	var lines: Array = G.L.lines.reveal.duplicate()
+	if G.flag("lieDelete"):
+		lines += G.L.lines.lieConfess
+	say(lines, mom_online)
 
 func mom_online() -> void:
 	G.stealth.reset_visits()

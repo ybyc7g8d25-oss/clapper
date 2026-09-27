@@ -110,6 +110,10 @@ func run() -> void:
 	if not G.flag("dayTut"):
 		G.set_flag("dayTut")
 		await G.pix.say_wait(G.L.lines.dayIntro)
+		# Пиксель врёт: журнал контроля — улика против него самого
+		if G.file_state("parental") == "" and not G.st.solved.has("s6"):
+			G.set_flag("lieDelete")
+			await G.pix.say_wait(G.L.lines.lieDelete)
 	else:
 		await G.pix.say_wait(G.L.lines.dayAgain)
 	if expert(d) and not G.flag("expertSeen"):

@@ -328,6 +328,16 @@ def make_icons(v2):
 def make_docs(v2):
     save(v2.drawing_tower(), 'drawing_tower')
     save(v2.drawing_family(), 'drawing_family')
+    # «жуткий» вариант: маму и папу кто-то зачеркнул тёмным мелком (появляется во 2-ю ночь)
+    from PIL import Image, ImageDraw
+    im = Image.open(out('drawing_family')).convert('RGBA')
+    d = ImageDraw.Draw(im)
+    rnd = random.Random(7)
+    for x0, x1 in ((14, 56), (64, 106)):
+        for _ in range(26):
+            y = rnd.randint(16, 140)
+            d.line([(x0 + rnd.randint(-2, 4), y), (x1 + rnd.randint(-4, 2), y + rnd.randint(-10, 10))], fill=(38, 33, 36, 255), width=1)
+    im.save(out('drawing_family_x'))
     wb = v2.wall_base()
     for layer in (v2.lamp_layer('yellow', 'yellow'), v2.tower_layer(), v2.lamp_disc('yellow')):
         wb.paste(layer, 0, 0)

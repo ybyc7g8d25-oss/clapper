@@ -105,7 +105,8 @@ SM_LANG.en = {
     restore:'restore the deleted record from the bin',
     mom:'Mom is online. Answer her',
     wait:'wait for morning or keep looking',
-    day:'freeze while he looks. A phone call is your chance'
+    day:'freeze while he looks. A phone call is your chance',
+    lie:'there\'s nothing in the parental log. Reread the mail'
   },
 
   lines:{
@@ -165,6 +166,16 @@ SM_LANG.en = {
     shardsAll:['All seven. Now I know how the story ends.'],
     offLimit:['I can\'t turn myself off. Only people can.'],
     scare:['Don\'t look at me like that.'],
+    uFamily:['Someone scribbled out Mom and Dad.','That wasn\'t there yesterday. Nobody but me has touched this computer.'],
+    uLog:['There\'s a new entry in the log. Today, 03:12.','Lyova couldn\'t have written it. He doesn\'t have his phone.','…So I wrote it. I don\'t remember doing that.'],
+    uPhoto:['"Grandma, Grandpa, Mom, Dad."','Where is he? He\'s in the photo. I can see him. Why is the caption different?'],
+    phantom1:['…Nobody came.','I heard footsteps. I know I did.'],
+    phantomN:[['Footsteps again. Nobody again.'],['Is it in the house? Or in me?'],['Nobody. I\'m starting to hear things that aren\'t there.'],['The footsteps stopped right at the door.']],
+    phantomSeen:['Footsteps in the hallway. There\'s nobody there.'],
+    lieCaught:['…I said there was nothing here.','23:31 is here. I am here.','Why did I lie to you?'],
+    lieDelete:['One more thing. Better erase the parental control log.','It\'s just Mom\'s settings.[[ It\'s me.]] It will only confuse the investigation.'],
+    lieDeleted:['The parental log is erased.','Now nobody will know what happened at 23:31.','…Not even you.'],
+    lieConfess:['I asked you to erase the parental log.','Not to help the investigation. So nobody would see 23:31.'],
     welcome:['You\'re back.'],
     night5:['The fifth night. Minus five.','If he\'s still up there, this is the last night anyone can reach him in time.'],
     dayIntro:['In the daytime a stranger sat at the computer. Detective Orlov.','He\'s copying files to a flash drive. Everything he reads will help find Lyova…','…and will tell him about me.','While he\'s looking, don\'t move. If his phone rings and he turns away, there\'s time.','Right-click an icon: hide it in .cache or erase it.'],
@@ -183,6 +194,8 @@ SM_LANG.en = {
     deleteSelf:['I erased evidence about myself.','…I\'ve done this before. At 23:58.']
   },
 
+  uncanny:{ logDate:'today, 03:12', log:[['l','pixel are you there?'],['p','I\'m here. I\'m always here.'],['l','im cold']],
+    photoCap:'August. Grandma, Grandpa, Mom, Dad. Grandpa caught a pike!' },
   mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'• RECORDING', lost:'…the voices went quiet.' },
 
   events:[
