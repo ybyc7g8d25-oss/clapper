@@ -347,7 +347,7 @@ def make_flags(v2):
     use_orig()
     tmp = os.path.join(OUT, '_tmpflags')
     os.makedirs(tmp, exist_ok=True)
-    v2.out = lambda n: os.path.join(tmp, n + '.png')
+    v2.out = lambda n: os.path.join(tmp, n if n.endswith('.png') else n + '.png')
     v2.flags()
     from PIL import Image, ImageEnhance
     for f in os.listdir(tmp):

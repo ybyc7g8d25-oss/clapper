@@ -92,6 +92,18 @@ func _play(k: String) -> bool:
 	G.docs.open_web()
 	await wait(0.3)
 	await shot("n1-web")
+	if k == "a":
+		# «Флажки»: у каждой страны есть картинка флага
+		for c in G.L.flags.countries:
+			if UI.tex("flag_" + c) == null:
+				errors.append("no flag image: " + c)
+		G.docs.open_flags()
+		G.docs.flag_seq = ["fr", "jp", "ru", "de", "se", "br", "us", "gb", "it", "mayak"]
+		G.docs.flag_round = 0
+		G.docs._flags_round(G.desk.win("flags"))
+		await wait(0.3)
+		await shot("n1-flags")
+		G.desk.close_win("flags")
 	G.docs.open_drawing(2)
 	G.docs.open_log()
 	if k == "t":
