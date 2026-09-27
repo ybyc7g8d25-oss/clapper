@@ -1,0 +1,10 @@
+GNU Unifont (glyphs 15.1.01), subset: Latin, Cyrillic, punctuation.
+Source: https://unifoundry.com/unifont/  (Ubuntu package fonts-unifont 15.1.01)
+
+Since version 13.0.04 GNU Unifont is dual-licensed. You may use it under EITHER:
+  * SIL Open Font License, Version 1.1  (https://openfontlicense.org), OR
+  * GNU General Public License v2 or later, with the GNU font embedding exception.
+
+This game uses it under the SIL Open Font License 1.1.
+The subset was produced with fontTools; the name "Unifont" is kept as the upstream
+font does not declare a Reserved Font Name.
