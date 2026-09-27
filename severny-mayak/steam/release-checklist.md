@@ -17,26 +17,31 @@
 - [ ] Завести в Steamworks → Stats & Achievements достижения с API-именами из `achievements.md` (регистр важен).
 - [ ] Иконки 256×256 (открытое и закрытое состояние) для каждого.
 
-## 4. Сборка
+## 4. Сборка и Steamworks в Godot
+- [ ] Поставить **GodotSteam** (GDExtension) в проект: Godot → AssetLib → «GodotSteam GDExtension» → Install.
+      Код игры уже готов: `scripts/game.gd` сам находит синглтон `Steam`, вызывает `steamInitEx()` и выдаёт достижения.
+      Без GodotSteam игра просто работает без Steam.
+- [ ] Положить `steam_appid.txt` с App ID рядом с `.exe` для локальной проверки (из Steam он не нужен).
+- [ ] Сборка:
 ```bash
-npm install
-npm run dist:win     # → dist/win-unpacked/
-npm run dist:linux   # → dist/linux-unpacked/
+cd godot
+godot --headless --export-release "Windows Desktop" ../dist/windows/SevernyMayak.exe
+godot --headless --export-release "Linux" ../dist/linux/SevernyMayak.x86_64
 ```
-- [ ] В корне сборки должен лежать `steam_appid.txt` (добавляется автоматически через `extraFiles`). Для релиза Steam его можно убрать: игра, запущенная из Steam, знает свой App ID.
+- [ ] Иконка .exe: сделать `icon.ico` (256×256) и указать в Project → Export → Windows → Application → Icon
+      (понадобится rcedit: Editor Settings → Export → Windows → rcedit).
 - [ ] Проверить, что при запуске из Steam работает оверлей (Shift+Tab) и выдаются достижения.
-- [ ] Иконка приложения: `build/icon.ico` (Windows) и `build/icon.png` 512×512 — electron-builder подхватит их сам.
 
 ## 5. Загрузка билда
-- [ ] Steamworks SDK → `tools/ContentBuilder`: депо для Windows (и Linux при желании), путь к `dist/win-unpacked`.
-- [ ] Launch options: `Severny Mayak.exe` (Windows), `severny-mayak` (Linux).
-- [ ] Steam Cloud (Auto-Cloud): Windows — `%APPDATA%/severny-mayak/Local Storage/**`, Linux — `~/.config/severny-mayak/Local Storage/**`.
+- [ ] Steamworks SDK → `tools/ContentBuilder`: депо для Windows (и Linux при желании), путь к `dist/windows`.
+- [ ] Launch options: `SevernyMayak.exe` (Windows), `SevernyMayak.x86_64` (Linux).
+- [ ] Steam Cloud (Auto-Cloud): Windows — `%APPDATA%/SevernyMayak/*.json`, Linux — `~/.local/share/SevernyMayak/*.json`.
 
 ## 6. Перед релизом
-- [ ] `npm test` зелёный на обоих языках.
+- [ ] Автотест зелёный на обоих языках: `godot --headless -- --test --lang=ru` и `--lang=en`.
 - [ ] Пройти руками: минимум один раз каждый финал, прятки, проигрыш «Шнур выдернут», второй круг.
 - [ ] Проверить щадящие эффекты и выключенные скримеры.
-- [ ] Демо для Steam Next Fest: `game/` до восстановления pix_log (стадии 0–2) — ставим заглушку «Продолжение в полной версии» вместо развязки.
+- [ ] Демо для Steam Next Fest: часть 1 целиком, в конце — заставка «Продолжение в полной версии».
 - [ ] Отправить на проверку Valve (2–5 рабочих дней), потом «Coming Soon» не меньше двух недель.
 
 ## Маркетинг

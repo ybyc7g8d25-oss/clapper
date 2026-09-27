@@ -183,7 +183,7 @@ func _dima_night() -> void:
 func check_part2() -> void:
 	if int(G.st.part) != 2 or G.flag("p2done"):
 		return
-	if not (G.flag("map") and G.flag("diary") and G.flag("tale3")):
+	if not (G.flag("map") and G.flag("diary") and G.flag("tale3") and G.flag("cipher")):
 		return
 	G.set_flag("p2done")
 	if not await G.sleep(3.0):

@@ -34,7 +34,9 @@ func desk_list() -> Array:
 		{"id": "cam", "ic": "cam", "label": func(): return l.cam, "open": open_cam},
 		{"id": "chat", "ic": "chat", "label": func(): return l.chat, "open": open_chat},
 		{"id": "bin", "ic": "bin", "label": func(): return l.bin, "open": open_bin},
+		{"id": "photos", "ic": "photo", "label": func(): return G.L.photos.folder, "open": open_photos},
 		{"id": "flags", "ic": "star", "label": func(): return G.L.flags.title, "open": open_flags},
+		{"id": "boat", "ic": "boat", "label": func(): return G.L.boat.title, "open": open_boat},
 		{"id": "map", "ic": "web", "label": func(): return G.L.map.title.split(" ")[0], "open": open_map,
 			"show": func(): return int(G.st.part) >= 2},
 		{"id": "dont", "ic": "noteRed", "label": func(): return l.dont, "open": open_dont,
@@ -51,6 +53,7 @@ func start_menu_items() -> Array:
 		{"text": l.desk.chat, "ic": "chat", "cb": open_chat},
 		{},
 		{"text": l.os.taskmgr, "ic": "tm", "cb": open_tm},
+		{"text": l.parental.title.split(" — ")[0], "ic": "shield", "cb": open_parental},
 		{"text": l.ui.settings, "ic": "gear", "cb": func(): G.menus.open_pause(true)},
 		{},
 		{"text": l.os.off, "ic": "power", "cb": power_off},
@@ -425,21 +428,21 @@ func tale_count() -> int:
 	return 4 if int(G.st.part) >= 2 else 2
 
 func open_tale() -> void:
-	D.open_win("tale", G.L.tale.folder, "folder", 460, 220)
+	D.open_win("tale", G.L.tale.folder, "folder", 580, 220)
 	render_tale()
 	if not G.flag("tale"):
 		G.set_flag("tale")
 		say(G.L.lines.taleFirst)
 	if tale_count() == 4 and not G.flag("taleNew"):
 		G.set_flag("taleNew")
-		say(G.L.lines.taleNew)
+		say(G.L.lines.taleNew + G.L.lines.cipherAppear)
 
 func render_tale() -> void:
 	var w := D.win("tale")
 	if not w:
 		return
 	var g := GridContainer.new()
-	g.columns = 4
+	g.columns = 5
 	for i in tale_count():
 		var c = G.L.tale.chapters[i]
 		var b := Button.new()
@@ -453,7 +456,22 @@ func render_tale() -> void:
 		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 		b.pressed.connect(open_chapter.bind(i))
 		g.add_child(b)
+	if int(G.st.part) >= 2:
+		g.add_child(_cipher_file_button())
 	w.set_content(UI.panel(g, Color.WHITE, Color(0, 0, 0, 0), 0, 10))
+
+func _cipher_file_button() -> Button:
+	var cb := Button.new()
+	cb.text = G.L.cipher.file
+	cb.icon = UI.tex("icon_noteRed")
+	cb.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cb.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	cb.custom_minimum_size = Vector2(100, 90)
+	cb.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	cb.add_theme_stylebox_override("hover", UI.flat(Color("#efeafd"), UI.GRAPE, 2, 0, 4))
+	cb.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	cb.pressed.connect(open_cipher)
+	return cb
 
 func open_chapter(i: int) -> void:
 	var c = G.L.tale.chapters[i]
@@ -1329,3 +1347,187 @@ func _map_click(pos: int) -> void:
 		say(G.L.lines.mapDone, func(): G.story.check_part2())
 		return
 	render_map()
+
+# ---------------------------------------------------------------- фото
+const PHOTO_TEX := ["photo_river", "photo_tower", "photo_treehouse", "photo_school", "photo_screen"]
+
+func open_photos() -> void:
+	D.open_win("photos", G.L.photos.folder, "photo", 600, 290, func(w: OSWindow):
+		var g := GridContainer.new()
+		g.columns = 5
+		g.add_theme_constant_override("h_separation", 6)
+		var items: Array = G.L.photos.items
+		for i in items.size():
+			var b := Button.new()
+			b.custom_minimum_size = Vector2(108, 110)
+			b.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+			b.add_theme_stylebox_override("hover", UI.flat(Color("#efeafd"), UI.GRAPE, 2, 0, 4))
+			b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+			var v := UI.vbox(4)
+			v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var th := TextureRect.new()
+			th.texture = UI.tex(PHOTO_TEX[i])
+			th.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			th.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			th.custom_minimum_size = Vector2(100, 66)
+			th.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			v.add_child(th)
+			var nl := UI.label(items[i].n, null, 16, UI.INK, true)
+			nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nl.custom_minimum_size = Vector2(100, 0)
+			nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			v.add_child(nl)
+			v.position = Vector2(4, 2)
+			b.add_child(v)
+			b.pressed.connect(open_photo.bind(i))
+			g.add_child(b)
+		w.set_content(UI.panel(g, Color.WHITE, Color(0, 0, 0, 0), 0, 10)))
+	if not G.flag("photos"):
+		G.set_flag("photos")
+		say(G.L.lines.photosFirst)
+
+func open_photo(i: int) -> void:
+	var it = G.L.photos.items[i]
+	D.open_win("ph%d" % i, it.n + " — " + G.L.os.viewer, "photo", 440, 360, func(w: OSWindow):
+		var v := UI.vbox(8)
+		var tr := TextureRect.new()
+		tr.texture = UI.tex(PHOTO_TEX[i])
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+		tr.custom_minimum_size = Vector2(416, 276)
+		v.add_child(tr)
+		if i == 4:
+			var cap := UI.label(G.L.dead.rows[0][1], null, 16, Color.WHITE, true)
+			cap.position = Vector2(48, 208)
+			cap.size = Vector2(320, 40)
+			tr.add_child(cap)
+		v.add_child(UI.label(it.cap, null, 16, Color("#cfd8e3"), true))
+		w.set_content(UI.panel(v, Color("#2b2b33"), Color(0, 0, 0, 0), 0, 8)))
+	if not G.flag("photo%d" % i):
+		G.set_flag("photo%d" % i)
+		var lines: Array = []
+		for l in it.react:
+			lines.append(G.plain(l))
+		say(lines)
+
+# ---------------------------------------------------------------- журнал родительского контроля
+func open_parental() -> void:
+	D.open_win("parental", G.L.parental.title, "shield", 600, 300, func(w: OSWindow):
+		var bb := "[table=2]"
+		for r in G.L.parental.rows:
+			bb += "[cell][color=#8890a0]%s   [/color][/cell][cell]%s[/cell]" % [r[0], G.clue(r[1])]
+		bb += "[/table]"
+		w.set_content(paper_rich(bb)))
+	if not G.flag("parental"):
+		G.set_flag("parental")
+		say(G.L.lines.parentalFirst + G.L.lines.parentalNight)
+
+# ---------------------------------------------------------------- шифровка Лёвы
+var cipher_shift := 0
+
+func _shift_text(text: String, sh: int) -> String:
+	var ab: String = G.L.cipher.alphabet
+	var n := ab.length()
+	var out := ""
+	for ch in text.replace("ё", "е"):
+		var i := ab.find(ch)
+		out += ab[(i + sh + n * 4) % n] if i >= 0 else ch
+	return out
+
+func open_cipher() -> void:
+	D.open_win("cipher", G.L.cipher.title, "noteRed", 520, 330)
+	render_cipher()
+	if not G.flag("cipherSeen"):
+		G.set_flag("cipherSeen")
+		say(G.L.lines.cipherFirst)
+
+func render_cipher() -> void:
+	var w := D.win("cipher")
+	if not w:
+		return
+	var cp = G.L.cipher
+	var solved := G.flag("cipher")
+	var enc := _shift_text(cp.text, int(cp.key))
+	var shown: String = cp.text if solved else _shift_text(enc, -cipher_shift)
+	var v := UI.vbox(10)
+	v.add_child(UI.label(cp.hint, null, 16, UI.GREY, true))
+	var r := UI.rich("[color=%s]%s[/color]" % ["#1d1a2b" if solved else "#b0433a", G.esc(shown)], true)
+	r.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	v.add_child(UI.panel(r, Color("#fffef6"), UI.LINE, 2, 12))
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	var minus := UI.button("◀", func():
+		cipher_shift -= 1
+		_cipher_changed())
+	var plus := UI.button("▶", func():
+		cipher_shift += 1
+		_cipher_changed())
+	minus.disabled = solved
+	plus.disabled = solved
+	row.add_child(minus)
+	row.add_child(UI.label(cp.shift % (int(cp.key) if solved else posmod(cipher_shift, 40)), UI.head, 16, UI.INK))
+	row.add_child(plus)
+	v.add_child(row)
+	w.set_content(UI.panel(v, Color.WHITE, Color(0, 0, 0, 0), 0, 12))
+
+func _cipher_changed() -> void:
+	Sfx.play("key")
+	var n: int = String(G.L.cipher.alphabet).length()
+	if posmod(cipher_shift, n) == int(G.L.cipher.key) and not G.flag("cipher"):
+		Sfx.play("chime")
+		G.set_flag("cipher")
+		G.achieve("CIPHER")
+		render_cipher()
+		say(G.L.lines.cipherDone, func(): G.story.check_part2())
+		return
+	render_cipher()
+
+# ---------------------------------------------------------------- «Капитан и шторм»
+func open_boat() -> void:
+	D.open_win("boat", G.L.boat.title, "boat", 424, 440)
+	_boat_menu("")
+	if not G.flag("boat"):
+		G.set_flag("boat")
+		say(G.L.lines.boatFirst)
+
+func _boat_menu(result: String) -> void:
+	var w := D.win("boat")
+	if not w:
+		return
+	var bt = G.L.boat
+	var v := UI.vbox(10)
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	var t := UI.label(bt.title.to_upper(), UI.pixf, 16, UI.GRAPE, true)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(t)
+	if result != "":
+		var rl := UI.label(result, UI.head, 16, UI.INK, true)
+		rl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(rl)
+	for s in [bt.help, bt.record]:
+		var l := UI.label(s, null, 16, UI.GREY, true)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(l)
+	var go := UI.button(bt.start if result == "" else bt.again, _boat_play, "primary")
+	go.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(go)
+	w.set_content(UI.panel(v, Color.WHITE, Color(0, 0, 0, 0), 0, 16))
+	go.call_deferred("grab_focus")
+
+func _boat_play() -> void:
+	var w := D.win("boat")
+	if not w:
+		return
+	var game := BoatGame.new()
+	var holder := CenterContainer.new()
+	holder.add_child(game)
+	w.set_content(UI.panel(holder, Color("#0b0a0e"), Color(0, 0, 0, 0), 0, 4))
+	game.finished.connect(func(n: int, dark: bool):
+		if n >= 3:
+			G.achieve("BOAT")
+			say(G.L.lines.boatWin)
+		if dark:
+			say(G.L.lines.boatDark)
+		await get_tree().create_timer(1.2, false).timeout
+		var bt = G.L.boat
+		_boat_menu(bt.darkLose if dark else ((bt.win if n > 0 else bt.lose) + "  " + bt.score % n)))
+	game.call_deferred("start")

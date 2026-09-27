@@ -1072,3 +1072,123 @@ if __name__ == '__main__':
     cam_dad().save(out('cam_dad.png'))
     knob()
     print('extra art ok')
+
+
+# ============================================================ ФОТО (200x130, «с телефона»)
+def _photo_base(sky='sky'):
+    cv = Canvas(200, 130, sky)
+    return cv
+
+
+def _stick(cv, x, ground, h, shirt, hair, skirt=False, arms_up=False):
+    cv.line(x - 2, ground - h * .35, x - 3, ground, 'grey4', 2); cv.line(x + 2, ground - h * .35, x + 3, ground, 'grey4', 2)
+    top = ground - h
+    cv.poly([(x - 5, top + 12), (x + 5, top + 12), (x + (8 if skirt else 6), ground - h * .33), (x - (8 if skirt else 6), ground - h * .33)], shirt)
+    cv.disc(x, top + 6, 5, 'skin')
+    cv.rect(x - 5, top, 11, 3, hair)
+    cv.px(x - 2, top + 6, 'ink'); cv.px(x + 2, top + 6, 'ink'); cv.px(x - 1, top + 9, 'ink'); cv.px(x, top + 9, 'ink'); cv.px(x + 1, top + 9, 'ink')
+    if arms_up:
+        cv.line(x - 5, top + 14, x - 10, top + 6, 'skin', 2); cv.line(x + 5, top + 14, x + 10, top + 6, 'skin', 2)
+    else:
+        cv.line(x - 5, top + 14, x - 8, top + 26, 'skin', 2); cv.line(x + 5, top + 14, x + 8, top + 26, 'skin', 2)
+
+
+def photo_river():
+    cv = _photo_base()
+    cv.dither(0, 0, 200, 50, 'white', .15)
+    cv.disc(170, 22, 10, 'yellow')
+    cv.rect(0, 70, 200, 60, 'blue'); cv.dither(0, 70, 200, 60, 'navy', .2)
+    for x in range(0, 200, 14):
+        cv.line(x, 80 + (x % 28) // 4, x + 6, 80 + (x % 28) // 4, 'cyan')
+    cv.poly([(0, 88), (120, 92), (200, 104), (200, 130), (0, 130)], 'sand'); cv.dither(0, 88, 200, 42, 'tan', .25)
+    for i, (x, h, s, hr) in enumerate([(30, 44, 'grey2', 'grey1'), (46, 40, 'pink2', 'grey1'), (72, 46, 'red', 'yellow2'), (92, 50, 'green', 'dkbrown'), (112, 30, 'blue', 'brown')]):
+        _stick(cv, x, 116, h, s, hr, skirt=i in (1, 2), arms_up=i == 4)
+    cv.line(36, 76, 60, 58, 'brown', 1); cv.line(60, 58, 64, 90, 'grey2', 1)   # удочка деда
+    cv.rect(14, 104, 14, 5, 'grey3'); cv.poly([(16, 101), (26, 101), (24, 104), (18, 104)], 'cyan')  # щука в ведре
+    return cv
+
+
+def photo_tower():
+    cv = _photo_base('sky2')
+    cv.dither(0, 0, 200, 60, 'white', .12)
+    cv.rect(0, 104, 200, 26, 'green'); cv.dither(0, 104, 200, 26, 'dkgreen', .3)
+    cv.rect(140, 96, 60, 34, 'blue')
+    # кирпичная водонапорная башня
+    cv.rect(78, 40, 36, 70, 'brown2')
+    for y in range(42, 110, 4):
+        cv.line(78, y, 113, y, 'brown')
+        for x in range(80 + (y // 4 % 2) * 4, 113, 8):
+            cv.px(x, y + 1, 'brown'); cv.px(x, y + 2, 'brown')
+    cv.rect(72, 22, 48, 20, 'grey3'); cv.dither(72, 22, 48, 20, 'grey4', .3)
+    cv.poly([(70, 22), (96, 10), (122, 22)], 'grey4')
+    cv.rect(92, 92, 10, 18, 'grey5'); cv.line(92, 96, 101, 106, 'grey2'); cv.line(101, 96, 92, 106, 'grey2')  # заваренная дверь
+    # пожарная лестница сбоку
+    for x in (116, 121):
+        cv.line(x, 24, x, 108, 'grey5')
+    for y in range(26, 108, 5):
+        cv.line(116, y, 121, y, 'grey5')
+    cv.rect(90, 19, 12, 3, 'grey5')   # люк наверху
+    cv.frame(0, 0, 200, 130, 'white')
+    return cv
+
+
+def photo_treehouse():
+    cv = _photo_base()
+    cv.rect(0, 100, 200, 30, 'green'); cv.dither(0, 100, 200, 30, 'dkgreen', .3)
+    cv.rect(96, 40, 12, 64, 'brown')
+    cv.disc(102, 30, 34, 'dkgreen'); cv.dither(68, 0, 70, 64, 'green', .3, mask=lambda x, y: (x - 102) ** 2 + (y - 30) ** 2 < 34 ** 2)
+    cv.rect(78, 56, 48, 16, 'brown2')
+    for x in range(78, 126, 6):
+        cv.line(x, 56, x, 71, 'brown')
+    cv.poly([(76, 56), (102, 42), (128, 56)], 'red')
+    _stick(cv, 60, 118, 30, 'blue', 'brown', arms_up=True)
+    _stick(cv, 140, 118, 32, 'orange', 'yellow2', arms_up=True)
+    return cv
+
+
+def photo_school():
+    cv = _photo_base()
+    cv.rect(0, 20, 200, 80, 'tan'); cv.dither(0, 20, 200, 80, 'brown2', .15)
+    for x in range(10, 200, 30):
+        cv.rect(x, 34, 18, 20, 'sky'); cv.frame(x, 34, 18, 20, 'paper')
+        cv.rect(x, 64, 18, 20, 'sky'); cv.frame(x, 64, 18, 20, 'paper')
+    cv.rect(0, 100, 200, 30, 'grey2')
+    _stick(cv, 100, 124, 40, 'white', 'brown')
+    for dx, c in [(-4, 'red'), (0, 'yellow'), (4, 'pink'), (-2, 'white'), (2, 'orange')]:
+        cv.disc(108 + dx, 92 - abs(dx), 2, c)
+    cv.line(106, 96, 104, 104, 'dkgreen')
+    cv.rect(94, 104, 12, 8, 'navy')   # ранец
+    return cv
+
+
+def photo_screen():
+    cv = Canvas(200, 130, 'black')
+    cv.dither(0, 0, 200, 130, 'grey5', .25)
+    cv.rect(60, 20, 80, 70, 'robot'); cv.frame(58, 18, 84, 74, 'ink'); cv.frame(59, 19, 82, 72, 'ink')
+    cv.rect(78, 40, 10, 12, 'ink'); cv.rect(112, 40, 10, 12, 'ink')
+    for i, dy in enumerate([0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0]):
+        cv.px(92 + i, 66 + dy, 'ink')
+    cv.rect(98, 6, 4, 12, 'ink'); cv.disc(100, 5, 4, 'red')
+    cv.rect(20, 100, 160, 20, 'grey5'); cv.frame(20, 100, 160, 20, 'grey3')
+    return cv
+
+
+def make_photos():
+    for n, f in [('photo_river', photo_river), ('photo_tower', photo_tower), ('photo_treehouse', photo_treehouse),
+                 ('photo_school', photo_school), ('photo_screen', photo_screen)]:
+        cv = f()
+        framed = Canvas(208, 138, 'white')
+        framed.paste(cv, 4, 4)
+        framed.frame(0, 0, 208, 138, 'grey1')
+        framed.save(out(n + '.png'))
+    icon('photo', lambda c: (c.rect(1, 3, 14, 11, 'white'), c.frame(0, 2, 16, 13, 'ink'), c.rect(2, 4, 12, 9, 'sky'),
+                             c.poly([(2, 12), (6, 7), (9, 10), (11, 8), (14, 12)], 'green'), c.disc(11, 6, 1.5, 'yellow')))
+    icon('boat', lambda c: (c.rect(0, 11, 16, 5, 'blue'), c.poly([(2, 10), (14, 10), (12, 13), (4, 13)], 'brown'),
+                            c.rect(7, 2, 1, 8, 'ink'), c.poly([(8, 2), (13, 8), (8, 8)], 'white'), c.px(3, 1, 'yellow'), c.px(4, 1, 'yellow')))
+    icon('shield', lambda c: (c.poly([(8, 0), (15, 3), (14, 10), (8, 15), (2, 10), (1, 3)], 'mint'),
+                              c.poly([(8, 0), (15, 3), (14, 10), (8, 15), (2, 10), (1, 3)], None, 'mintlo'), c.line(5, 8, 7, 10, 'white', 2), c.line(7, 10, 11, 5, 'white', 2)))
+
+
+if __name__ == '__main__':
+    make_photos()
+    print('photos ok')

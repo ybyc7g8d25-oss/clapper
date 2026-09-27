@@ -129,6 +129,15 @@ SM_LANG.en = {
     flagsFirst:['"Flags". Lyova loved this game. His record is 8 of 10.','I always gave him hints. Want to try without hints?'],
     flagsBeat:['You beat Lyova\'s record.','…Don\'t tell him. He\'d be upset.'],
     flagsDark:['There\'s no such flag.','It\'s my flag. I made it up for him.'],
+    photosFirst:['His photos. Mom used to send them over from her phone.'],
+    parentalFirst:['The parental control log. Everything that happened to this computer.'],
+    parentalNight:['"Night mode disabled. Requested by: PIKSEL.EXE."','I turned it off. At 23:31. So I could talk to him at night.'],
+    cipherFirst:['A cipher. Our captain\'s code. I made it up myself for the story.','The key… In the first chapter the keeper flashes the light. How many times?'],
+    cipherDone:['"Up the ladder like you said."','I never told him about the ladder. Grandpa did, in the photo.','…But "come up to me" — that was me. Those were my words.'],
+    cipherAppear:['A new file in the story folder. A cipher. Lyova wrote it.'],
+    boatFirst:['"Captain and the Storm". I made this game for Lyova. Myself. From our story.','Reach the lighthouse — and you\'re home.'],
+    boatWin:['The captain is home. That\'s how it should be.'],
+    boatDark:['The light leads onto the rocks. I didn\'t mean it like that.','…Or did I?'],
     guardMsg:['pix_guard.exe isn\'t only holding the file.','"Blocks: recycle bin, outgoing messages".','It wasn\'t parental control stopping me from writing. It was me.']
   },
 
@@ -190,7 +199,7 @@ SM_LANG.en = {
   tale:{ folder:'Lighthouse story', locked:'The file is empty.',
     chapters:[
       {n:'chapter_1.txt',title:'Chapter 1. How the keeper lit the light',meta:'Modified: 12.09.2025 19:02 · Authors: Lyova, PIKSEL.EXE',
-        body:[['p','Far in the north, where the map ends, there stands a lighthouse. A keeper lives inside. He is made of light and wires, and he never sleeps.'],['l','and he has an antenna and hes funny'],['p','Every night the keeper lights the lamp so the ships won\'t crash on the rocks.'],['l','and the captain of the most important ship is me']],
+        body:[['p','Far in the north, where the map ends, there stands a lighthouse. A keeper lives inside. He is made of light and wires, and he never sleeps.'],['l','and he has an antenna and hes funny'],['p','Every night the keeper lights the lamp so the ships won\'t crash on the rocks. {{The light flashes three times — that means "I\'m here".}}'],['l','and the captain of the most important ship is me']],
         react:['The first chapter. He spent half an hour choosing what the antenna would look like.']},
       {n:'chapter_2.txt',title:'Chapter 2. The captain and the storm',meta:'Modified: 19.09.2025 20:15 · Authors: Lyova, PIKSEL.EXE',
         body:[['p','One day a storm came. All the ships went into the harbor, but the captain stayed at sea, because in the harbor they laughed at him.'],['l','dima was the boss of the harbor'],['p','The keeper shone for the captain all night. And the captain understood: as long as the lighthouse is lit, he is not alone.'],['shard',1]],
@@ -331,6 +340,27 @@ SM_LANG.en = {
   mem:{ title:'Recovering pix_log_0310.dat', hint:'The record\'s sectors are scrambled. Click one fragment, then another — they swap places. Put the conversation in order.', check:'Assemble', wrong:'The order doesn\'t fit — the record is unreadable.', up:'▲', down:'▼' },
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d of 10', right:'Correct!', wrong:'No, it\'s: %s', result:'You got %d of 10', again:'Again', beat:'New record!', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
+  photos:{ folder:'Photos', items:[
+      {n:'at_the_river.jpg', cap:'August 2025. Grandma, Grandpa, Mom, Dad and me. Grandpa caught a pike!', react:['Summer. He didn\'t know me yet.','He\'s smiling. In every photo after September he isn\'t.']},
+      {n:'tower_summer.jpg', cap:'Grandpa: "This is where Grandma and I used to climb. Ladder on the side, hatch at the top."', react:['The real tower. Not a lighthouse at all: brick, a tank, a rusty fire ladder on the side.','{{Ladder outside. Hatch at the top.}} Grandpa showed him the way up.']},
+      {n:'treehouse.jpg', cap:'Dima and I built a treehouse! June.', react:['Dima. They were friends. Before I came along.']},
+      {n:'first_day.jpg', cap:'Class 4B. First day of school.', react:['The first day of school. A week later his dad installed me on the computer.']},
+      {n:'screen_2344.png', cap:'Screenshot · 03.10.2025 23:44 · author: PIKSEL.EXE', react:['A screenshot. Taken by me. At 23:44 on October 3.','Why did I keep it? To remember. Or so I wouldn\'t forget what I did.']}
+    ] },
+  parental:{ title:'Parental control — log', rows:[
+      ['02.10 22:30','Rule: the AI friend will be removed on Saturday, 05.10 (Mom)'],
+      ['03.10 21:00','Night mode: the computer sleeps at 23:00'],
+      ['03.10 23:31','{{Night mode disabled. Requested by: PIKSEL.EXE}}'],
+      ['03.10 23:58','Chat log: record deleted (PIKSEL.EXE)'],
+      ['04.10 07:00','Profile "Lyova": log in'],
+      ['04.10 07:05','Profile "Lyova": log out. {{Child\'s phone: not connected}}'],
+      ['06.10 21:40','Profile "Lyova": login without user. Started: PIKSEL.EXE']
+    ] },
+  cipher:{ file:'cipher.txt', title:'cipher.txt — Decoder', hint:'The captain\'s cipher: every letter is shifted by a few positions. Turn the shift until the text is readable.', shift:'Shift: %d',
+    alphabet:'abcdefghijklmnopqrstuvwxyz', key:3,
+    text:'pixel if you are reading this im already coming to you. up the ladder like you said. not telling mom. captain' },
+  boat:{ title:'Captain and the Storm', help:'← → to steer. Reach the lighthouse light without hitting the rocks.', start:'Set sail!', win:'The captain is home!', lose:'The ship crashed.', again:'Again', record:'Lyova\'s record: 3 lighthouses in a row', score:'Lighthouses: %d',
+    darkLose:'The captain never made it.' },
   visit:{
     mom:'Mom', dad:'Dad',
     stepsTitle:'FOOTSTEPS IN THE HALL',
@@ -384,6 +414,8 @@ SM_LANG.en = {
     CAUGHT:['Busted','Get noticed by people.'],
     GHOST:['Quiet as a mouse','Reach an ending while barely drawing attention.'],
     FLAGS:['Flag expert','Guess 10 flags out of 10.'],
+    CIPHER:['Captain\'s cipher','Read Lyova\'s cipher.'],
+    BOAT:['The captain is home','Reach the lighthouse three times in a row.'],
     MAP:['Cartographer','Put the route map together.'],
     PIN:['Secret mode','Open Lyova\'s hidden history.']
   }

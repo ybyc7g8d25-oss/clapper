@@ -21,6 +21,7 @@ var _wait := -1.0
 var _talk_acc := 0.0
 var _talk_frame := false
 var _gen := 0
+var _idle := 0.0
 
 func _ready() -> void:
 	layer = 25
@@ -193,6 +194,15 @@ func advance() -> void:
 func _process(delta: float) -> void:
 	if hold:
 		return
+	# когда Пиксель молчит, облачко сворачивается до цели и не мешает окнам
+	var idle := not busy
+	_idle = _idle + delta if idle else 0.0
+	text.visible = _idle < 4.0
+	var over := bubble.get_global_rect().grow(8).has_point(bubble.get_global_mouse_position())
+	var ghost := idle and _idle > 0.5 and over
+	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE if ghost else Control.MOUSE_FILTER_STOP
+	var target := 0.2 if ghost else 1.0
+	bubble.modulate.a = move_toward(bubble.modulate.a, target, delta * 4.0)
 	if typing:
 		var sp: float = SPEED[G.settings.text] * (1.6 if G.stage() >= 3 else 1.0)
 		_acc += delta

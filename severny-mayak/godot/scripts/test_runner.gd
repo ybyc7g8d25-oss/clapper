@@ -101,6 +101,15 @@ func _play(k: String) -> bool:
 	A.open_flags()
 	A._flags_begin()
 	await shot("flags")
+	A.open_photos()
+	A.open_photo(1)
+	await shot("photo")
+	A.open_parental()
+	await shot("parental")
+	A.open_boat()
+	A._boat_play()
+	await wait(1.0)
+	await shot("boat")
 	G.desk.close_all()
 	if k == "a":
 		# прятки: тихо пересидеть визит — палево падает; дёргать мышь — растёт
@@ -139,6 +148,14 @@ func _play(k: String) -> bool:
 	A.open_chapter(2)
 	A.open_chapter(3)
 	await shot("tale4")
+	A.open_cipher()
+	await wait(0.2)
+	await shot("cipher")
+	for i in 3:
+		A.cipher_shift += 1
+		A._cipher_changed()
+	if not G.flag("cipher"):
+		errors.append("cipher not solved at shift 3")
 	G.desk.close_all()
 	if k == "b":
 		# камера при маме в комнате поднимает палево; потом проверяем проигрыш и загрузку

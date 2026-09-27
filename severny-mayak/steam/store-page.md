@@ -15,12 +15,14 @@
 история браузера, рисунки мелком, дневник под паролем, почта и корзина, в которой лежит файл, который ты почему-то
 не хочешь открывать.
 
+- **Пиксель-арт в духе детских рисунков мелком.**
 - **Расследование на одном рабочем столе.** Читай, сопоставляй, подбирай пароли, восстанавливай удалённое.
 - **Прячься.** Слышишь шаги — сворачивай окна и замирай. Лишнее движение мыши, и папа выдернет шнур.
 - **Рабочий стол мрачнеет** вместе с тобой: от ярких красок до красно-чёрного экрана.
 - **Честный твист.** Все улики видны с первой минуты. Во втором круге ты увидишь их везде.
-- **4 финала**, осколки последней главы сказки, 15 достижений.
-- Прохождение за один вечер: 40–70 минут.
+- **Три части одной ночи**: секретные коды, карта-пазл, шифр, восстановление удалённой записи.
+- **4 финала**, осколки последней главы сказки, мини-игры «Флажки» и «Капитан и шторм», 20 достижений.
+- Прохождение за один вечер: около полутора часов.
 
 *Содержит тему пропавшего ребёнка и чувства вины, мерцание и резкие звуки. Вспышки и скримеры можно отключить.*
 
@@ -39,12 +41,14 @@ the North Lighthouse — you were its keeper, he was the captain. Now all you ha
 a browser history, crayon drawings, a locked diary, his mail, and a file in the Recycle Bin that, for some reason,
 you really don't want to open.
 
+- **Pixel art in the style of a child's crayon drawings.**
 - **A single-desktop investigation.** Read, connect the dots, crack passwords, recover what was deleted.
 - **Hide.** Hear footsteps? Minimize everything and freeze. One twitch of the cursor and Dad pulls the plug.
 - **The desktop darkens with you** — from bright crayon colors to red and black.
 - **An honest twist.** Every clue is visible from the first minute. On your second run you'll see them everywhere.
-- **4 endings**, shards of the story's last chapter, 15 achievements.
-- One-evening length: 40–70 minutes.
+- **Three parts of one night**: secret codes, a map jigsaw, a cipher, rebuilding a deleted record.
+- **4 endings**, shards of the story's last chapter, the mini-games "Flags" and "Captain and the Storm", 20 achievements.
+- One-evening length: about an hour and a half.
 
 *Deals with a missing child and guilt; contains flickering and sudden loud sounds. Flashes and jump scares can be disabled.*
 
