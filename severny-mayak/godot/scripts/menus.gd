@@ -20,9 +20,6 @@ var visit_box: PanelContainer
 var visit_l: Label
 var monitor: ColorRect
 var scare_o: Control
-var _face: TextureRect          # лицо Пикселя на мониторе заставки
-var _cursor_l: Label
-var _glitch_at := 0.0
 
 func _ready() -> void:
 	layer = 30
@@ -147,79 +144,30 @@ func show_warn(then: Callable) -> void:
 func show_title() -> void:
 	Sfx.music("title")
 	_clear(title)
-	# пустая детская ночью; светится только монитор — на нём Пиксель
-	var bg := TextureRect.new()
-	bg.texture = UI.tex("title_room")
-	title.add_child(bg)
-	var scr := ColorRect.new()
-	scr.color = Color("#16263a")
-	scr.position = Vector2(292, 90)
-	scr.size = Vector2(116, 82)
-	title.add_child(scr)
-	_face = TextureRect.new()
-	_face.texture = UI.tex(_face_tex())
-	_face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_face.size = Vector2(64, 64)
-	_face.position = Vector2(318, 99)
-	title.add_child(_face)
-	for y in range(90, 172, 2):   # строки кинескопа
-		var ln := ColorRect.new()
-		ln.color = Color(0, 0, 0, 0.18)
-		ln.position = Vector2(292, y)
-		ln.size = Vector2(116, 1)
-		title.add_child(ln)
-	var t := UI.label(G.L.title, UI.PAPER, UI.logo, 24)
-	t.position = Vector2(16, 18)
-	t.add_theme_color_override("font_shadow_color", UI.BLACK)
-	t.add_theme_constant_override("shadow_offset_x", 2)
-	t.add_theme_constant_override("shadow_offset_y", 2)
-	title.add_child(t)
-	_cursor_l = UI.label("_", UI.AMBER2, UI.logo, 24)
-	_cursor_l.position = Vector2(16 + t.get_combined_minimum_size().x + 2, 18)
-	title.add_child(_cursor_l)
-	_glitch_at = Time.get_ticks_msec() / 1000.0 + 3.0
-	var v := _col(title, 14, 150, 180, 0)
 	var has_save := G.has_save()
-	var c := item(G.L.ui.cont, func():
-		_hide(title)
-		continue_requested.emit(), has_save)
-	v.add_child(c)
-	v.add_child(item(G.L.ui.newGame, func():
-		if has_save:
-			confirm(G.L.ui.confirmNew, func():
-				_hide(title)
-				new_game_requested.emit())
-		else:
+	var ts := TitleScreen.new()
+	title.add_child(ts)
+	ts.build([
+		[G.L.ui.cont, func():
 			_hide(title)
-			new_game_requested.emit()))
-	v.add_child(item(G.L.ui.settings, func(): open_panel("settings")))
-	v.add_child(item(G.L.ui.endings, func(): open_panel("endings")))
-	v.add_child(item(G.L.ui.credits, func(): open_panel("credits")))
-	v.add_child(item(G.L.ui.quit, func(): get_tree().quit()))
-	var ver := UI.label(G.L.ui.ver, UI.GREY)
-	ver.position = Vector2(450, 259)
-	title.add_child(ver)
+			continue_requested.emit(), has_save],
+		[G.L.ui.newGame, func():
+			if has_save:
+				confirm(G.L.ui.confirmNew, func():
+					_hide(title)
+					new_game_requested.emit())
+			else:
+				_hide(title)
+				new_game_requested.emit(), true],
+		[G.L.ui.settings, func(): open_panel("settings"), true],
+		[G.L.ui.endings, func(): open_panel("endings"), true],
+		[G.L.ui.credits, func(): open_panel("credits"), true],
+		[G.L.ui.quit, func(): get_tree().quit(), true],
+	])
 	_show(title, 0.8)
-	(c if has_save else v.get_child(1)).call_deferred("grab_focus")
-
 func _process(_d: float) -> void:
 	_update_point()
-	if title.visible and _face and is_instance_valid(_face):
-		var t := Time.get_ticks_msec() / 1000.0
-		_cursor_l.visible = fmod(t, 1.0) < 0.55
-		_face.modulate.a = 0.92 + 0.08 * sin(t * 9.0)
-		# иногда лицо сбоит: на миг — тёмное, со сдвигом
-		if t >= _glitch_at:
-			_face.texture = UI.tex("pix_3")
-			_face.position = Vector2(318 + randi_range(-3, 3), 99)
-			if t >= _glitch_at + 0.14:
-				_face.texture = UI.tex(_face_tex())
-				_face.position = Vector2(318, 99)
-				_glitch_at = t + randf_range(3.5, 8.0)
 
-## После первого пройденного финала Пиксель на заставке уже не улыбается.
-func _face_tex() -> String:
-	return "pix_2" if not G.meta.endings.is_empty() else "pix_0"
 
 # ---------------------------------------------------------------- панели
 func open_panel(kind: String, in_game := false) -> void:

@@ -64,7 +64,8 @@ godot -- --test --lang=ru --shots=/tmp/s   # со скриншотами (нуж
 | `scripts/house.gd` | полоска дома с людьми |
 | `scripts/desk.gd`, `os_window.gd`, `desk_icon.gd`, `hud.gd` | рабочий стол, окна, значки, строка статуса и кнопки |
 | `scripts/voice.gd` | реплики и цель Пикселя |
-| `scripts/menus.gd` | титул, настройки, пауза, газета ночи, протокол дня, отчёты, финалы |
+| `scripts/menus.gd` | настройки, пауза, «Как играть», газета ночи, протокол дня, отчёты, финалы |
+| `scripts/title_screen.gd` | главное меню: детская ночью, Пиксель на мониторе, «включение» кинескопа |
 | `scripts/main.gd`, `shaders/` | вывод 480×270 на весь экран, курсор |
 | `scripts/test_runner.gd` | автотест |
 | `tools/make_art.py` | **вся графика рисуется этим скриптом** (Python + Pillow) → `art/` |
