@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'">
+<title>Северный маяк</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="0" data-ng="0" data-fx="full">
+<div id="app">
+  <div id="screen">
+    <div id="wall"></div>
+    <div id="icons"></div>
+    <div id="windows"></div>
+    <div id="menu" role="menu"></div>
+    <div id="bar">
+      <button id="startBtn" aria-haspopup="menu"></button>
+      <button id="hideAll"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="9" fill="none" stroke="#fff" stroke-width="1.4"/><path d="M4 14h8" stroke="#fff" stroke-width="1.4"/></svg></button>
+      <div id="tasks"></div>
+      <div id="tray">
+        <div id="sus" role="meter" aria-valuemin="0" aria-valuemax="100"><svg viewBox="0 0 16 16"><path d="M1 8q7-8 14 0q-7 8-14 0z" fill="none" stroke="#fff" stroke-width="1.4"/><circle cx="8" cy="8" r="2.4" fill="#fff"/></svg><b><i></i></b></div>
+        <button id="frag"></button>
+        <button id="snd"></button>
+        <span id="clock">21:40</span>
+      </div>
+    </div>
+  </div>
+  <div id="fx"><div class="vig"></div><div class="scan"></div><div class="noise"></div><div class="flash"></div></div>
+  <div id="pix" aria-live="polite">
+    <div id="bubble" role="button" tabindex="0"><div class="who"></div><div id="btext"></div><div id="goal"></div></div>
+    <div id="avatar"></div>
+  </div>
+  <div id="scare" aria-hidden="true"></div>
+  <div id="visit" role="alert"></div>
+
+  <div id="boot" class="overlay hide">
+    <div class="logo"><svg viewBox="0 0 64 48"><path d="M16 42h34a12 12 0 0 0 1-24 16 16 0 0 0-30-4A13 13 0 0 0 16 42z" fill="#8e72f2" stroke="#fff" stroke-width="3"/><circle cx="26" cy="28" r="3" fill="#fff"/><circle cx="40" cy="28" r="3" fill="#fff"/></svg>Nimbus<small>Kids</small></div>
+    <div class="bootlog" id="bootlog"></div>
+  </div>
+  <div id="end" class="overlay hide">
+    <div class="tag" id="endTag"></div>
+    <h1 id="endTitle"></h1>
+    <p id="endText"></p>
+    <button class="power" id="endRetry" hidden></button>
+    <button class="power" id="endCred"></button>
+    <button class="power" id="endMenu"></button>
+  </div>
+  <div id="title" class="overlay hide"></div>
+  <div id="panel" class="overlay hide" style="background:rgba(0,0,0,.9);z-index:10600"></div>
+  <div id="pause" class="overlay hide"></div>
+  <div id="warn" class="overlay hide" style="z-index:10700"></div>
+  <div id="toast" role="status"></div>
+</div>
+
+<script src="js/lang/ru.js"></script>
+<script src="js/lang/en.js"></script>
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/art.js"></script>
+<script src="js/desktop.js"></script>
+<script src="js/apps.js"></script>
+<script src="js/stealth.js"></script>
+<script src="js/visit.js"></script>
+<script src="js/story.js"></script>
+<script src="js/menu.js"></script>
+</body>
+</html>

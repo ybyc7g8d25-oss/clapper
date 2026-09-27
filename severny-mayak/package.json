@@ -1,0 +1,36 @@
+{
+  "name": "severny-mayak",
+  "productName": "Severny Mayak",
+  "version": "1.0.0",
+  "description": "Северный маяк — психологический хоррор на одном рабочем столе",
+  "main": "electron/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --windowed --smoke",
+    "web": "npx http-server game -p 8080 -c-1",
+    "test": "node tools/playtest.mjs ru && node tools/playtest.mjs en",
+    "dist:win": "electron-builder --win --x64",
+    "dist:linux": "electron-builder --linux --x64",
+    "dist:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "playwright": "^1.56.0"
+  },
+  "optionalDependencies": {
+    "steamworks.js": "^0.4.0"
+  },
+  "build": {
+    "appId": "com.severnymayak.game",
+    "productName": "Severny Mayak",
+    "directories": { "output": "dist" },
+    "files": ["electron/**", "game/**", "package.json"],
+    "extraFiles": ["steam_appid.txt"],
+    "asarUnpack": ["node_modules/steamworks.js/**"],
+    "win": { "target": "dir" },
+    "linux": { "target": "dir" },
+    "mac": { "target": "dir" }
+  }
+}

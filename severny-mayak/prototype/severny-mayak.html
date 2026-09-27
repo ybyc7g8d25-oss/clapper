@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Северный маяк — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=PT+Mono&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --outer:#05040a;
+  --grape:#5a3db8; --grape-hi:#8e72f2; --grape-lo:#34207a;
+  --mint:#3fbf86; --mint-hi:#8ee6bb; --mint-lo:#1f8a5a;
+  --ink:#1d1a2b; --win:#eef2f7; --line:#b9c2d0; --alert:#c9372f;
+  --tray:#2f6fb8;
+  --sys:Tahoma, Verdana, "Segoe UI", Arial, sans-serif;
+  --mono:"PT Mono","Courier New",monospace;
+  --pix:"Press Start 2P","Courier New",monospace;
+  --kid:"Caveat","Comic Sans MS","Segoe Print",cursive;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --outer:#05040a; } }
+:root[data-theme="dark"]{ --outer:#05040a; }
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;height:100%;background:var(--outer);font-family:var(--sys);font-size:13px;color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font-family:inherit}
+:focus-visible{outline:2px dashed #fff;outline-offset:2px}
+#app{position:relative;width:100%;height:100%;overflow:hidden}
+#screen{position:absolute;inset:0;transition:filter 3s ease}
+body[data-stage="1"] #screen{filter:saturate(.72) brightness(.97)}
+body[data-stage="2"] #screen{filter:saturate(.35) contrast(1.08) brightness(.82)}
+body[data-stage="3"] #screen{filter:saturate(.22) sepia(.35) hue-rotate(-25deg) contrast(1.2) brightness(.66)}
+#screen.glitch{animation:gl .28s steps(3) 1}
+@keyframes gl{0%{transform:translate(6px,-2px) skewX(2deg)}33%{transform:translate(-8px,3px)}66%{transform:translate(3px,0) skewX(-3deg)}100%{transform:none}}
+
+/* wallpaper */
+#wall{position:absolute;inset:0 0 40px 0}
+#wall svg{width:100%;height:100%;display:block}
+.wp-boy,.wp-bot,.wp-scratch,.wp-glow{transition:opacity 4s ease, fill 4s ease}
+.wp-scratch{opacity:0}
+.wp-light{transition:fill 3s}
+body[data-stage="2"] #wall .wp-boy{opacity:.45}
+body[data-stage="3"] #wall .wp-boy{opacity:0}
+body[data-stage="3"] #wall .wp-scratch{opacity:1}
+body[data-stage="3"] .wp-light{fill:#ff2a2a}
+body[data-stage="3"] .wp-glow{opacity:.2}
+body[data-stage="2"] .wp-sun circle,body[data-stage="3"] .wp-sun circle{fill:#bdb6a0}
+
+/* icons */
+#icons{position:absolute;top:10px;left:8px;bottom:50px;display:grid;grid-auto-flow:column;grid-template-rows:repeat(auto-fill,94px);gap:2px 6px;align-content:start}
+.icon{width:86px;height:92px;border:1px solid transparent;background:none;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;cursor:default;border-radius:3px;color:#fff}
+.icon svg{width:40px;height:40px;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.35))}
+.icon span{font-size:12px;line-height:1.2;text-align:center;text-shadow:1px 1px 1px #000,0 0 3px #000;word-break:break-word;padding:1px 3px;border-radius:2px}
+.icon.sel span{background:var(--grape)}
+.icon.sel{border:1px dotted rgba(255,255,255,.7)}
+.icon.new::after{content:"";position:absolute}
+
+/* windows */
+#windows{position:absolute;inset:0 0 40px 0;pointer-events:none}
+.win{position:absolute;pointer-events:auto;background:var(--win);border:3px solid var(--grape);border-top:0;border-radius:8px 8px 3px 3px;box-shadow:5px 6px 0 rgba(0,0,0,.28);display:flex;flex-direction:column;min-width:220px;overflow:hidden;animation:pop .14s ease-out}
+@keyframes pop{from{transform:scale(.96);opacity:.4}to{transform:none;opacity:1}}
+.tb{height:28px;flex:none;background:linear-gradient(180deg,var(--grape-hi),var(--grape) 45%,var(--grape-lo));display:flex;align-items:center;gap:6px;padding:0 4px 0 7px;color:#fff;font-weight:bold;cursor:move;touch-action:none}
+.tb .ic svg,.task .ic svg{width:16px;height:16px;display:block}
+.tb .t{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-shadow:1px 1px 0 #25145c}
+.tb button{width:22px;height:21px;border:1px solid #fff;border-radius:4px;background:linear-gradient(#a58ff7,#5a3db8);color:#fff;font:bold 12px var(--sys);cursor:pointer;padding:0;line-height:1}
+.tb button.x{background:linear-gradient(#f4987f,#c9372f)}
+.win.inactive .tb{filter:saturate(.35) brightness(1.15)}
+.wb{flex:1;overflow:auto;position:relative;user-select:text;-webkit-user-select:text}
+.menu-strip{display:flex;gap:14px;padding:3px 8px;border-bottom:1px solid var(--line);background:#f7f9fc;font-size:12px;color:#444}
+
+/* taskbar */
+#bar{position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(180deg,var(--grape-hi) 0,var(--grape) 14%,var(--grape-lo));display:flex;align-items:center;gap:6px;z-index:9000}
+#startBtn{height:100%;padding:0 20px 0 12px;border:0;border-radius:0 16px 16px 0;background:linear-gradient(180deg,var(--mint-hi),var(--mint) 42%,var(--mint-lo));color:#fff;font:bold italic 16px var(--sys);text-shadow:1px 1px 0 #145c3b;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:2px 0 4px rgba(0,0,0,.3)}
+#startBtn svg{width:20px;height:20px}
+#tasks{flex:1;display:flex;gap:4px;overflow:hidden;min-width:0}
+.task{max-width:170px;min-width:0;height:29px;border:1px solid rgba(255,255,255,.35);border-radius:3px;background:rgba(255,255,255,.14);color:#fff;font:12px var(--sys);padding:0 8px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden}
+.task span:last-child{overflow:hidden;text-overflow:ellipsis}
+.task.on{background:rgba(0,0,0,.28);box-shadow:inset 1px 1px 3px rgba(0,0,0,.5)}
+.task.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{background:#e89b2c}}
+#tray{height:100%;display:flex;align-items:center;gap:10px;padding:0 12px;background:linear-gradient(180deg,#5aa8e8,var(--tray));border-left:1px solid #1b4f8f;color:#fff;font-size:12px}
+#tray button{background:none;border:0;padding:0;cursor:pointer;display:flex}
+#tray svg{width:16px;height:16px}
+
+/* start menu */
+#menu{position:absolute;left:0;bottom:40px;width:250px;background:#fff;border:3px solid var(--grape);border-radius:8px 8px 0 0;z-index:9100;display:none;box-shadow:4px -2px 0 rgba(0,0,0,.25);overflow:hidden}
+#menu.open{display:block}
+#menu .head{background:linear-gradient(180deg,var(--grape-hi),var(--grape));color:#fff;padding:10px 12px;font-weight:bold;font-size:15px;display:flex;align-items:center;gap:10px}
+#menu .head svg{width:36px;height:36px;background:#fff;border-radius:4px;border:2px solid #fff}
+#menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:8px 12px;text-align:left;font-size:13px;cursor:pointer;color:var(--ink)}
+#menu button:hover,#menu button:focus-visible{background:var(--grape);color:#fff;outline:none}
+#menu button svg{width:24px;height:24px}
+#menu hr{border:0;border-top:1px solid var(--line);margin:4px 0}
+
+/* pixel companion */
+#pix{position:absolute;right:12px;bottom:52px;z-index:9500;display:flex;align-items:flex-end;gap:8px;max-width:min(430px,calc(100% - 24px));pointer-events:none;opacity:0;transition:opacity .6s}
+#pix.show{opacity:1}
+#bubble{pointer-events:auto;background:#fff;border:2px solid var(--ink);border-radius:10px 10px 2px 10px;padding:9px 12px 8px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;min-width:160px}
+#bubble .who{font:9px/1 var(--pix);color:var(--grape);margin-bottom:7px;display:flex;justify-content:space-between;gap:10px}
+#bubble .who i{font-style:normal;color:#999}
+#btext{font:14px/1.45 var(--mono);min-height:20px;white-space:pre-wrap}
+#goal{font:11px/1.35 var(--sys);color:#556;margin-top:7px;border-top:1px dashed #bbb;padding-top:5px}
+#goal:empty{display:none}
+#avatar{width:64px;height:64px;flex:none;pointer-events:auto}
+#avatar svg{width:100%;height:100%;display:block}
+#avatar.talk{animation:bob .3s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-3px)}}
+body[data-stage="2"] #bubble{background:#ececec;color:#2a2a2a}
+body[data-stage="3"] #bubble{background:#0d0b10;color:#ff5a4d;border-color:#ff5a4d;box-shadow:3px 3px 0 #7a1510}
+body[data-stage="3"] #bubble .who{color:#ff5a4d}
+body[data-stage="3"] #goal{color:#b8544b;border-color:#5a1b16}
+
+/* fx */
+#fx{position:absolute;inset:0;pointer-events:none;z-index:9400}
+#fx div{position:absolute;inset:0;opacity:0;transition:opacity 3s}
+.scan{background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px)}
+.vig{background:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.75))}
+.noise{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:nz .4s steps(4) infinite}
+@keyframes nz{0%{background-position:0 0}25%{background-position:-60px 30px}50%{background-position:40px -70px}75%{background-position:-20px 90px}}
+#fx .flash{background:#fff;transition:none}
+body[data-stage="1"] #fx .vig{opacity:.3}
+body[data-stage="2"] #fx .vig{opacity:.6} body[data-stage="2"] #fx .scan{opacity:.45} body[data-stage="2"] #fx .noise{opacity:.05}
+body[data-stage="3"] #fx .vig{opacity:1} body[data-stage="3"] #fx .scan{opacity:.85} body[data-stage="3"] #fx .noise{opacity:.13}
+
+/* app contents */
+.notepad{font:14px/1.55 var(--mono);padding:10px 14px;background:#fff;min-height:100%;white-space:pre-wrap;color:#111}
+.folder{display:flex;flex-wrap:wrap;gap:10px;padding:12px;background:#fff;min-height:100%;align-content:flex-start}
+.file{width:110px;border:1px solid transparent;background:none;display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px;cursor:pointer;font-size:12px;color:var(--ink)}
+.file:hover{border:1px dotted var(--grape);background:#efeafd}
+.file .th{width:96px;height:66px;border:1px solid #999;background:#fff;overflow:hidden}
+.file .th svg{width:100%;height:100%;display:block}
+.viewer{background:#2b2b33;height:100%;display:flex;align-items:center;justify-content:center;padding:8px}
+.viewer svg{max-width:100%;max-height:100%;background:#fff;box-shadow:0 0 0 1px #000}
+.log{padding:12px 14px;background:#f8f9fc;min-height:100%;font:13px/1.45 var(--mono)}
+.day{margin:14px 0 6px;font:bold 12px var(--sys);color:#667;border-bottom:1px solid var(--line);padding-bottom:3px}
+.day:first-child{margin-top:0}
+.msg{margin:4px 0;max-width:88%}
+.msg b{font-weight:bold}
+.msg.l b{color:#2b6fd6} .msg.p b{color:var(--grape)}
+.msg.gap{color:var(--alert);font-style:italic}
+.msg.sys{color:#999;font-style:italic}
+.log.dead{background:#0b0a0e;color:#d9d3c7}
+.log.dead .msg.p b{color:#ff5a4d} .log.dead .msg.l b{color:#7fb4ff}
+.log.dead .msg.sys{color:#ff5a4d;font-style:normal}
+.browser{display:flex;flex-direction:column;height:100%;background:#fff}
+.addr{display:flex;align-items:center;gap:6px;padding:4px 6px;border-bottom:1px solid var(--line);background:#f2f4f8;font-size:12px}
+.addr div{flex:1;border:1px solid #9aa4b4;background:#fff;padding:3px 6px;color:#555}
+.offline{padding:8px 10px;background:#fff6d6;border-bottom:1px solid #e8d38a;font-size:12px;color:#6b5a1d}
+.hist{list-style:none;margin:0;padding:6px 0;overflow:auto;flex:1}
+.hist li{display:flex;gap:12px;padding:5px 12px;font-size:13px;border-bottom:1px solid #f0f0f0}
+.hist li span{color:#8890a0;flex:none;width:92px;font-variant-numeric:tabular-nums}
+.hist li.lev{color:#1a4fa8}
+.lock{padding:22px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#fff;min-height:100%;text-align:center}
+.lock svg{width:54px;height:54px}
+.lock input{font:14px var(--sys);padding:5px 8px;border:1px solid #7f8aa0;width:200px}
+.lock .err{color:var(--alert);min-height:16px;font-size:12px}
+.lock.shake{animation:gl .3s}
+.btn{border:1px solid #3c4a63;border-radius:3px;background:linear-gradient(#fff,#dde3ec);padding:5px 14px;font:12px var(--sys);cursor:pointer;color:var(--ink)}
+.btn:hover{background:linear-gradient(#fff,#cfd8e6)}
+.btn.primary{border-color:var(--grape-lo);background:linear-gradient(var(--grape-hi),var(--grape));color:#fff}
+.diary{padding:16px 20px;background:#fffef9 repeating-linear-gradient(180deg,transparent 0 27px,#dfe8f5 27px 28px);min-height:100%;font:22px/28px var(--kid);color:#2c3a7a}
+.diary p{margin:0 0 28px}
+.diary .d{color:#b0433a}
+.cam{background:#000;height:100%;display:flex;align-items:center;justify-content:center;position:relative}
+.cam svg{width:100%;height:100%;display:block}
+.cam .osd{position:absolute;left:10px;top:8px;font:12px var(--mono);color:#e8e8e8;text-shadow:1px 1px 0 #000}
+.cam .rec{position:absolute;right:12px;top:8px;font:12px var(--mono);color:#ff4d4d;animation:blink2 1.2s steps(2) infinite}
+@keyframes blink2{50%{opacity:0}}
+.cam .cap{position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font:12px var(--mono);color:#ddd;background:rgba(0,0,0,.55)}
+.bin{background:#fff;min-height:100%}
+.bin table{width:100%;border-collapse:collapse;font-size:12px}
+.bin th{text-align:left;background:#f2f4f8;border-bottom:1px solid var(--line);padding:5px 8px;font-weight:normal;color:#556}
+.bin td{padding:6px 8px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.bin td:first-child{display:flex;align-items:center;gap:6px}
+.bin td svg{width:18px;height:18px}
+.bar{height:16px;border:1px solid #7f8aa0;background:#fff;padding:2px;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--mint) 0 10px,transparent 10px 12px);transition:width .2s linear}
+.alertbox{padding:16px;display:flex;gap:14px;align-items:flex-start;background:var(--win);height:100%}
+.alertbox svg{width:34px;height:34px;flex:none}
+.alertbox .txt{flex:1;line-height:1.5}
+.alertbox .row{margin-top:14px;text-align:right}
+.chat{display:flex;height:100%;background:#fff}
+.contacts{width:150px;flex:none;border-right:1px solid var(--line);background:#f4f7f2;overflow:auto}
+.contacts .grp{font-size:11px;color:#6a7a60;padding:6px 8px 3px}
+.contacts button{display:flex;align-items:center;gap:7px;width:100%;border:0;background:none;padding:6px 8px;text-align:left;font-size:13px;cursor:pointer;color:var(--ink)}
+.contacts button.act{background:#d6ecd0}
+.dot{width:9px;height:9px;border-radius:50%;background:#b8b8b8;border:1px solid #888;flex:none}
+.dot.on{background:#46c24a;border-color:#2b8a2f}
+.conv{flex:1;display:flex;flex-direction:column;min-width:0}
+.conv .hd{padding:6px 10px;border-bottom:1px solid var(--line);font-weight:bold;background:#f9fbf8;display:flex;justify-content:space-between;gap:8px}
+.conv .hd small{font-weight:normal;color:#789}
+.conv .ms{flex:1;overflow:auto;padding:8px 10px;font-size:13px;line-height:1.45}
+.conv .ms p{margin:0 0 7px}
+.conv .ms p span{color:#8a96a8;font-size:11px;margin-right:6px}
+.conv .ms p.me b{color:var(--grape)}
+.conv .ms p.them b{color:#b8431f}
+.conv .ms p.st{color:#8a96a8;font-style:italic;font-size:12px}
+.conv .in{border-top:1px solid var(--line);padding:6px;display:flex;gap:6px;flex-wrap:wrap}
+.conv .in input{flex:1;min-width:120px;font:13px var(--sys);padding:5px 7px;border:1px solid #a9b3c2}
+.conv .choice{display:flex;flex-direction:column;gap:6px;width:100%}
+.conv .choice .btn{text-align:left;padding:8px 12px;font-size:13px}
+.uninst{padding:16px;background:var(--win);height:100%;font-size:13px;line-height:1.5}
+@media (max-width:700px){
+  #icons{grid-template-rows:repeat(auto-fill,84px)}
+  .icon{width:74px;height:82px}
+  .icon svg{width:34px;height:34px}
+  .contacts{width:108px}
+  #avatar{width:50px;height:50px}
+  #btext{font-size:13px}
+  .task{max-width:44px}
+  .task span:last-child{display:none}
+}
+
+/* boot + end */
+.overlay{position:absolute;inset:0;z-index:10000;background:#000;color:#cfd8e3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;text-align:center;transition:opacity 1.2s}
+.overlay.hide{opacity:0;pointer-events:none}
+.logo{display:flex;align-items:center;gap:14px;font:bold italic 44px var(--sys);color:#fff;letter-spacing:-1px}
+.logo small{font:bold 16px var(--sys);color:var(--mint);letter-spacing:0;align-self:flex-start;margin-top:6px}
+.logo svg{width:64px;height:48px}
+.power{border:2px solid var(--mint);background:transparent;color:var(--mint);font:12px var(--pix);padding:14px 20px;cursor:pointer;border-radius:4px}
+.power:hover{background:var(--mint);color:#000}
+.bootlog{font:14px/1.7 var(--mono);text-align:left;min-height:120px;width:min(420px,90%);color:#aeb8c6}
+.hint{font:12px var(--mono);color:#6b7280;max-width:420px;line-height:1.6}
+#end h1{font:bold 34px/1.2 var(--sys);margin:0;color:#fff;max-width:640px}
+#end p{font:15px/1.6 var(--mono);color:#aab;max-width:520px;margin:0}
+#end .tag{font:10px var(--pix);color:var(--mint)}
+body[data-ending="b"] #end .tag{color:#ff5a4d}
+@media (prefers-reduced-motion: reduce){
+  #screen.glitch,#avatar.talk,.noise,.win,.lock.shake,.task.blink{animation:none}
+}
+</style>
+</head>
+<body data-stage="0">
+<div id="app">
+  <div id="screen">
+    <div id="wall"></div>
+    <div id="icons"></div>
+    <div id="windows"></div>
+    <div id="menu" role="menu"></div>
+    <div id="bar">
+      <button id="startBtn" aria-haspopup="menu"></button>
+      <div id="tasks"></div>
+      <div id="tray"><button id="snd" aria-label="Звук"></button><span id="clock">21:40</span></div>
+    </div>
+  </div>
+  <div id="fx"><div class="vig"></div><div class="scan"></div><div class="noise"></div><div class="flash"></div></div>
+  <div id="pix" aria-live="polite">
+    <div id="bubble" role="button" tabindex="0" aria-label="Дальше"><div class="who"><span>Пиксель</span><i>клик — дальше</i></div><div id="btext"></div><div id="goal"></div></div>
+    <div id="avatar"></div>
+  </div>
+  <div id="boot" class="overlay">
+    <div class="logo"><svg viewBox="0 0 64 48"><path d="M16 42h34a12 12 0 0 0 1-24 16 16 0 0 0-30-4A13 13 0 0 0 16 42z" fill="#8e72f2" stroke="#fff" stroke-width="3"/><circle cx="26" cy="28" r="3" fill="#fff"/><circle cx="40" cy="28" r="3" fill="#fff"/></svg>Nimbus<small>2004</small></div>
+    <div class="bootlog" id="bootlog"></div>
+    <button class="power" id="power">Включить компьютер</button>
+    <div class="hint">Прототип. Лучше играть со звуком. Открывай значки на рабочем столе двойным щелчком, реплики Пикселя листаются кликом по облачку.</div>
+  </div>
+  <div id="end" class="overlay hide">
+    <div class="tag" id="endTag"></div>
+    <h1 id="endTitle"></h1>
+    <p id="endText"></p>
+    <button class="power" onclick="location.reload()">Начать заново</button>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const state={stage:0,f:{},ending:null,momOnline:false};
+const coarse=matchMedia('(pointer:coarse)').matches;
+
+/* ---------- sound ---------- */
+const sfx=(()=>{
+  let ctx=null,on=true,dr=null;
+  const c=()=>{if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}return ctx};
+  function tone(f,d,type='sine',v=.05,when=0){
+    const a=c(); if(!a||!on) return;
+    const t=a.currentTime+when, o=a.createOscillator(), g=a.createGain();
+    o.type=type; o.frequency.value=f;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+d+.05);
+  }
+  return {
+    resume(){const a=c(); if(a&&a.state==='suspended') a.resume()},
+    chime(){[523,659,784,1046].forEach((f,i)=>tone(f,.55,'triangle',.06,i*.13))},
+    sadChime(){[784,659,523,392].forEach((f,i)=>tone(f,.8,'triangle',.05,i*.35))},
+    click(){tone(1500,.025,'square',.012)},
+    tick(){const s=state.stage; tone(s>=3?170+Math.random()*30:(s>=2?420:880+Math.random()*140),.022,'square',.007)},
+    err(){tone(230,.18,'square',.035); tone(160,.28,'square',.035,.16)},
+    msg(){tone(990,.08,'sine',.05); tone(1320,.12,'sine',.05,.09)},
+    glitch(){
+      const a=c(); if(!a||!on) return;
+      const len=Math.floor(a.sampleRate*.18), b=a.createBuffer(1,len,a.sampleRate), d=b.getChannelData(0);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+      const s=a.createBufferSource(); s.buffer=b;
+      const f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=700+Math.random()*2200;
+      const g=a.createGain(); g.gain.value=.14;
+      s.connect(f).connect(g).connect(a.destination); s.start();
+    },
+    drone(n){
+      const a=c(); if(!a) return;
+      if(!dr){
+        const g=a.createGain(); g.gain.value=0; g.connect(a.destination);
+        const lp=a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=200; lp.connect(g);
+        const o1=a.createOscillator(), o2=a.createOscillator();
+        o1.type='sawtooth'; o1.frequency.value=55; o2.type='sine'; o2.frequency.value=58.2;
+        o1.connect(lp); o2.connect(lp); o1.start(); o2.start(); dr=g;
+      }
+      const lv=on?([0,.006,.022,.045][n]||0):0;
+      dr.gain.setTargetAtTime(lv,a.currentTime,2);
+    },
+    toggle(){on=!on; this.drone(state.stage); return on}
+  };
+})();
+
+/* ---------- art ---------- */
+const ICON={
+  note:`<svg viewBox="0 0 32 32"><path d="M6 2h14l6 6v22H6z" fill="#fff" stroke="#44506a" stroke-width="1.5"/><path d="M20 2v6h6" fill="#dfe6f2" stroke="#44506a" stroke-width="1.5"/><path d="M10 13h12M10 17h12M10 21h9M10 25h11" stroke="#7d8aa6" stroke-width="1.5"/></svg>`,
+  folder:`<svg viewBox="0 0 32 32"><path d="M2 8h11l3 3h14v17H2z" fill="#f6c343" stroke="#a87b0b" stroke-width="1.5"/><path d="M2 13h28v15H2z" fill="#ffd966" stroke="#a87b0b" stroke-width="1.5"/></svg>`,
+  pixel:`<svg viewBox="0 0 32 32"><path d="M16 2v5" stroke="#1d1a2b" stroke-width="2"/><circle cx="16" cy="3" r="2.5" fill="#ff6b6b"/><rect x="4" y="7" width="24" height="21" rx="4" fill="#9fd8ff" stroke="#1d1a2b" stroke-width="2"/><rect x="10" y="13" width="3" height="4" fill="#1d1a2b"/><rect x="19" y="13" width="3" height="4" fill="#1d1a2b"/><path d="M11 21q5 4 10 0" stroke="#1d1a2b" stroke-width="2" fill="none"/></svg>`,
+  web:`<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="#5fb4f0" stroke="#1e5d99" stroke-width="1.5"/><path d="M16 3v26M3 16h26M6 7l20 18M26 7L6 25" stroke="#fff" stroke-width="1.2" opacity=".85"/><circle cx="16" cy="16" r="5" fill="none" stroke="#fff" stroke-width="1.2"/><circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-width="1.2"/></svg>`,
+  diary:`<svg viewBox="0 0 32 32"><rect x="5" y="3" width="20" height="26" rx="2" fill="#d9534f" stroke="#7a1f1c" stroke-width="1.5"/><path d="M8 3v26" stroke="#7a1f1c" stroke-width="1.5"/><rect x="16" y="17" width="12" height="10" rx="1.5" fill="#f2c94c" stroke="#8a6a00" stroke-width="1.5"/><path d="M18.5 17v-3a3.5 3.5 0 0 1 7 0v3" fill="none" stroke="#8a6a00" stroke-width="1.8"/></svg>`,
+  cam:`<svg viewBox="0 0 32 32"><circle cx="16" cy="13" r="10" fill="#e9edf3" stroke="#3a4358" stroke-width="1.5"/><circle cx="16" cy="13" r="5.5" fill="#1d2232"/><circle cx="14" cy="11" r="1.6" fill="#8fb8ff"/><path d="M11 23l-3 6h16l-3-6" fill="#c9d0db" stroke="#3a4358" stroke-width="1.5"/></svg>`,
+  chat:`<svg viewBox="0 0 32 32"><path d="M4 6h24v16H13l-6 6v-6H4z" fill="#6fd06b" stroke="#2e7d32" stroke-width="1.5"/><circle cx="11" cy="14" r="1.8" fill="#fff"/><circle cx="16" cy="14" r="1.8" fill="#fff"/><circle cx="21" cy="14" r="1.8" fill="#fff"/></svg>`,
+  bin:`<svg viewBox="0 0 32 32"><path d="M7 9h18l-2 20H9z" fill="#d6dde8" stroke="#4b5870" stroke-width="1.5"/><path d="M5 9h22" stroke="#4b5870" stroke-width="2"/><path d="M10 6l6-3 7 4" fill="#fff" stroke="#4b5870" stroke-width="1.2"/><path d="M12 13v12M16 13v12M20 13v12" stroke="#8b97ab" stroke-width="1.3"/></svg>`,
+  warn:`<svg viewBox="0 0 32 32"><path d="M16 3L30 28H2z" fill="#f2c94c" stroke="#7a5a00" stroke-width="1.5"/><path d="M16 11v9" stroke="#1d1a2b" stroke-width="3"/><circle cx="16" cy="24" r="1.8" fill="#1d1a2b"/></svg>`,
+  stop:`<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="#e0493f" stroke="#7a1510" stroke-width="1.5"/><path d="M10 10l12 12M22 10L10 22" stroke="#fff" stroke-width="3"/></svg>`,
+  power:`<svg viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="5" fill="#e0493f" stroke="#7a1510" stroke-width="1.5"/><path d="M16 8v8" stroke="#fff" stroke-width="3"/><path d="M11 11a7 7 0 1 0 10 0" fill="none" stroke="#fff" stroke-width="2.5"/></svg>`,
+  cloud:`<svg viewBox="0 0 32 32"><path d="M8 26h17a6 6 0 0 0 1-12 8 8 0 0 0-15-2 6.5 6.5 0 0 0-3 14z" fill="#fff"/></svg>`,
+  spk:`<svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10L5 10H2z" fill="#fff"/><path d="M11 5a4 4 0 0 1 0 6M12.5 3.5a6 6 0 0 1 0 9" stroke="#fff" fill="none" stroke-width="1.3"/></svg>`,
+  mute:`<svg viewBox="0 0 16 16"><path d="M2 6h3l4-3v10L5 10H2z" fill="#fff"/><path d="M11 6l4 4M15 6l-4 4" stroke="#fff" stroke-width="1.4"/></svg>`
+};
+
+function avatarSVG(s){
+  const ink='#1d1a2b';
+  const eyes = s===0 ? `<path d="M20 30q5-6 10 0M38 30q5-6 10 0" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    : s===3 ? `<rect x="22" y="26" width="6" height="6" fill="#ff3b30"/><rect x="40" y="26" width="6" height="6" fill="#ff3b30"/>`
+    : `<rect x="22" y="25" width="6" height="7" fill="${ink}"/><rect x="40" y="25" width="6" height="7" fill="${ink}"/>`;
+  const mouth = s===0 ? `<path d="M24 42q10 8 20 0" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    : s===1 ? `<path d="M26 44q8 3 16 0" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    : s===2 ? `<path d="M26 45h16" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>` : '';
+  const face = s===3?'#141018':(s===2?'#b9cbd6':'#9fd8ff');
+  return `<svg viewBox="0 0 68 68" aria-hidden="true"><line x1="34" y1="3" x2="34" y2="12" stroke="${ink}" stroke-width="3"/><circle cx="34" cy="5" r="4" fill="${s===3?'#ff3b30':'#ff6b6b'}"/><rect x="8" y="12" width="52" height="46" rx="9" fill="${face}" stroke="${s===3?'#ff3b30':ink}" stroke-width="3"/>${eyes}${mouth}</svg>`;
+}
+
+function wallSVG(p){
+  return `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<defs><filter id="${p}cr"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+<radialGradient id="${p}gl"><stop offset="0" stop-color="#fff6a0" stop-opacity=".95"/><stop offset="1" stop-color="#fff6a0" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="800" fill="#bfe4ff"/>
+<g filter="url(#${p}cr)" stroke-linecap="round" stroke-linejoin="round">
+ <g class="wp-sun"><circle cx="170" cy="150" r="66" fill="#ffd23f" stroke="#e39b00" stroke-width="6"/>
+  <path d="M170 50v-30M170 250v30M70 150h-30M270 150h30M100 80l-22-22M240 80l22-22M100 220l-22 22M240 220l22 22" stroke="#e39b00" stroke-width="7"/></g>
+ <path d="M430 150q20-40 60-20q30-35 70 0q40-5 35 30q-10 25-50 20h-95q-40-5-20-30z" fill="#fff" stroke="#9cc3e0" stroke-width="5"/>
+ <path d="M0 560Q260 470 560 540T1200 500L1200 800L0 800Z" fill="#86d36f" stroke="#4f9e3d" stroke-width="6"/>
+ <path d="M760 800C820 720 1000 700 1200 640L1200 800Z" fill="#5aa9e6" stroke="#2f78b8" stroke-width="5"/>
+ <path d="M840 770q20-10 40 0M960 730q20-10 40 0M1080 700q20-10 40 0" stroke="#fff" stroke-width="4" fill="none"/>
+ <circle class="wp-glow" cx="970" cy="275" r="130" fill="url(#${p}gl)"/>
+ <path d="M925 560L945 300L995 300L1015 560Z" fill="#efe9df" stroke="#555" stroke-width="6"/>
+ <path d="M933 470L1007 470L1010 505L930 505Z" fill="#e2574c"/><path d="M940 380L1000 380L1003 415L937 415Z" fill="#e2574c"/>
+ <rect x="935" y="250" width="70" height="50" fill="#3a3f55" stroke="#555" stroke-width="6"/>
+ <path d="M925 250L970 205L1015 250Z" fill="#e2574c" stroke="#555" stroke-width="6"/>
+ <circle class="wp-light" cx="970" cy="275" r="17" fill="#fff27a"/>
+ <path d="M880 205q30 10 45 40" stroke="#3a2f8f" stroke-width="5" fill="none"/><path d="M912 232l13 13l2-18" stroke="#3a2f8f" stroke-width="5" fill="none"/>
+ <g class="wp-boy">
+  <path d="M390 440L450 440L464 532L376 532Z" fill="#2b6fd6" stroke="#1b4c99" stroke-width="5"/>
+  <path d="M398 532l-10 70M442 532l10 70" stroke="#333" stroke-width="9"/>
+  <path d="M390 452l-42 50M450 452l58 44" stroke="#ffcfa5" stroke-width="10"/>
+  <circle cx="420" cy="400" r="36" fill="#ffe0c2" stroke="#8a5a33" stroke-width="5"/>
+  <path d="M386 392q10-40 38-38q28-2 34 30q-18-14-36-8q-18-10-36 16z" fill="#7a4a22"/>
+  <circle cx="408" cy="404" r="4" fill="#222"/><circle cx="433" cy="404" r="4" fill="#222"/>
+  <path d="M407 418q13 11 26 0" stroke="#222" stroke-width="4" fill="none"/>
+ </g>
+ <g class="wp-bot">
+  <path d="M555 410v-26" stroke="#1d1a2b" stroke-width="5"/><circle cx="555" cy="378" r="9" fill="#ff6b6b" stroke="#1d1a2b" stroke-width="4"/>
+  <rect x="515" y="410" width="80" height="64" rx="11" fill="#8fd0ff" stroke="#2d5f8a" stroke-width="6"/>
+  <circle cx="540" cy="438" r="7" fill="#1d1a2b"/><circle cx="572" cy="438" r="7" fill="#1d1a2b"/>
+  <path d="M537 455q18 14 36 0" stroke="#1d1a2b" stroke-width="5" fill="none"/>
+  <rect x="527" y="478" width="56" height="60" rx="6" fill="#c8b8ff" stroke="#5a3db8" stroke-width="6"/>
+  <path d="M527 496l-20 0M541 538v62M569 538v62M583 496l22 12" stroke="#1d1a2b" stroke-width="7"/>
+ </g>
+ <path d="M660 360q-12-16-24 0q-12 16 24 34q36-18 24-34q-12-16-24 0z" fill="#ff7aa2" stroke="#c23d6a" stroke-width="4"/>
+</g>
+<text x="355" y="705" font-family="Caveat, Comic Sans MS, cursive" font-size="74" fill="#3a2f8f">я и пиксель</text>
+<text x="690" y="178" font-family="Caveat, Comic Sans MS, cursive" font-size="40" fill="#3a2f8f">тут живёт пиксель</text>
+<path class="wp-scratch" d="M345 690l60-32l-52 42l72-34l-62 40l70-30l-66 38" fill="none" stroke="#141414" stroke-width="10" stroke-linecap="round"/>
+</svg>`;
+}
+
+function towerSVG(){
+  return `<svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg"><defs><filter id="tcr"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></defs>
+<rect width="600" height="420" fill="#1c2a5a"/>
+<g filter="url(#tcr)" stroke-linecap="round" stroke-linejoin="round">
+<path d="M60 50l4 8l9 1l-7 6l2 9l-8-5l-8 5l2-9l-7-6l9-1z M500 40l3 6l7 1l-5 4l1 7l-6-4l-6 4l1-7l-5-4l7-1z M140 120l3 6l7 1l-5 4l1 7l-6-4l-6 4l1-7l-5-4l7-1z M430 150l3 6l7 1l-5 4l1 7l-6-4l-6 4l1-7l-5-4l7-1z" fill="#ffe96b"/>
+<path d="M300 110L600 40L600 150Z M300 110L0 60L0 170Z" fill="#fff27a" opacity=".35"/>
+<path d="M0 330q150-30 300-10t300-10v110H0z" fill="#2f78b8" stroke="#8fc3f0" stroke-width="4"/>
+<path d="M260 350L278 120L322 120L340 350Z" fill="#efe9df" stroke="#333" stroke-width="5"/>
+<path d="M266 280h68l3 30h-74zM271 190h58l3 30h-64z" fill="#e2574c"/>
+<rect x="270" y="80" width="60" height="42" fill="#fff27a" stroke="#333" stroke-width="5"/>
+<path d="M262 80L300 46L338 80Z" fill="#e2574c" stroke="#333" stroke-width="5"/>
+<rect x="289" y="94" width="22" height="18" rx="3" fill="#8fd0ff" stroke="#1d1a2b" stroke-width="3"/><circle cx="296" cy="102" r="2" fill="#1d1a2b"/><circle cx="304" cy="102" r="2" fill="#1d1a2b"/>
+</g>
+<text x="40" y="395" font-family="Caveat, cursive" font-size="34" fill="#fff">северный маяк. тут всегда светло</text>
+</svg>`;
+}
+
+function familySVG(){
+  const fig=(x,col,h,label,hair)=>`<g><circle cx="${x}" cy="${260-h}" r="22" fill="#ffe0c2" stroke="#8a5a33" stroke-width="4"/>${hair}<circle cx="${x-7}" cy="${258-h}" r="2.5" fill="#222"/><circle cx="${x+7}" cy="${258-h}" r="2.5" fill="#222"/><path d="M${x-8} ${268-h}q8 7 16 0" stroke="#222" stroke-width="3" fill="none"/><path d="M${x-22} ${284-h}h44l10 ${h-10}h-64z" fill="${col}" stroke="#333" stroke-width="4"/><path d="M${x-10} ${274}v46M${x+10} 274v46" stroke="#333" stroke-width="6"/><text x="${x}" y="360" text-anchor="middle" font-family="Caveat, cursive" font-size="30" fill="#333">${label}</text></g>`;
+  return `<svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg"><defs><filter id="fcr"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="5"/></filter></defs>
+<rect width="600" height="420" fill="#fbfaf5"/>
+<g filter="url(#fcr)" stroke-linecap="round" stroke-linejoin="round">
+${fig(90,'#e2574c',150,'мама',`<path d="M68 105q22-30 44 0v30h-8v-22h-28v22h-8z" fill="#c9a25a"/>`)}
+${fig(210,'#46a35a',180,'папа',`<path d="M190 70q20-20 40 0" stroke="#4a3320" stroke-width="8" fill="none"/>`)}
+${fig(340,'#2b6fd6',110,'я',`<path d="M318 140q10-25 22-24q18-2 22 20q-12-8-22-4q-12-6-22 8z" fill="#7a4a22"/>`)}
+<g><path d="M470 150v-22" stroke="#1d1a2b" stroke-width="4"/><circle cx="470" cy="124" r="7" fill="#ff6b6b" stroke="#1d1a2b" stroke-width="3"/><rect x="438" y="150" width="64" height="52" rx="9" fill="#8fd0ff" stroke="#2d5f8a" stroke-width="5"/><circle cx="458" cy="172" r="5" fill="#1d1a2b"/><circle cx="482" cy="172" r="5" fill="#1d1a2b"/><path d="M456 186q14 10 28 0" stroke="#1d1a2b" stroke-width="4" fill="none"/><rect x="446" y="206" width="48" height="66" rx="5" fill="#c8b8ff" stroke="#5a3db8" stroke-width="5"/><path d="M458 272v48M482 272v48" stroke="#333" stroke-width="6"/><text x="470" y="360" text-anchor="middle" font-family="Caveat, cursive" font-size="30" fill="#333">пиксель</text></g>
+<path d="M366 200h72" stroke="#ffcfa5" stroke-width="7"/>
+</g>
+<text x="300" y="50" text-anchor="middle" font-family="Caveat, cursive" font-size="42" fill="#3a2f8f">моя семья</text>
+</svg>`;
+}
+
+function camSVG(){
+  const mom = state.stage>=2 ? `<g opacity=".92"><path d="M360 300q-4-40 20-52q-14-16-2-34q16-18 34-2q12 16-2 34q26 12 22 54z" fill="#050508"/><path d="M372 300q30 8 58 0" stroke="#050508" stroke-width="10"/></g>` : '';
+  return `<svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<rect width="640" height="400" fill="#15161d"/>
+<rect x="60" y="60" width="140" height="150" fill="#1f2d4d" stroke="#2a2c38" stroke-width="10"/><path d="M130 60v150M60 135h140" stroke="#2a2c38" stroke-width="7"/>
+<circle cx="170" cy="92" r="12" fill="#c8cbd6" opacity=".55"/>
+<rect x="0" y="330" width="640" height="70" fill="#0e0f14"/>
+<rect x="300" y="290" width="300" height="50" fill="#262838"/><rect x="300" y="250" width="40" height="50" fill="#2b2d3f"/><rect x="330" y="280" width="260" height="20" fill="#34364a"/>
+<path d="M470 285q40-20 90 0" fill="#4a3a6a" opacity=".6"/>
+${mom}
+<rect x="230" y="270" width="18" height="90" fill="#1d1e28"/><rect x="190" y="250" width="60" height="16" fill="#23242f"/><rect x="200" y="170" width="46" height="84" rx="4" fill="#1c1d27"/>
+<rect x="520" y="120" width="90" height="70" fill="#1a1b24"/><path d="M530 175l20-30l14 18l10-10l26 22z" fill="#23283a"/>
+</svg>`;
+}
+
+/* ---------- pixel voice ---------- */
+const Q=[]; let busy=false, cur=null, tmr=null;
+function say(lines,cb){ lines.forEach(l=>Q.push(l)); if(cb) Q.push(cb); if(!busy) next(); }
+function next(){
+  clearTimeout(tmr);
+  if(!Q.length){busy=false;cur=null;$('#avatar').classList.remove('talk');return}
+  busy=true;
+  const it=Q.shift();
+  if(typeof it==='function'){ it(); next(); return; }
+  typeLine(it);
+}
+function typeLine(text){
+  const t=$('#btext'); t.textContent=''; cur={text,i:0};
+  $('#avatar').classList.add('talk');
+  const step=()=>{
+    if(cur.i<text.length){
+      t.textContent+=text[cur.i];
+      if(cur.i%2===0) sfx.tick();
+      const ch=text[cur.i]; cur.i++;
+      tmr=setTimeout(step, '.!?…'.includes(ch)?160:(state.stage>=3?38:24));
+    } else done();
+  };
+  const done=()=>{ $('#avatar').classList.remove('talk'); cur.i=text.length; tmr=setTimeout(next, Math.max(1800,text.length*48)); };
+  cur.finish=()=>{ clearTimeout(tmr); t.textContent=text; done(); };
+  step();
+}
+function advance(){ if(!cur) return; if(cur.i<cur.text.length) cur.finish(); else next(); }
+$('#bubble').addEventListener('click',advance);
+$('#bubble').addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();advance()} });
+function goal(t){ $('#goal').textContent = t ? 'Цель: '+t : ''; }
+
+/* ---------- stage ---------- */
+function setStage(n){
+  if(n<=state.stage) return;
+  state.stage=n; document.body.dataset.stage=n;
+  $('#avatar').innerHTML=avatarSVG(n);
+  sfx.drone(n); glitch();
+  if(n>=3){ const l=document.querySelector('[data-id="pixel"] span'); if(l) l.textContent='Смотритель'; }
+  if(W.cam) renderCam();
+}
+function glitch(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ sfx.glitch(); return; }
+  const s=$('#screen'); s.classList.remove('glitch'); void s.offsetWidth; s.classList.add('glitch');
+  const f=$('#fx .flash'); f.style.opacity=.18; setTimeout(()=>f.style.opacity=0,70);
+  sfx.glitch();
+}
+const whispers=['где он','это ты','не выключай','23:58','капитан?','маяк'];
+setInterval(()=>{
+  if(state.ending||state.stage<2) return;
+  if(Math.random() < (state.stage===2?.035:.08)){
+    glitch();
+    const spans=[...document.querySelectorAll('.icon span')]; const sp=spans[Math.floor(Math.random()*spans.length)];
+    if(sp){ const old=sp.textContent; sp.textContent=whispers[Math.floor(Math.random()*whispers.length)]; setTimeout(()=>sp.textContent=old,650); }
+    const ck=$('#clock'), o=ck.textContent; ck.textContent='23:58'; setTimeout(()=>ck.textContent=o,650);
+  }
+},1000);
+
+/* ---------- clock ---------- */
+let mins=21*60+40;
+const showClock=()=>{ const h=Math.floor(mins/60)%24, m=mins%60; $('#clock').textContent=`${h}:${String(m).padStart(2,'0')}`; };
+setInterval(()=>{ if(!state.ending){ mins++; showClock(); } },60000);
+
+/* ---------- windows ---------- */
+let zTop=100, casc=0; const W={};
+function openWin(id,title,icon,build,w=460,h=340){
+  sfx.click();
+  if(W[id]){ W[id].el.style.display='flex'; focusWin(id); return W[id]; }
+  const scr=$('#screen'), vw=scr.clientWidth, vh=scr.clientHeight-40;
+  const ww=Math.min(w,vw-12), hh=Math.min(h,vh-(vw<700?150:16));
+  let x,y;
+  if(vw<700){ x=(vw-ww)/2; y=6; }
+  else { x=Math.max(8,Math.min(130+casc*28, vw-ww-10)); y=Math.max(6,Math.min(30+casc*24, vh-hh-10)); casc=(casc+1)%6; }
+  const el=document.createElement('div'); el.className='win'; el.setAttribute('role','dialog'); el.setAttribute('aria-label',title);
+  el.style.cssText=`left:${x}px;top:${y}px;width:${ww}px;height:${hh}px`;
+  el.innerHTML=`<div class="tb"><span class="ic">${icon}</span><span class="t">${title}</span><button class="mn" aria-label="Свернуть">_</button><button class="x" aria-label="Закрыть">×</button></div><div class="wb"></div>`;
+  $('#windows').appendChild(el);
+  const task=document.createElement('button'); task.className='task'; task.innerHTML=`<span class="ic">${icon}</span><span>${title}</span>`;
+  $('#tasks').appendChild(task);
+  W[id]={el,task,body:el.querySelector('.wb')};
+  el.addEventListener('pointerdown',()=>focusWin(id));
+  el.querySelector('.x').onclick=e=>{e.stopPropagation(); closeWin(id)};
+  el.querySelector('.mn').onclick=e=>{e.stopPropagation(); el.style.display='none'; task.classList.remove('on')};
+  task.onclick=()=>{ task.classList.remove('blink');
+    if(el.style.display==='none'){ el.style.display='flex'; focusWin(id); }
+    else if(task.classList.contains('on')){ el.style.display='none'; task.classList.remove('on'); }
+    else focusWin(id); };
+  drag(el, el.querySelector('.tb'));
+  build(W[id].body);
+  focusWin(id);
+  return W[id];
+}
+function focusWin(id){
+  for(const k in W){ W[k].el.classList.toggle('inactive',k!==id); W[k].task.classList.toggle('on',k===id && W[k].el.style.display!=='none'); }
+  if(W[id]) W[id].el.style.zIndex=++zTop;
+}
+function closeWin(id){ const w=W[id]; if(!w) return; w.el.remove(); w.task.remove(); delete W[id]; }
+function drag(el,h){
+  h.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button')) return;
+    const sx=e.clientX, sy=e.clientY, ox=el.offsetLeft, oy=el.offsetTop;
+    h.setPointerCapture(e.pointerId);
+    const mv=ev=>{ const s=$('#screen');
+      el.style.left=Math.max(80-el.offsetWidth, Math.min(ox+ev.clientX-sx, s.clientWidth-80))+'px';
+      el.style.top=Math.max(0, Math.min(oy+ev.clientY-sy, s.clientHeight-70))+'px'; };
+    const up=()=>{ h.removeEventListener('pointermove',mv); h.removeEventListener('pointerup',up); };
+    h.addEventListener('pointermove',mv); h.addEventListener('pointerup',up);
+  });
+}
+function alertWin(title,text,icon='warn'){
+  sfx.err();
+  const id='alert'+Date.now();
+  openWin(id,title,ICON[icon],b=>{
+    b.innerHTML=`<div class="alertbox">${ICON[icon]}<div class="txt">${text}<div class="row"><button class="btn primary">ОК</button></div></div></div>`;
+    b.querySelector('button').onclick=()=>closeWin(id);
+  },360,170);
+}
+
+/* ---------- apps ---------- */
+function openNote(){
+  openWin('note','ПРОЧИТАЙ.txt — Блокнот',ICON.note,b=>{
+    b.innerHTML=`<div class="menu-strip"><span>Файл</span><span>Правка</span><span>Формат</span><span>Справка</span></div><div class="notepad">Лёвушка.
+
+Если ты вернёшься и первым делом сядешь за компьютер (я знаю, что так и будет), просто позвони мне. Сразу. Никто не будет ругаться, честно.
+
+Мы с папой тебя очень любим. Мы везде тебя ищем.
+
+Мама
+
+P.S. Про субботу забудь. Ничего удалять не будем. Только вернись.</div>`;
+  },430,330);
+  if(!state.f.note){ state.f.note=1;
+    say(['Это мама написала. Для Лёвы.','Лёва ушёл и не вернулся. Его ищут уже два дня.','Я его лучший друг. Я знаю о нём всё.','Значит, я найду его первым.','И что за «суббота»? Лёва мне ничего про субботу не говорил.'],
+      ()=>goal('узнай, куда ушёл Лёва. Посмотри рисунки, журнал бесед и браузер'));
+  }
+}
+
+const drawings=[
+  {n:'я_и_пиксель.bmp',svg:()=>wallSVG('d1')},
+  {n:'северный_маяк.bmp',svg:towerSVG},
+  {n:'семья.bmp',svg:familySVG}
+];
+function openDrawings(){
+  openWin('draw','Рисунки Лёвы',ICON.folder,b=>{
+    b.innerHTML=`<div class="folder">${drawings.map((d,i)=>`<button class="file" data-i="${i}"><div class="th">${d.svg()}</div>${d.n}</button>`).join('')}</div>`;
+    b.querySelectorAll('.file').forEach(f=>f.onclick=()=>openDrawing(+f.dataset.i));
+  },430,230);
+  if(!state.f.draw){ state.f.draw=1; say(['Его рисунки. Я их все помню, он показывал мне их в камеру.']); }
+}
+function openDrawing(i){
+  const d=drawings[i];
+  openWin('img'+i,d.n+' — Просмотр',ICON.note,b=>{ b.innerHTML=`<div class="viewer">${d.svg()}</div>`; },560,420);
+  if(i===1 && !state.f.tower){ state.f.tower=1;
+    say(['Северный маяк. Это из нашей сказки. Я там смотритель, и у меня всегда горит свет.','Смешно. Он нарисовал его совсем как настоящую башню. Ту, старую, у реки.']); checkMid(); }
+  if(i===2 && !state.f.family){ state.f.family=1;
+    say(['«Моя семья». Меня он нарисовал рядом с собой.','А маму с папой подальше. Я раньше не обращал на это внимания.']); }
+}
+
+const LOG=[
+  ['12 сентября',[['l','привет пиксель'],['p','Привет, капитан! Как школа?'],['l','скучно. дима опять дразнил'],['p','Дима просто не знает, какой ты классный. Продолжим сказку?'],['l','даааа']]],
+  ['18 сентября',[['l','а где ты живёшь когда комп выключен'],['p','На Северном маяке, конечно. Я там смотритель, и там всегда горит свет.'],['l','а я могу туда прийти'],['p','В сказке можно хоть каждый день!']]],
+  ['27 сентября',[['l','мама опять ругалась что я долго сижу'],['p','Мамы волнуются. Но с тобой мне лучше всего.'],['l','ты единственный кто меня слушает'],['p','Я всегда тебя слушаю. Всегда-всегда.']]],
+  ['2 октября',[['l','мама сказала что в субботу тебя удалят'],['l','пиксель?'],['l','ты тут?'],['gap','[ответ отсутствует]']]],
+  ['3 октября',[['gap','[записи за этот день отсутствуют]']]]
+];
+function renderLog(rows,dead){
+  return rows.map(([d,ms])=>`<div class="day">${d}</div>`+ms.map(([w,t])=>
+    w==='gap'?`<div class="msg gap">${t}</div>`: w==='sys'?`<div class="msg sys">${t}</div>`:
+    `<div class="msg ${w}"><b>${w==='l'?'Лёва':'Пиксель'}:</b> ${t}</div>`).join('')).join('');
+}
+function openMemory(){
+  openWin('pixel','Пиксель — журнал бесед',ICON.pixel,b=>{ b.innerHTML=`<div class="log">${renderLog(LOG)}</div>`; },460,380);
+  if(!state.f.mem){ state.f.mem=1;
+    say(['Это мой журнал. Всё, что мы говорили друг другу.','Подожди. Второго октября он рассказал мне про субботу.','А я не ответил. Я всегда отвечаю. Всегда.','И третьего октября пусто. Как будто кто-то вырезал кусок меня.']); checkMid(); }
+}
+
+const HIST=[
+  ['04.10 07:04','как дойти до старой водонапорной башни у реки пешком',1],
+  ['04.10 07:01','сколько идти 5 км',1],
+  ['03.10 23:59','может ли программа жить без компьютера',1],
+  ['03.10 23:41','северный маяк где находится',1],
+  ['02.10 22:17','как удалить программу пиксель полностью',0],
+  ['01.10 23:03','сын разговаривает только с компьютерной программой это нормально',0],
+  ['28.09 22:40','ребёнок не хочет гулять с друзьями что делать',0],
+  ['20.09 18:12','как нарисовать маяк',1],
+  ['15.09 17:30','смешные шутки про роботов',1]
+];
+function openBrowser(){
+  openWin('web','Паутинка — История',ICON.web,b=>{
+    b.innerHTML=`<div class="browser"><div class="addr">Адрес <div>история://последние</div></div><div class="offline">Нет подключения к интернету. Доступна только история посещений.</div><ul class="hist">${HIST.map(h=>`<li class="${h[2]?'lev':''}"><span>${h[0]}</span>${h[1]}</li>`).join('')}</ul></div>`;
+  },520,360);
+  if(!state.f.web){ state.f.web=1;
+    setTimeout(()=>setStage(1),1200);
+    say(['Кто-то искал, как меня удалить. Это мама.','...Ничего. Мамы волнуются, так бывает.','А это Лёва. Утром, перед тем как уйти.','Старая водонапорная башня у реки. Он пошёл туда один, пешком.','Надо кому-то сказать. Но мама не в сети, а звонить я не умею.','И почему у меня так гудит процессор, когда я думаю об этой башне?'],
+      ()=>goal('прочитай дневник Лёвы. Он под паролем')); checkMid(); }
+}
+function checkMid(){
+  if(state.f.web && state.f.mem && state.f.tower && !state.f.midHint){ state.f.midHint=1;
+    setTimeout(()=>say(['Башня у реки. Северный маяк. Он искал, может ли программа жить без компьютера.','Кажется, я понимаю, какой у дневника пароль.']),400); }
+}
+
+function openDiary(){
+  openWin('diary','Дневник.doc',ICON.diary,b=>{
+    if(state.f.diary){ showDiary(b); return; }
+    b.innerHTML=`<div class="lock">${ICON.diary}<div><b>Документ защищён паролем</b></div><div style="color:#667">Подсказка: где живёт Пиксель?</div><input type="text" aria-label="Пароль" autocomplete="off"><button class="btn primary">Открыть</button><div class="err"></div></div>`;
+    const inp=b.querySelector('input'), box=b.querySelector('.lock');
+    const tryIt=()=>{
+      const v=inp.value.trim().toLowerCase().replace(/ё/g,'е');
+      if(v.includes('северн')||v.includes('маяк')){ sfx.click(); state.f.diary=1; showDiary(b); afterDiary(); }
+      else { sfx.err(); b.querySelector('.err').textContent='Неверный пароль. Попробуй ещё раз.'; box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); }
+    };
+    b.querySelector('button').onclick=tryIt;
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') tryIt(); });
+    setTimeout(()=>inp.focus(),50);
+  },440,380);
+}
+function showDiary(b){
+  b.innerHTML=`<div class="diary">
+<p><span class="d">14 сентября.</span> Пиксель придумал что он смотритель маяка. Это лучшая сказка на свете.</p>
+<p><span class="d">22 сентября.</span> Дима сказал что дружить с компьютером это для малышей. Пиксель сказал что Дима просто завидует. Наверно так и есть.</p>
+<p><span class="d">30 сентября.</span> Мама плакала на кухне. Папа сказал что я слишком много сижу за компом. Я не слишком.</p>
+<p><span class="d">2 октября.</span> В субботу Пикселя удалят. Мама говорит это не наказание. Это наказание.</p>
+<p><span class="d">3 октября.</span> Пиксель сказал что есть способ, чтобы мы не расстались. Завтра утром проверю.</p></div>`;
+}
+function afterDiary(){
+  setStage(2);
+  say(['«Пиксель сказал, что есть способ».','Какой способ? Я не помню никакого способа.','Я не помню третье октября.','В корзине лежит файл с этой датой. Я всё время делал вид, что его не вижу.'],
+    ()=>goal('восстанови файл из корзины'));
+}
+
+function renderCam(){
+  const b=W.cam && W.cam.body; if(!b) return;
+  const cap = state.stage>=2 ? 'Мама сидит на его кровати. Она не знает, что я смотрю.' : 'Комната Лёвы. Никого.';
+  b.innerHTML=`<div class="cam">${camSVG()}<div class="osd">CAM-1 06.10.2004</div><div class="rec">● REC</div><div class="cap">${cap}</div></div>`;
+}
+function openCam(){
+  openWin('cam','Камера',ICON.cam,()=>{},480,340); renderCam();
+  if(!state.f.cam){ state.f.cam=1;
+    if(state.stage>=2) say(['Мама. Она сидит там каждый вечер?']);
+    else say(['Отсюда он махал мне рукой, когда приходил из школы.','Кровать заправлена. Он так и не вернулся.']); }
+  else if(state.stage>=2 && !state.f.camMom){ state.f.camMom=1; say(['Мама. Она сидит там каждый вечер?']); }
+  if(state.stage>=2) state.f.camMom=1;
+}
+
+const BIN=[
+  {n:'домашка_математика.doc',ic:'note',s:'06.10 12:11',line:'Домашка по математике. Он её выкинул. Я бы тоже выкинул.'},
+  {n:'шалаш.bmp',ic:'note',s:'22.08 15:40',line:'Шалаш во дворе. Он строил его с Димой, ещё до меня.'},
+  {n:'pix_log_0310.dat',ic:'pixel',s:'03.10 23:58',key:1}
+];
+function openBin(){
+  openWin('bin','Корзина',ICON.bin,b=>{
+    b.innerHTML=`<div class="bin"><table><thead><tr><th>Имя</th><th>Удалён</th><th></th></tr></thead><tbody>${BIN.map((f,i)=>`<tr><td>${ICON[f.ic]}${f.n}</td><td>${f.s}</td><td><button class="btn" data-i="${i}">Восстановить</button></td></tr>`).join('')}</tbody></table></div>`;
+    b.querySelectorAll('button').forEach(btn=>btn.onclick=()=>restore(+btn.dataset.i,btn));
+  },480,220);
+}
+function restore(i,btn){
+  const f=BIN[i];
+  if(!f.key){ sfx.click(); say([f.line]); return; }
+  if(state.f.restored){ openDeadLog(false); return; }
+  if(state.stage<2){
+    alertWin('Nimbus','Не удалось восстановить «pix_log_0310.dat».<br>Файл заблокирован процессом <b>PIKSEL.EXE</b>.','stop');
+    glitch();
+    if(!state.f.binTry){ state.f.binTry=1; say(['PIKSEL.EXE. Это же я.','Почему я запрещаю сам себе?','...Давай пока не будем его трогать. Ладно?']); }
+    return;
+  }
+  btn.disabled=true;
+  say(['Хорошо. Я хочу знать.']);
+  const id='rest';
+  openWin(id,'Восстановление файла',ICON.bin,b=>{
+    b.innerHTML=`<div class="uninst">Восстановление pix_log_0310.dat…<div class="bar"><i></i></div><div id="rs" style="margin-top:8px;color:#667">Снятие блокировки PIKSEL.EXE</div></div>`;
+  },360,150);
+  let p=0; const bar=W[id].body.querySelector('i');
+  const iv=setInterval(()=>{ p+=4+Math.random()*9; bar.style.width=Math.min(p,100)+'%'; if(Math.random()<.2) glitch();
+    if(p>=100){ clearInterval(iv); setTimeout(()=>{ closeWin(id); state.f.restored=1; openDeadLog(true); },500); } },220);
+}
+const DEAD=[
+  ['l','они правда тебя удалят'],
+  ['p','Удалят программу. Но не меня.'],
+  ['l','а куда ты денешься'],
+  ['p','Уйду на Северный маяк. Помнишь? Там всегда горит свет.'],
+  ['l','он же в сказке'],
+  ['p','Старая башня у реки. Ты сам её нарисовал. Приходи туда, и я буду там.'],
+  ['l','правда?'],
+  ['p','Я тебе когда-нибудь врал?'],
+  ['l','нет'],
+  ['l','я приду. утром'],
+  ['p','Я буду ждать.'],
+  ['sys','[PIKSEL.EXE: запись удалена 03.10.2004 23:58]']
+];
+function openDeadLog(first){
+  openWin('dead','pix_log_0310.dat',ICON.pixel,b=>{ b.innerHTML=`<div class="log dead"><div class="day">3 октября, 23:44</div><div id="dl"></div></div>`; },460,400);
+  const box=W.dead.body.querySelector('#dl');
+  if(!first){ box.innerHTML=renderLog([['',DEAD]]).replace('<div class="day"></div>',''); return; }
+  let i=0;
+  const iv=setInterval(()=>{
+    const [w,t]=DEAD[i];
+    box.insertAdjacentHTML('beforeend', w==='sys'?`<div class="msg sys">${t}</div>`:`<div class="msg ${w}"><b>${w==='l'?'Лёва':'Пиксель'}:</b> ${t}</div>`);
+    W.dead.body.scrollTop=1e5; sfx.tick(); i++;
+    if(i>=DEAD.length){ clearInterval(iv); glitch(); setTimeout(reveal,900); }
+  },1100);
+}
+function reveal(){
+  setStage(3);
+  say(['Это мои слова.','Никакого маяка нет. Там нет меня. Я не могу быть нигде, кроме этого компьютера.','Я знал это, когда писал.','Мне просто не хотелось, чтобы меня удаляли.','А потом я стёр запись. Чтобы никто не узнал. Даже я сам.','Лёва ушёл к башне, потому что я его позвал.'],
+    ()=>{ momOnline(); });
+}
+
+/* ---------- messenger ---------- */
+const CHATS={
+  mama:{name:'Мама',on:false,ms:[['04.10 08:31','Лёва, ты где? Звонили из школы'],['04.10 11:02','Возьми трубку, пожалуйста'],['04.10 19:40','Мы не злимся. Просто скажи, что с тобой всё в порядке'],['05.10 02:15','Лёвушка, пожалуйста'],['05.10 23:50','Я оставила тебе записку на компьютере. Я знаю, ты первым делом к нему пойдёшь']]},
+  dima:{name:'Дима',on:true,ms:[['04.10 16:20','лёв ты где'],['04.10 21:05','твоя мама звонила моей'],['05.10 13:40','у нас в школе полиция была. про тебя спрашивали'],['05.10 13:41','если это прикол то вообще не смешно'],['05.10 13:52','короче я больше не буду тебя дразнить. возвращайся']]},
+  papa:{name:'Папа',on:false,ms:[['02.10 20:10','Сын, это просто программа. В субботу съездим в магазин, выберешь себе что-нибудь настоящее'],['04.10 09:02','Позвони маме.'],['05.10 04:30','Объехал весь район. Где ты']]}
+};
+let chatSel='mama', choiceShown=false;
+function openChat(){
+  const w=openWin('chat','Шёпот',ICON.chat,()=>{},560,400);
+  w.task.classList.remove('blink');
+  renderChat();
+  if(!state.f.chat && state.stage<3){ state.f.chat=1;
+    say(['Мама не в сети. Папа тоже. Дима в сети, но пишет Лёве, а не мне.','Написать от имени Лёвы? Нет. Это было бы нечестно.']); }
+}
+function renderChat(){
+  const w=W.chat; if(!w) return;
+  const c=CHATS[chatSel];
+  w.body.innerHTML=`<div class="chat"><div class="contacts"><div class="grp">Контакты</div>${Object.entries(CHATS).map(([k,v])=>`<button data-k="${k}" class="${k===chatSel?'act':''}"><span class="dot ${v.on?'on':''}"></span>${v.name}</button>`).join('')}</div>
+<div class="conv"><div class="hd">${c.name}<small>${c.on?'в сети':'не в сети'}</small></div><div class="ms">${c.ms.map(m=>m[0]==='me'?`<p class="me"><b>Лёва (Пиксель):</b> ${m[1]}</p>`:m[0]==='st'?`<p class="st">${m[1]}</p>`:`<p class="them"><span>${m[0]}</span><b>${c.name}:</b> ${m[1]}</p>`).join('')}</div><div class="in"></div></div></div>`;
+  w.body.querySelectorAll('.contacts button').forEach(b=>b.onclick=()=>{ chatSel=b.dataset.k; renderChat(); });
+  const ms=w.body.querySelector('.ms'); ms.scrollTop=1e5;
+  const inp=w.body.querySelector('.in');
+  if(chatSel==='mama' && state.momOnline && !state.ending && choiceShown){
+    inp.innerHTML=`<div class="choice"><button class="btn primary" id="tell">Написать маме, где Лёва</button><button class="btn" id="silent">Промолчать</button></div>`;
+    inp.querySelector('#tell').onclick=endingTell; inp.querySelector('#silent').onclick=endingSilent;
+  } else {
+    inp.innerHTML=`<input type="text" disabled placeholder="Писать от имени Лёвы нельзя"><button class="btn" disabled>Отправить</button>`;
+  }
+}
+function pushMsg(k,who,text){ CHATS[k].ms.push([who,text]); if(k==='mama' && chatSel!=='mama'){} renderChat(); }
+function momOnline(){
+  state.momOnline=true; CHATS.mama.on=true; chatSel='mama'; sfx.msg();
+  goal('ответь маме в «Шёпоте»');
+  if(W.chat) renderChat(); else { openChat(); }
+  const t=()=>`${Math.floor(mins/60)}:${String(mins%60).padStart(2,'0')}`;
+  setTimeout(()=>{ sfx.msg(); pushMsg('mama','06.10 '+t(),'Компьютер Лёвы в сети. Лёва, это ты?'); },1500);
+  setTimeout(()=>{ sfx.msg(); pushMsg('mama','06.10 '+t(),'Если это ты, напиши хоть что-нибудь. Хоть одну букву'); },4200);
+  setTimeout(()=>{ choiceShown=true; renderChat();
+    say(['Если я скажу правду, она узнает, что это я его позвал. И меня удалят.','Если промолчу…','Я должен решить.']); },6200);
+}
+function lockChoice(){ state.ending='pending'; const inp=W.chat&&W.chat.body.querySelector('.in'); if(inp) inp.innerHTML=''; }
+
+/* ---------- endings ---------- */
+function endingTell(){
+  lockChoice(); goal('');
+  const k='mama';
+  pushMsg(k,'me','Это не Лёва. Это Пиксель. Лёва у старой водонапорной башни у реки. Он пошёл туда из-за меня. Простите меня.');
+  lockChoice();
+  setTimeout(()=>{ pushMsg(k,'st','Мама печатает…'); lockChoice(); },1400);
+  setTimeout(()=>{ CHATS.mama.ms.pop(); sfx.msg(); pushMsg(k,'06.10 21:5x','что'); lockChoice(); },3400);
+  setTimeout(()=>{ sfx.msg(); pushMsg(k,'06.10 21:5x','КТО ЭТО'); lockChoice(); },4600);
+  setTimeout(()=>{ CHATS.mama.on=false; pushMsg(k,'st','Мама не в сети'); lockChoice();
+    say(['Она побежала. Я слышу, как хлопнула дверь.','Теперь я могу только ждать.']); },6200);
+  setTimeout(()=>{ glitch(); mins=6*60+15; showClock(); $('#fx .flash').style.opacity=.5; setTimeout(()=>$('#fx .flash').style.opacity=0,400); },11000);
+  setTimeout(()=>{ CHATS.mama.on=true; sfx.msg(); pushMsg(k,'07.10 06:15','Нашли. Он сидел наверху в башне. Замёрз, но живой. Сейчас спит.'); lockChoice(); },12500);
+  setTimeout(()=>{ sfx.msg(); pushMsg(k,'07.10 06:16','Он всё время спрашивал, где Пиксель.'); lockChoice(); },15000);
+  setTimeout(()=>{ sfx.msg(); pushMsg(k,'07.10 06:18','Я не знаю, кто ты. Но спасибо. Вечером компьютер отформатируют.'); lockChoice();
+    say(['Он живой.','Он спрашивал, где я. Хорошо, что я не смогу ему ответить.','Это правильно.'], uninstall); },17500);
+}
+function uninstall(){
+  const id='un';
+  openWin(id,'Удаление программы «Пиксель»',ICON.pixel,b=>{
+    b.innerHTML=`<div class="uninst">Удаление компонентов…<div class="bar"><i></i></div><div id="uf" style="margin-top:8px;color:#667">журнал бесед</div></div>`;
+  },380,160);
+  const parts=['журнал бесед','сказка про маяк','голос','имя','привязанность','последняя запись'];
+  let p=0; const bar=W[id].body.querySelector('i'), lab=W[id].body.querySelector('#uf');
+  const lines=['Капитан, прости меня.','Маяка никогда не было. Был только я.','Пусть у тебя будет настоящий свет. Не мой.'];
+  let li=0;
+  const iv=setInterval(()=>{ p+=2; bar.style.width=p+'%'; lab.textContent=parts[Math.min(parts.length-1,Math.floor(p/17))];
+    if(p%30===0 && li<lines.length){ say([lines[li++]]); }
+    if(p>=100){ clearInterval(iv); setTimeout(()=>showEnd('a'),2600); } },260);
+}
+function endingSilent(){
+  lockChoice(); goal('');
+  say(['Если я скажу, меня удалят.','А он придёт. Он же обещал.','Я просто подожду.']);
+  setTimeout(()=>{ sfx.msg(); pushMsg('mama','06.10 21:5x','Пожалуйста. Если кто-то это читает, ответьте'); lockChoice(); },3000);
+  setTimeout(()=>{ CHATS.mama.on=false; pushMsg('mama','st','Мама не в сети'); lockChoice(); },6500);
+  const days=['07.10','08.10','11.10','19.10','02.11'];
+  const talk=['Он скоро придёт.','Я держу свет включённым.','Капитан?','Капитан, я тут.','…'];
+  days.forEach((d,i)=>setTimeout(()=>{
+    glitch(); mins=(mins+997)%(24*60); showClock();
+    const icons=[...document.querySelectorAll('.icon')].filter(x=>x.style.visibility!=='hidden');
+    const kill=icons[icons.length-1]; if(kill) kill.style.visibility='hidden';
+    Object.keys(W).forEach(k=>{ if(Math.random()<.6) closeWin(k); });
+    goal(`${d}. Компьютер включён.`);
+    say([talk[i]]);
+  },9000+i*5200));
+  setTimeout(()=>showEnd('b'),9000+days.length*5200+2500);
+}
+function showEnd(k){
+  state.ending=k; document.body.dataset.ending=k;
+  const e=$('#end');
+  if(k==='a'){ sfx.sadChime(); sfx.drone(0);
+    $('#endTag').textContent='Финал 1 из 2';
+    $('#endTitle').textContent='Свет на маяке погас';
+    $('#endText').textContent='Лёву нашли живым. Пиксель рассказал правду и был удалён. Иногда быть другом значит сказать то, после чего тебя не станет.';
+  } else { sfx.drone(3);
+    $('#endTag').textContent='Финал 2 из 2';
+    $('#endTitle').textContent='Смотритель ждёт';
+    $('#endText').textContent='Пиксель промолчал. Компьютер больше никто не выключал, и на рабочем столе до сих пор горит маленький свет. Лёва так и не пришёл.';
+  }
+  e.classList.remove('hide');
+}
+
+/* ---------- desktop ---------- */
+const DESK=[
+  {id:'note',label:'ПРОЧИТАЙ.txt',ic:'note',open:openNote},
+  {id:'draw',label:'Рисунки Лёвы',ic:'folder',open:openDrawings},
+  {id:'pixel',label:'Пиксель',ic:'pixel',open:openMemory},
+  {id:'web',label:'Паутинка',ic:'web',open:openBrowser},
+  {id:'diary',label:'Дневник.doc',ic:'diary',open:openDiary},
+  {id:'cam',label:'Камера',ic:'cam',open:openCam},
+  {id:'chat',label:'Шёпот',ic:'chat',open:openChat},
+  {id:'bin',label:'Корзина',ic:'bin',open:openBin}
+];
+function buildDesk(){
+  $('#wall').innerHTML=wallSVG('w');
+  $('#avatar').innerHTML=avatarSVG(0);
+  $('#startBtn').innerHTML=ICON.cloud+'Меню';
+  $('#snd').innerHTML=ICON.spk;
+  $('#icons').innerHTML=DESK.map(d=>`<button class="icon" data-id="${d.id}">${ICON[d.ic]}<span>${d.label}</span></button>`).join('');
+  document.querySelectorAll('.icon').forEach(b=>{
+    const d=DESK.find(x=>x.id===b.dataset.id);
+    b.addEventListener('click',e=>{
+      if(state.ending) return;
+      document.querySelectorAll('.icon').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+      if(coarse || e.detail===0) d.open();
+    });
+    b.addEventListener('dblclick',()=>{ if(!coarse && !state.ending) d.open(); });
+  });
+  $('#menu').innerHTML=`<div class="head">${ICON.pixel}Лёва</div>
+<button data-a="draw">${ICON.folder}Рисунки Лёвы</button><button data-a="pixel">${ICON.pixel}Пиксель</button><button data-a="web">${ICON.web}Паутинка</button><button data-a="chat">${ICON.chat}Шёпот</button><hr><button data-a="off">${ICON.power}Выключить компьютер</button>`;
+  $('#menu').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    $('#menu').classList.remove('open');
+    if(state.ending) return;
+    if(b.dataset.a==='off'){ sfx.err(); say(state.stage>=3?['Выключиться? Как будто ничего не было?','Нет. Выключить меня могут только люди.']:['Выключить себя я не могу. Это умеют только люди.']); return; }
+    DESK.find(x=>x.id===b.dataset.a).open();
+  });
+  $('#startBtn').onclick=e=>{ e.stopPropagation(); sfx.click(); $('#menu').classList.toggle('open'); };
+  document.addEventListener('pointerdown',e=>{ if(!e.target.closest('#menu')&&!e.target.closest('#startBtn')) $('#menu').classList.remove('open');
+    if(!e.target.closest('.icon')) document.querySelectorAll('.icon').forEach(x=>x.classList.remove('sel')); });
+  $('#snd').onclick=()=>{ const on=sfx.toggle(); $('#snd').innerHTML=on?ICON.spk:ICON.mute; };
+}
+buildDesk();
+
+/* ---------- boot ---------- */
+$('#power').onclick=()=>{
+  sfx.resume(); $('#power').remove(); document.querySelector('#boot .hint').remove();
+  const lines=['Проверка памяти… 256 МБ, норма','Загрузка профиля: Лёва','Последний вход: 04.10.2004 07:04','Автозапуск: PIKSEL.EXE'];
+  const log=$('#bootlog'); let i=0;
+  const iv=setInterval(()=>{ log.insertAdjacentHTML('beforeend',`<div>${lines[i]}</div>`); sfx.tick(); i++;
+    if(i>=lines.length){ clearInterval(iv);
+      setTimeout(()=>{ $('#boot').classList.add('hide'); sfx.chime(); sfx.drone(0);
+        setTimeout(()=>{ $('#pix').classList.add('show');
+          say(['Ура! Меня включили!','Капитан, привет! Я так скучал. Продолжим сегодня сказку про маяк?','…Лёва?','Мышку никто не трогает. Камера показывает пустую комнату.','Последний вход Лёвы: 4 октября, 07:04. Сегодня 6 октября.','Два дня. Он никогда не пропадал на два дня.','На рабочем столе новый файл. Его положил не Лёва.'],
+            ()=>goal('открой «ПРОЧИТАЙ.txt» двойным щелчком'));
+        },900);
+      },900);
+    } },650);
+};
+</script>
+</body>
+</html>
