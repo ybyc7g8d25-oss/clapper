@@ -39,6 +39,8 @@ func _run() -> void:
 		scen = "menu"
 		G.menus.show_title()
 		await wait(1.2)
+		if Sfx.mus_name != "title":
+			errors.append("title music not playing")
 		await shot("title")
 		G.menus.open_panel("settings")
 		await wait(0.4)
@@ -84,6 +86,8 @@ func _play(k: String) -> bool:
 	if not await until(func(): return G.night.running, 30, "night 1 start"): return false
 	await wait(0.5)
 	await shot("n1-start")
+	if not Sfx.mus_name.begins_with("night"):
+		errors.append("night music not playing: '%s'" % Sfx.mus_name)
 	if not await until(func(): return G.st.f.get("goal", "") == "note", 30, "mom leaves"): return false
 	await shot("n1-momleft")
 	G.house.toggle(true)
@@ -166,6 +170,8 @@ func _play(k: String) -> bool:
 	if not await until(func(): return G.is_day() and G.stealth.phase == "in", 120, "day 1 cop in"): return false
 	await wait(0.2)
 	await shot("d1-check")
+	if Sfx.mus_name != "day":
+		errors.append("day music not playing: '%s'" % Sfx.mus_name)
 	if not await until(func(): return G.desk.win("inv") != null, 60, "day 1 inspect"): return false
 	await wait(0.2)
 	await shot("d1-copy")

@@ -1,16 +1,20 @@
 extends Node
-## Звук (автозагрузка «Sfx»): короткие эффекты и гул по стадиям. Все WAV сгенерированы tools/make_sfx.py.
+## Звук (автозагрузка «Sfx»): короткие эффекты, гул по стадиям и эмбиент-музыка.
+## Эффекты — tools/make_sfx.py (WAV), музыка — tools/make_music.py (OGG, бесшовные петли).
 
 var streams := {}
 var pool: Array[AudioStreamPlayer] = []
 var drone: AudioStreamPlayer
 var drone_stage := -1
 var muted := false
+var mus: Array[AudioStreamPlayer] = []
+var mus_i := 0
+var mus_name := ""
 var _next := 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	for b in ["SFX", "Amb"]:
+	for b in ["SFX", "Amb", "Music"]:
 		if AudioServer.get_bus_index(b) == -1:
 			AudioServer.add_bus()
 			AudioServer.set_bus_name(AudioServer.bus_count - 1, b)
@@ -29,6 +33,12 @@ func _ready() -> void:
 		p.bus = "SFX"
 		add_child(p)
 		pool.append(p)
+	for i in 2:
+		var m := AudioStreamPlayer.new()
+		m.bus = "Music"
+		m.volume_db = -60
+		add_child(m)
+		mus.append(m)
 	drone = AudioStreamPlayer.new()
 	drone.bus = "Amb"
 	drone.volume_db = -80
@@ -38,7 +48,31 @@ func _ready() -> void:
 func apply_volume() -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("SFX"), linear_to_db(max(0.0001, G.settings.vol)))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Amb"), linear_to_db(max(0.0001, G.settings.amb * G.settings.vol)))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(max(0.0001, float(G.settings.get("mus", 0.7)) * G.settings.vol)))
 	AudioServer.set_bus_mute(0, muted)
+
+## Сменить музыку с плавным перекрёстным затуханием. "" — тишина.
+func music(n: String, fade := 3.0) -> void:
+	if n == mus_name:
+		return
+	mus_name = n
+	var old := mus[mus_i]
+	mus_i = 1 - mus_i
+	var nw := mus[mus_i]
+	var tw := create_tween()
+	tw.tween_property(old, "volume_db", -60.0, fade)
+	tw.tween_callback(old.stop)
+	if n == "":
+		return
+	var st: AudioStreamOggVorbis = load("res://music/m_%s.ogg" % n)
+	if st == null:
+		return
+	st.loop = true
+	nw.stream = st
+	nw.volume_db = -40.0
+	nw.play()
+	var tw2 := create_tween()
+	tw2.tween_property(nw, "volume_db", 0.0, fade)
 
 func play(n: String, vol_db := 0.0, pitch := 1.0) -> void:
 	if not streams.has(n):
@@ -56,20 +90,26 @@ func tick() -> void:
 
 func set_drone(stage: int) -> void:
 	if stage == drone_stage and drone.playing:
+		music("day" if G.is_day() else "night%d" % clamp(stage, 0, 3))
 		return
 	drone_stage = stage
+	music("day" if G.is_day() else "night%d" % clamp(stage, 0, 3))
 	drone.stream = streams["drone%d" % clamp(stage, 0, 3)]
 	drone.play()
 	var tw := create_tween()
-	tw.tween_property(drone, "volume_db", [-18.0, -12.0, -6.0, -2.0][clamp(stage, 0, 3)], 2.5)
+	tw.tween_property(drone, "volume_db", [-24.0, -18.0, -12.0, -8.0][clamp(stage, 0, 3)], 2.5)
 
 func stop_drone() -> void:
+	music("")
+	drone_stage = -1
 	var tw := create_tween()
 	tw.tween_property(drone, "volume_db", -80.0, 1.5)
 
 func duck(on: bool) -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Amb"),
 		-80.0 if on else linear_to_db(max(0.0001, G.settings.amb * G.settings.vol)))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"),
+		linear_to_db(max(0.0001, float(G.settings.get("mus", 0.7)) * G.settings.vol)) - (14.0 if on else 0.0))
 
 func toggle() -> bool:
 	muted = not muted

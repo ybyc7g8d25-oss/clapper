@@ -8,7 +8,7 @@ SM_LANG.en = {
     cont:'Continue', newGame:'New game', settings:'Settings', endings:'Endings', credits:'Credits', quit:'Quit',
     back:'Back', resume:'Resume', toMenu:'Main menu', yes:'Yes', no:'No', paused:'PAUSED',
     confirmNew:'Start over? Your progress will be lost.',
-    sVol:'Volume', sAmb:'Hum', sText:'Text speed', sFx:'Effects', sScares:'Jump scares', sLang:'Language',
+    sVol:'Volume', sMus:'Music', sAmb:'Hum', sText:'Text speed', sFx:'Effects', sScares:'Jump scares', sLang:'Language',
     sFull:'Fullscreen', sScale:'Scaling',
     tSlow:'slow', tNormal:'normal', tFast:'fast', tInstant:'instant', fxFull:'full', fxLow:'gentle',
     scaleFill:'fill screen', scalePixel:'pixel perfect', on:'on', off:'off',

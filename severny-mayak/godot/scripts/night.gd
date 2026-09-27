@@ -500,6 +500,7 @@ func show_end(k: String) -> void:
 	if k in ["a", "t"]:
 		Sfx.play("sad")
 		Sfx.stop_drone()
+		Sfx.music("end", 2.0)
 	else:
 		Sfx.set_drone(3)
 	G.menus.show_end(k)

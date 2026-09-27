@@ -69,6 +69,7 @@ godot -- --test --lang=ru --shots=/tmp/s   # со скриншотами (нуж
 | `scripts/test_runner.gd` | автотест |
 | `tools/make_art.py` | **вся графика рисуется этим скриптом** (Python + Pillow) → `art/` |
 | `tools/make_sfx.py` | все звуки (синтез) → `sfx/` |
+| `tools/make_music.py` | эмбиент-музыка (синтез, нужны `pip install numpy soundfile`) → `music/*.ogg`: титры, 4 ночных по стадиям, день, финал |
 
 Старые версии — в `old/godot-v2/` (v2 на Godot), `game/` и `prototype/` (веб-прототип).
 

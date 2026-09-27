@@ -27,7 +27,7 @@ const FILE_WINS := {"draw": ["draw", "dr0", "dr1", "dr2"], "photos": ["photos", 
 
 var L: Dictionary = {}
 var LANGS := {}
-var settings := {"vol": 0.8, "amb": 0.8, "text": "normal", "fx": "full", "scares": true,
+var settings := {"vol": 0.8, "mus": 0.7, "amb": 0.8, "text": "normal", "fx": "full", "scares": true,
 	"lang": "", "warned": false, "fullscreen": true, "scale": "fill"}
 var meta := {"endings": {}, "ach": {}, "runs": 0}
 var st := {}

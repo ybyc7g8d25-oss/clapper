@@ -12,7 +12,7 @@ SM_LANG.ru = {
     cont:'Продолжить', newGame:'Новая игра', settings:'Настройки', endings:'Финалы', credits:'Титры', quit:'Выход',
     back:'Назад', resume:'Продолжить', toMenu:'В главное меню', yes:'Да', no:'Нет', paused:'ПАУЗА',
     confirmNew:'Начать заново? Прогресс будет потерян.',
-    sVol:'Громкость', sAmb:'Гул', sText:'Скорость текста', sFx:'Эффекты', sScares:'Скримеры', sLang:'Язык',
+    sVol:'Громкость', sMus:'Музыка', sAmb:'Гул', sText:'Скорость текста', sFx:'Эффекты', sScares:'Скримеры', sLang:'Язык',
     sFull:'Полный экран', sScale:'Масштаб',
     tSlow:'медленно', tNormal:'обычно', tFast:'быстро', tInstant:'сразу', fxFull:'полные', fxLow:'щадящие',
     scaleFill:'на весь экран', scalePixel:'пиксель в пиксель', on:'вкл', off:'выкл',

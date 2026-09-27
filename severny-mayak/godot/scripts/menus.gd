@@ -144,6 +144,7 @@ func show_warn(then: Callable) -> void:
 
 # ---------------------------------------------------------------- титульный экран
 func show_title() -> void:
+	Sfx.music("title")
 	_clear(title)
 	var bg := TextureRect.new()
 	bg.texture = UI.tex("title_bg")
@@ -232,7 +233,7 @@ func _cycle(opts: Array, labels: Array, key: String, after := Callable()) -> But
 func _settings(v: VBoxContainer, in_game: bool) -> void:
 	var u = G.L.ui
 	v.add_child(UI.label(u.settings.to_upper(), UI.PAPER, UI.logo, 8))
-	for pair in [["vol", u.sVol], ["amb", u.sAmb]]:
+	for pair in [["vol", u.sVol], ["mus", u.sMus], ["amb", u.sAmb]]:
 		var s := HSlider.new()
 		s.min_value = 0
 		s.max_value = 1
