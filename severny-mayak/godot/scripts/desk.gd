@@ -2,9 +2,10 @@ class_name Desk
 extends Control
 
 signal changed          # окна открыты/закрыты/свёрнуты — для значков на нижней панели
-## Рабочий стол (y 84..258): обои-фото, значки программ, окна и доска улик поверх.
+## Рабочий стол (y 12..258): обои-фото, значки программ, окна и доска улик поверх.
 
-const TOP := 84
+const TOP := 12
+const ROWS := 8
 const BOTTOM := 258
 var wall: TextureRect
 var icons_box: Control
@@ -66,7 +67,7 @@ func build_icons(list: Array) -> void:
 			continue
 		var ic := DeskIcon.new()
 		ic.setup(d.id, d.ic, d.label.call())
-		ic.position = Vector2(3 + int(i / 6) * 44, 3 + (i % 6) * 28)
+		ic.position = Vector2(3 + int(i / ROWS) * 44, 3 + (i % ROWS) * 28)
 		ic.open_requested.connect(func(_id):
 			if G.ending == "" and not G.stealth.frozen():
 				d.open.call())
@@ -182,6 +183,8 @@ func hide_all() -> void:
 			w.visible = false
 	if G.board and G.board.visible:
 		G.board.toggle(false)
+	if G.house and G.house.visible:
+		G.house.toggle(false)
 	Sfx.play("click")
 
 func hidden_windows() -> Array:

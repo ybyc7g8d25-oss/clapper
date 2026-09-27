@@ -17,7 +17,7 @@ SM_LANG.en = {
     warnOk:'I understand',
     endLocked:'???', achTitle:'Achievement', saved:'Progress saved',
     retry:'Try again', again:'Main menu',
-    board:'BOARD', lens:'LENS', hide:'HIDE', wait:'WAIT', menu:'MENU',
+    board:'BOARD', lens:'LENS', house:'HOUSE', hide:'HIDE', wait:'WAIT', menu:'MENU',
     night:'NIGHT', exposure:'EXPOSURE', gone:'LYOVA GONE', hours:'%d H', memory:'MEMORY',
     click:'click', goal:'> ',
     lensHint:'Lens: click highlighted words to add them to the bank.',
@@ -32,7 +32,7 @@ SM_LANG.en = {
 
   os:{ ok:'OK', close:'Close', user:'Lyova', viewer:'Viewer', notepad:'Notepad' },
 
-  desk:{ note:'README.txt', draw:'Drawings', log:'Pixel', web:'Webby', mail:'Mail', photos:'Photos', tale:'Story',
+  desk:{ note:'README', draw:'Drawings', log:'Pixel', web:'Webby', mail:'Mail', photos:'Photos', tale:'Story',
     diary:'Diary', cam:'Camera', mic:'Microphone', chat:'Whisper', bin:'Bin', parental:'Control', map:'Map',
     flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache' },
 
@@ -130,6 +130,7 @@ SM_LANG.en = {
     mic:['The microphone. I can hear the house. It doesn\'t give me away — no indicator light.'],
     cam:['The camera. When someone is in the room, its red light is on.'],
     camRisk:['The light is on. If they turn around, they\'ll see.'],
+    houseTut:['Footsteps. I can\'t see who.','House — H. It shows who is where. Just don\'t forget to close it: it\'s on the screen too.'],
     visitWarn:['Footsteps! Hide the windows — D. And freeze.'],
     visitGood:['Gone. They didn\'t notice.'],
     visitBad:['I think they noticed.'],
@@ -256,7 +257,7 @@ SM_LANG.en = {
   ],
   snd:{ steps:'*steps*', voices:'*voices*', ring:'*ring*', door:'*door slams*', cry:'*crying*', snore:'*breathing*' },
   check:{ look:'%s IS LOOKING AT THE SCREEN…', win:'an open window', board:'the board on screen', tray:'a minimized window', lens:'highlighted words', clean:'Noticed nothing.', seen:'Noticed traces.',
-    coming:'%s IS COMING. HIDE THE WINDOWS (D).', inRoom:'%s IS IN THE ROOM. DON\'T MOVE.', away:'%s LOOKED AWAY. QUICK!' },
+    coming:'%s IS COMING. HIDE THE WINDOWS (D).', comingAnon:'FOOTSTEPS. SOMEONE IS COMING. HIDE THE WINDOWS (D).', house:'the house on screen', inRoom:'%s IS IN THE ROOM. DON\'T MOVE.', away:'%s LOOKED AWAY. QUICK!' },
   speakers:{ mom:'MOM', dad:'DAD', phone:'PHONE', gran:'GRANDMA', cop:'DETECTIVE' },
 
   note:{ title:'README.txt',
@@ -456,7 +457,7 @@ SM_LANG.en = {
   },
   caught:{ tag:'UNPLUGGED', title:'Pulled the plug', text:'The computer acted far too alive. Dad pulled the plug from the wall. They keep searching for Lyova — without Pixel.' },
   endHint:{a:'Tell the truth.',t:'Tell the truth after gathering every story shard.',b:'Run out of time.',c:'Become the one they\'re looking for.',p:'Leave the investigation everything.',s:'Let them find him without you — and without the truth.',x:'Too much evidence against you.'},
-  credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P, Pixelify Sans (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
+  credits:'THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don\'t wait.',
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d/10', right:'Correct!', wrong:'No: %s', result:'You got %d of 10', again:'Again', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
   ach:{

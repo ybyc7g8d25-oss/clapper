@@ -57,7 +57,8 @@ func _process(delta: float) -> void:
 	if phase == "" and coming != "":
 		phase = "warn"
 		G.hud.set_fast(false)
-		G.menus.visit_banner("warn", G.L.speakers[coming])
+		# дом закрыт — слышны только шаги, кто идёт — неизвестно
+		G.menus.visit_banner("warn", G.L.speakers[coming] if G.house.visible else "")
 		if not G.flag("visitTut"):
 			G.pix.say(G.L.lines.visitWarn)
 		Sfx.play("step")
@@ -117,7 +118,9 @@ func _check(who: String) -> void:
 	for w in G.desk.visible_list():
 		traces.append({"x": w.position.x + w.size.x / 2.0, "rect": Rect2(w.position, w.size), "text": ck.win, "pen": 12.0})
 	if G.board.visible:
-		traces.append({"x": 240.0, "rect": Rect2(0, 84, 480, 174), "text": ck.board, "pen": 15.0})
+		traces.append({"x": 240.0, "rect": Rect2(0, Desk.TOP, 480, Desk.BOTTOM - Desk.TOP), "text": ck.board, "pen": 15.0})
+	if G.house.visible:
+		traces.append({"x": 200.0, "rect": Rect2(G.house.position, G.house.size), "text": ck.house, "pen": 8.0})
 	for b in G.hud.tray.get_children():
 		traces.append({"x": b.global_position.x, "rect": Rect2(b.global_position, Vector2(10, 10)), "text": ck.tray, "pen": 5.0})
 	if G.lens:

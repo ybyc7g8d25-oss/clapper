@@ -12,7 +12,7 @@ var status: Label
 var stamp: Control
 
 func _ready() -> void:
-	size = Vector2(480, 174)
+	size = Vector2(480, 246)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var cork := TextureRect.new()
@@ -37,7 +37,7 @@ func _ready() -> void:
 	var paper := PanelContainer.new()
 	paper.add_theme_stylebox_override("panel", _paper_style())
 	paper.position = Vector2(104, 4)
-	paper.custom_minimum_size = Vector2(372, 106)
+	paper.custom_minimum_size = Vector2(372, 150)
 	paper.size = paper.custom_minimum_size
 	add_child(paper)
 	card = UI.vbox(3)
@@ -48,24 +48,24 @@ func _ready() -> void:
 	pin.position = Vector2(288, 2)
 	add_child(pin)
 	stamp = Control.new()
-	stamp.position = Vector2(390, 86)
+	stamp.position = Vector2(390, 130)
 	stamp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(stamp)
 	var bl := UI.label(G.L.board.bank, UI.PAPER)
-	bl.position = Vector2(104, 114)
+	bl.position = Vector2(104, 158)
 	add_child(bl)
 	status = UI.label("", UI.AMBER2)
-	status.position = Vector2(180, 114)
+	status.position = Vector2(180, 158)
 	add_child(status)
 	var bank_bg := ColorRect.new()
 	bank_bg.color = Color(0, 0, 0, 0.35)
-	bank_bg.position = Vector2(104, 124)
-	bank_bg.size = Vector2(372, 46)
+	bank_bg.position = Vector2(104, 168)
+	bank_bg.size = Vector2(372, 74)
 	bank_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bank_bg)
 	var sc := ScrollContainer.new()
-	sc.position = Vector2(106, 126)
-	sc.size = Vector2(368, 42)
+	sc.position = Vector2(106, 170)
+	sc.size = Vector2(368, 70)
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(sc)
 	bank = HFlowContainer.new()
@@ -74,7 +74,7 @@ func _ready() -> void:
 	bank.custom_minimum_size = Vector2(360, 0)
 	sc.add_child(bank)
 	var hint := UI.label(G.L.board.hint, Color(UI.PAPER, 0.7), null, 8, 92)
-	hint.position = Vector2(5, 118)
+	hint.position = Vector2(5, 190)
 	add_child(hint)
 	G.words_changed.connect(render)
 	render()

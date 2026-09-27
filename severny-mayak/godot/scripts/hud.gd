@@ -1,7 +1,7 @@
 class_name Hud
 extends Control
-## Строка статуса (y 72..84): ночь и дата, часы, палево, сколько нет Лёвы, память Пикселя.
-## И нижняя полоса кнопок (y 258..270): доска, лупа, спрятать, ждать, меню.
+## Строка статуса (y 0..12): ночь и дата, часы, палево, сколько нет Лёвы, память Пикселя.
+## И нижняя полоса кнопок (y 258..270): доска, лупа, дом, спрятать, ждать, меню.
 
 var night_l: Label
 var clock_l: Label
@@ -14,6 +14,7 @@ var mem_l: Label
 var btn_board: Button
 var btn_lens: Button
 var btn_wait: Button
+var btn_house: Button
 var fast := false
 var tray: HBoxContainer
 
@@ -24,12 +25,12 @@ func build() -> void:
 	# статус
 	var bar := ColorRect.new()
 	bar.color = UI.BLACK
-	bar.position = Vector2(0, 72)
+	bar.position = Vector2(0, 0)
 	bar.size = Vector2(480, 12)
 	add_child(bar)
 	var line := ColorRect.new()
 	line.color = UI.DARK3
-	line.position = Vector2(0, 83)
+	line.position = Vector2(0, 11)
 	line.size = Vector2(480, 1)
 	add_child(line)
 	night_l = _lab(4, UI.LIGHT)
@@ -37,7 +38,7 @@ func build() -> void:
 	var sl := _lab(126, UI.GREY3)
 	sl.text = G.L.ui.exposure
 	sus_box = Control.new()
-	sus_box.position = Vector2(160, 76)
+	sus_box.position = Vector2(160, 4)
 	add_child(sus_box)
 	var sb_bg := ColorRect.new()
 	sb_bg.color = UI.DARK3
@@ -51,7 +52,7 @@ func build() -> void:
 	var cl := _lab(202, UI.GREY3)
 	cl.text = G.L.ui.case
 	var cb := Control.new()
-	cb.position = Vector2(226, 76)
+	cb.position = Vector2(226, 4)
 	add_child(cb)
 	var cb_bg := ColorRect.new()
 	cb_bg.color = UI.DARK3
@@ -80,8 +81,12 @@ func build() -> void:
 	add_child(h)
 	btn_board = _btn(G.L.ui.board + " [Tab]", func(): G.board.toggle())
 	btn_lens = _btn(G.L.ui.lens + " [Q]", func(): G.set_lens(not G.lens))
+	btn_house = _btn(G.L.ui.house + " [H]", func():
+		if not G.stealth.frozen():
+			G.house.toggle())
 	h.add_child(btn_board)
 	h.add_child(btn_lens)
+	h.add_child(btn_house)
 	h.add_child(_btn(G.L.ui.hide + " [D]", func(): G.desk.hide_all()))
 	btn_wait = _btn(G.L.ui.wait + " [W]", func(): set_fast(not fast))
 	h.add_child(btn_wait)
@@ -91,7 +96,7 @@ func build() -> void:
 	add_child(r)
 	r.add_child(_btn(G.L.ui.menu, func(): G.menus.open_pause()))
 	tray = UI.hbox(1)
-	tray.position = Vector2(300, 259)
+	tray.position = Vector2(354, 259)
 	tray.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(tray)
 	G.lens_changed.connect(func(on): _set_on(btn_lens, on))
@@ -117,7 +122,7 @@ func render_tray() -> void:
 
 func _lab(x: int, c: Color) -> Label:
 	var l := UI.label("", c)
-	l.position = Vector2(x, 73)
+	l.position = Vector2(x, 1)
 	add_child(l)
 	return l
 
@@ -132,6 +137,9 @@ func _btn(text: String, cb: Callable) -> Button:
 func _set_on(b: Button, on: bool) -> void:
 	b.add_theme_stylebox_override("normal", UI.flat(UI.AMBER if on else UI.DARK2, UI.AMBER2 if on else UI.DARK3, 1, 3, 0))
 	b.add_theme_color_override("font_color", UI.INK if on else UI.LIGHT)
+
+func set_house(on: bool) -> void:
+	_set_on(btn_house, on)
 
 func set_fast(on: bool) -> void:
 	fast = on

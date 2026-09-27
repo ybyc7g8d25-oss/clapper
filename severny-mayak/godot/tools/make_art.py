@@ -213,52 +213,59 @@ def make_house():
 
 # ================================================================ ОБОИ: фото «с папой на рыбалке» (480x186)
 def wallpaper(with_boy=True, dark=False):
-    W, H = 480, 186
+    W, H = 480, 246
+    O = H - 186                     # на сколько стол стал выше: небо растёт вверх
     cv = Canvas(W, H)
     # закатное небо полосами
     sky = ['#3f3a4a', '#554a57', '#7a5f5d', '#9b7560', '#b88d64', '#c9a26f']
-    for y in range(110):
-        k = y / 110 * (len(sky) - 1)
+    for y in range(110 + O):
+        k = y / (110 + O) * (len(sky) - 1)
         i = int(k)
         c = sky[i] if bayer(0, y) + (k - i) < 1 or i + 1 >= len(sky) else sky[i + 1]
         for x in range(W):
             cv.px(x, y, sky[i] if bayer(x, y) > (k - i) else sky[min(i + 1, len(sky) - 1)])
-    cv.disc(330, 96, 16, '#dcc07a'); cv.disc(330, 96, 12, '#e8d59a')
+    cv.disc(330, 96 + O, 16, '#dcc07a'); cv.disc(330, 96 + O, 12, '#e8d59a')
     # дальний берег и деревья
     rnd = random.Random(3)
     for x in range(W):
-        h = 96 + int(4 * math.sin(x / 40) + rnd.random() * 2)
-        for y in range(h, 112):
+        h = 96 + O + int(4 * math.sin(x / 40) + rnd.random() * 2)
+        for y in range(h, 112 + O):
             cv.px(x, y, '#2e2a33')
         if rnd.random() < .12:
             th = rnd.randint(4, 12)
             for y in range(h - th, h):
                 cv.px(x, y, '#27242c')
     # вода с отражением солнца
-    for y in range(110, H):
+    for y in range(110 + O, H):
         for x in range(W):
-            c = '#3a3a47' if bayer(x, y) < .5 + (y - 110) / 200 else '#4a4552'
+            c = '#3a3a47' if bayer(x, y) < .5 + (y - 110 - O) / 200 else '#4a4552'
             cv.px(x, y, c)
-    for y in range(112, 150, 3):
-        w = 20 - (y - 112) // 3
+    for y in range(112 + O, 150 + O, 3):
+        w = 20 - (y - 112 - O) // 3
         cv.rect(330 - w, y, w * 2, 1, '#b89c64')
     # мостки
-    cv.rect(0, 146, 260, 6, '#3a2f28'); cv.rect(0, 146, 260, 1, '#5e4a3c')
+    cv.rect(0, 146 + O, 260, 6, '#3a2f28'); cv.rect(0, 146 + O, 260, 1, '#5e4a3c')
     for x in range(10, 260, 36):
-        cv.rect(x, 152, 4, 34, '#2b231e')
+        cv.rect(x, 152 + O, 4, 34, '#2b231e')
     # папа (сидит с удочкой)
     def fisher(x, big, boy=False):
         s = '#1b1820'
+        cv0 = cv
+        class Sh:  # сдвиг на O вниз
+            def disc(self, x, y, *a): cv0.disc(x, y + O, *a)
+            def rect(self, x, y, *a): cv0.rect(x, y + O, *a)
+            def line(self, x0, y0, x1, y1, *a): cv0.line(x0, y0 + O, x1, y1 + O, *a)
+        c2 = Sh()
         h = 30 if big else 20
-        cv.disc(x, 146 - h, 4 if big else 3, s)
-        cv.rect(x - 4 if big else x - 3, 146 - h + 4, 8 if big else 6, h - 10, s)
-        cv.rect(x - 2, 140, 10 if big else 8, 4, s)
-        cv.rect(x + 6 if big else x + 4, 144, 2, 10 if big else 8, s)
+        c2.disc(x, 146 - h, 4 if big else 3, s)
+        c2.rect(x - 4 if big else x - 3, 146 - h + 4, 8 if big else 6, h - 10, s)
+        c2.rect(x - 2, 140, 10 if big else 8, 4, s)
+        c2.rect(x + 6 if big else x + 4, 144, 2, 10 if big else 8, s)
         rx = x + (40 if big else 30)
-        cv.line(x + 2, 146 - h + 10, rx, 146 - h - (24 if big else 18), '#1b1820')
-        cv.line(rx, 146 - h - (24 if big else 18), rx + 4, 160, '#6b6570')
+        c2.line(x + 2, 146 - h + 10, rx, 146 - h - (24 if big else 18), '#1b1820')
+        c2.line(rx, 146 - h - (24 if big else 18), rx + 4, 160, '#6b6570')
         if boy:
-            cv.rect(x - 3, 146 - h + 2, 6, 2, '#2e3a4f')  # кепка
+            c2.rect(x - 3, 146 - h + 2, 6, 2, '#2e3a4f')  # кепка
     fisher(120, True)
     if with_boy:
         fisher(170, False, True)

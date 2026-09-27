@@ -82,6 +82,10 @@ func _play(k: String) -> bool:
 	await shot("n1-start")
 	if not await until(func(): return G.st.f.get("goal", "") == "note", 30, "mom leaves"): return false
 	await shot("n1-momleft")
+	G.house.toggle(true)
+	await wait(0.3)
+	await shot("n1-house")
+	G.house.toggle(false)
 	G.docs.open_note()
 	G.set_lens(true)
 	await wait(0.3)

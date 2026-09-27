@@ -44,6 +44,7 @@
   "again": "Main menu",
   "board": "BOARD",
   "lens": "LENS",
+  "house": "HOUSE",
   "hide": "HIDE",
   "wait": "WAIT",
   "menu": "MENU",
@@ -78,7 +79,7 @@
   "notepad": "Notepad"
  },
  "desk": {
-  "note": "README.txt",
+  "note": "README",
   "draw": "Drawings",
   "log": "Pixel",
   "web": "Webby",
@@ -364,6 +365,10 @@
   ],
   "camRisk": [
    "The light is on. If they turn around, they'll see."
+  ],
+  "houseTut": [
+   "Footsteps. I can't see who.",
+   "House — H. It shows who is where. Just don't forget to close it: it's on the screen too."
   ],
   "visitWarn": [
    "Footsteps! Hide the windows — D. And freeze."
@@ -979,6 +984,8 @@
   "clean": "Noticed nothing.",
   "seen": "Noticed traces.",
   "coming": "%s IS COMING. HIDE THE WINDOWS (D).",
+  "comingAnon": "FOOTSTEPS. SOMEONE IS COMING. HIDE THE WINDOWS (D).",
+  "house": "the house on screen",
   "inRoom": "%s IS IN THE ROOM. DON'T MOVE.",
   "away": "%s LOOKED AWAY. QUICK!"
  },
@@ -1839,7 +1846,7 @@
   "s": "Let them find him without you — and without the truth.",
   "x": "Too much evidence against you."
  },
- "credits": "THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P, Pixelify Sans (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don't wait.",
+ "credits": "THE NORTH LIGHTHOUSE\n\nIdea, writing, development — the project author\nCode, art, sound — together with Claude\n\nFonts: Tiny5, Press Start 2P (SIL OFL)\n\nAll programs, websites and addresses are fictional.\n\nIf a child goes missing, call emergency services right away. Don't wait.",
  "flags": {
   "title": "Flags",
   "record": "Lyova's record: 8 of 10",

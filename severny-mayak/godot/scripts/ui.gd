@@ -9,7 +9,7 @@ const DARK2 := Color("#27242c")
 const DARK3 := Color("#35313b")
 const GREY := Color("#4d4852")
 const GREY2 := Color("#6b6570")
-const GREY3 := Color("#948c8e")
+const GREY3 := Color("#a8a0a1")
 const LIGHT := Color("#c2b8ac")
 const PAPER := Color("#ddd2ba")
 const PAPER2 := Color("#c9bb9c")
@@ -25,13 +25,12 @@ const BLUE2 := Color("#6c86a0")
 const AMBER := Color("#c49a45")
 const AMBER2 := Color("#e3c983")
 const PURPLE := Color("#5a4b75")
-const PURPLE2 := Color("#8574a4")
-const ALARM := Color("#cf3f4f")
+const PURPLE2 := Color("#a293c4")
+const ALARM := Color("#d9505e")
 
 static var tiny: FontFile      # Tiny5 8 — основной текст
 static var big: FontFile       # Tiny5 16 — заголовки
 static var logo: FontFile      # Press Start 2P — логотип, номера ночей
-static var hand: FontFile      # Pixelify Sans 11 — почерк
 static var theme: Theme
 static var _tex := {}
 
@@ -55,7 +54,6 @@ static func setup() -> void:
 	tiny = _font(["tiny5-latin-400-normal.woff2", "tiny5-cyrillic-400-normal.woff2"])
 	big = tiny
 	logo = _font(["press-start-2p-latin-400-normal.woff2", "press-start-2p-cyrillic-400-normal.woff2"])
-	hand = _font(["pixelify-sans-latin-400-normal.woff2", "pixelify-sans-cyrillic-400-normal.woff2"])
 	theme = Theme.new()
 	theme.default_font = tiny
 	theme.default_font_size = 8

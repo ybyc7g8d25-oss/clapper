@@ -90,7 +90,7 @@ func _title_input(e: InputEvent) -> void:
 	elif e is InputEventMouseMotion and _drag:
 		var p := (get_global_mouse_position() - _off).round()
 		p.x = clampf(p.x, 40 - size.x, 440)
-		p.y = clampf(p.y, 0, 246)
+		p.y = clampf(p.y, Desk.TOP, 246)
 		position = p
 
 func close() -> void:

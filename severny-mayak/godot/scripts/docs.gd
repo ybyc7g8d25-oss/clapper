@@ -219,7 +219,7 @@ func open_drawing(i: int) -> void:
 		t.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
 		t.custom_minimum_size = Vector2(240, 168 if i > 0 else 125)
 		v.add_child(t)
-		v.add_child(UI.label(dr.captions[i], UI.BLUE, UI.hand, 11))
+		v.add_child(UI.label(dr.captions[i], UI.BLUE))
 		if i > 0:
 			var sb := shard_btn(0 if i == 1 else 5)
 			sb.position = Vector2(200, 10)
@@ -404,8 +404,6 @@ func open_diary() -> void:
 			var v := UI.vbox(3)
 			for e in G.L.diary.entries:
 				var r := rt("[color=#a8443c]%s[/color] %s" % [G.esc(e[0]), G.doc(e[1])], UI.BLUE)
-				r.add_theme_font_override("normal_font", UI.hand)
-				r.add_theme_font_size_override("normal_font_size", 11)
 				v.add_child(r)
 			v.add_child(shard_btn(int(G.L.diary.shard)))
 			w.set_content(UI.scroll(paper(v, Color("#e9e1cc"))))
@@ -458,7 +456,7 @@ func _cam_build(w: OSWindow) -> void:
 	var root := Control.new()
 	root.mouse_filter = Control.MOUSE_FILTER_PASS
 	if G.flag("monitorOff"):
-		var off := UI.label(c.off, UI.GREY2)
+		var off := UI.label(c.off, UI.GREY3)
 		off.position = Vector2(80, 70)
 		root.add_child(off)
 		w.set_content(root)
@@ -595,7 +593,7 @@ func _chat_build(w: OSWindow) -> void:
 		conv.add_child(UI.button(cl.silent, func(): G.night.ending_silent()))
 		conv.add_child(UI.button(cl.pretend, func(): G.night.ending_pretend()))
 	elif G.ending == "":
-		conv.add_child(UI.label(cl.disabled, UI.GREY2, null, 8, 190))
+		conv.add_child(UI.label(cl.disabled, UI.GREY3, null, 8, 190))
 	h.add_child(paper(conv))
 	w.set_content(h)
 

@@ -1,6 +1,7 @@
 class_name House
 extends Control
 ## Полоска «дом» (480x72): разрез квартиры. Так Пиксель «слышит» дом через микрофон и видит через камеру.
+## Открывается кнопкой ДОМ (H) поверх верха рабочего стола. Закрыт — слышны только звуки, без людей.
 ## Родители — силуэты, ходят по комнатам по расписанию ночи. Над ними всплывают звуки.
 
 signal arrived(who: String, room: String)
@@ -18,8 +19,9 @@ var sounds: Control
 var base: TextureRect
 
 func build() -> void:
-	position = Vector2.ZERO
+	position = Vector2(0, Desk.TOP)
 	size = Vector2(480, 72)
+	visible = false
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	base = TextureRect.new()
@@ -44,6 +46,19 @@ func build() -> void:
 	sounds = Control.new()
 	sounds.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(sounds)
+	var edge := ColorRect.new()
+	edge.color = UI.GREY
+	edge.position = Vector2(0, 71)
+	edge.size = Vector2(480, 1)
+	add_child(edge)
+
+func toggle(on = null) -> void:
+	visible = (not visible) if on == null else bool(on)
+	Sfx.play("click")
+	if G.hud:
+		G.hud.set_house(visible)
+	if G.desk:
+		G.desk.changed.emit()
 
 ## Днём дом серый, пасмурный; ночью — тёмный.
 func set_day(on: bool) -> void:
@@ -177,6 +192,23 @@ func _update_lights() -> void:
 ## Звук над домом: «*шаги*», «*голоса*», «*звонок*».
 func sound(x: float, text: String, color := UI.GREY3) -> void:
 	var l := UI.label(text, color)
+	if not visible:
+		# дом закрыт: звук всплывает у верхнего края стола — примерно с той стороны, откуда слышно
+		if G.menus:
+			var p := PanelContainer.new()
+			p.add_theme_stylebox_override("panel", UI.flat(Color(UI.BLACK, 0.75), Color(0, 0, 0, 0), 0, 3, 1))
+			p.add_child(l)
+			p.position = Vector2(clampf(x - 14, 2, 430), Desk.TOP + 2)
+			p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			G.menus.root.add_child(p)
+			var tw := p.create_tween()
+			tw.tween_interval(1.2)
+			tw.tween_property(p, "modulate:a", 0.0, 1.0)
+			tw.tween_callback(p.queue_free)
+		if text == G.L.snd.steps and not G.flag("houseTut") and G.night and G.night.running:
+			G.set_flag("houseTut")
+			G.pix.say(G.L.lines.houseTut)
+		return
 	l.position = Vector2(clampf(x - 12, 2, 440), 10)
 	sounds.add_child(l)
 	var tw := l.create_tween()

@@ -132,10 +132,10 @@ func start_run(mode: String) -> void:
 	world.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	screen.add_child(world)
 	screen.move_child(world, 1)
-	G.house = House.new()
-	world.add_child(G.house)
 	G.desk = Desk.new()
 	world.add_child(G.desk)
+	G.house = House.new()
+	world.add_child(G.house)
 	G.hud = Hud.new()
 	world.add_child(G.hud)
 	G.desk.build()

@@ -32,12 +32,12 @@ func _ready() -> void:
 	add_child(root)
 	monitor = ColorRect.new()
 	monitor.color = UI.BLACK
-	monitor.position = Vector2(0, 84)
-	monitor.size = Vector2(480, 174)
+	monitor.position = Vector2(0, Desk.TOP)
+	monitor.size = Vector2(480, Desk.BOTTOM - Desk.TOP)
 	monitor.visible = false
 	root.add_child(monitor)
 	visit_box = PanelContainer.new()
-	visit_box.position = Vector2(150, 88)
+	visit_box.position = Vector2(150, 16)
 	visit_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visit_box.visible = false
 	visit_l = UI.label("", UI.PAPER)
@@ -58,7 +58,7 @@ func _ready() -> void:
 	scare_o = _overlay()
 	toast_l = PanelContainer.new()
 	toast_l.add_theme_stylebox_override("panel", UI.flat(UI.DARK, UI.AMBER, 1, 4, 2))
-	toast_l.position = Vector2(170, 88)
+	toast_l.position = Vector2(170, 16)
 	toast_l.modulate.a = 0
 	toast_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(toast_l)
@@ -325,6 +325,9 @@ func _unhandled_input(e: InputEvent) -> void:
 		KEY_D:
 			if not G.stealth.frozen():
 				G.desk.hide_all()
+		KEY_H:
+			if not G.stealth.frozen():
+				G.house.toggle()
 		KEY_W:
 			G.hud.set_fast(not G.hud.fast)
 		KEY_SPACE, KEY_ENTER:
@@ -562,7 +565,10 @@ func visit_banner(kind: String, who: String) -> void:
 	var red := kind == "in"
 	var ck = G.L.check
 	visit_box.add_theme_stylebox_override("panel", UI.flat(Color(UI.BLACK, 0.9), UI.ALARM if red else (UI.GREEN if kind == "away" else UI.AMBER), 1, 5, 3))
-	visit_l.text = String(ck.inRoom if red else (ck.away if kind == "away" else ck.coming)) % who
+	if kind == "warn" and who == "":
+		visit_l.text = String(ck.comingAnon)
+	else:
+		visit_l.text = String(ck.inRoom if red else (ck.away if kind == "away" else ck.coming)) % who
 	visit_l.add_theme_color_override("font_color", UI.RED2 if red else (UI.GREEN2 if kind == "away" else UI.AMBER2))
 	visit_box.reset_size()
 	visit_box.position.x = 240 - visit_box.get_combined_minimum_size().x / 2
@@ -578,18 +584,18 @@ func gaze(x: float) -> void:
 	if _gaze == null:
 		_gaze = ColorRect.new()
 		_gaze.color = Color(UI.AMBER2, 0.14)
-		_gaze.size = Vector2(36, 186)
+		_gaze.size = Vector2(36, Desk.BOTTOM - Desk.TOP)
 		_gaze.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var edge := ColorRect.new()
 		edge.color = Color(UI.AMBER2, 0.45)
-		edge.size = Vector2(1, 186)
+		edge.size = Vector2(1, Desk.BOTTOM - Desk.TOP)
 		edge.position = Vector2(35, 0)
 		edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_gaze.add_child(edge)
 		root.add_child(_gaze)
 		root.move_child(_gaze, 0)
 	_gaze.visible = x >= 0
-	_gaze.position = Vector2(x - 36, 84)
+	_gaze.position = Vector2(x - 36, Desk.TOP)
 
 ## Подсветить найденный след красной рамкой с подписью.
 func callout(r: Rect2, text: String) -> void:
