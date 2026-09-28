@@ -71,7 +71,7 @@
   "delConfirm": "Erase \"%s\" forever? Nobody will ever read it again — you included.",
   "cacheTitle": ".cache — hidden folder",
   "cacheHint": "Files you hid. The detective can't see them. For now.",
-  "ver": "v4.7"
+  "ver": "v5.0"
  },
  "os": {
   "ok": "OK",

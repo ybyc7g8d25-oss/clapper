@@ -28,7 +28,7 @@ SM_LANG.en = {
     fileOpen:'Open', fileHide:'Hide in .cache', fileDel:'Erase', fileBack:'Restore',
     delConfirm:'Erase "%s" forever? Nobody will ever read it again — you included.',
     cacheTitle:'.cache — hidden folder', cacheHint:'Files you hid. The detective can\'t see them. For now.',
-    ver:'v4.7'
+    ver:'v5.0'
   },
 
   os:{ ok:'OK', close:'Close', user:'Lyova', viewer:'Viewer', notepad:'Notepad' },
