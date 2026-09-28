@@ -168,7 +168,9 @@ func _play(k: String) -> bool:
 	# что спрятать/стереть до первого дня
 	match k:
 		"b": for f in ["web", "mail", "photos", "diary"]: G.docs.delete_file(f)
-		"s": for f in ["log", "parental", "tale", "essay", "voice"]: G.docs.delete_file(f)
+		"s":
+			G.st.solved.append("s4")    # как у живого игрока: «Маршрут» решён — появится шифровка
+			for f in ["log", "parental", "tale", "essay", "voice"]: G.docs.delete_file(f)
 		"p": for f in ["log", "parental"]: G.docs.hide_file(f)
 		"x": for f in ["mail", "diary"]: G.docs.delete_file(f)
 		"a", "t":
@@ -197,7 +199,7 @@ func _play(k: String) -> bool:
 		errors.append("day 1 copied nothing")
 	if k in ["a", "t"] and (G.st.copied.has("log") or G.st.copied.has("parental")):
 		errors.append("hidden file was copied: %s" % str(G.st.copied))
-	if k == "p" and not G.flag("lieDelete"):
+	if k == "c" and not G.flag("lieDelete"):
 		errors.append("Pixel did not lie about the parental log")
 	if k in ["p", "s", "x"]:
 		return await _police_run(k)
