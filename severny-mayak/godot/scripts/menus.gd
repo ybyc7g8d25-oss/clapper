@@ -86,6 +86,8 @@ func _hide(c: Control, t := 0.3) -> void:
 func hide_overlays() -> void:
 	for c in [title, end_o, pause, panel, warn, card]:
 		c.visible = false
+	if _tension:
+		_tension.modulate.a = 0.0
 	monitor.visible = false
 
 func _col(parent: Control, x: float, y: float, w: float, sep := 4, center := false) -> VBoxContainer:
@@ -401,7 +403,7 @@ func day_card(d: int, seize := false) -> void:
 	var txt: String = dd.seizeText if seize else String(dd.cards[clampi(d - 1, 0, dd.cards.size() - 1)])
 	v.add_child(UI.label(dd.seizeHead if seize else dd.head, UI.INK, UI.tiny, 16, 220))
 	v.add_child(UI.label(txt, UI.INK, null, 8, 220))
-	v.add_child(UI.label(dd.caseLine % int(G.st.case), UI.BLUE))
+	v.add_child(UI.label(G.case_text(), UI.BLUE, null, 8, 220))
 	paper.add_child(v)
 	card.add_child(paper)
 	_show(card, 0.6)
@@ -430,11 +432,11 @@ func day_report(d: int, copied: Array, missed: Array) -> void:
 	if copied.is_empty():
 		v.add_child(UI.label(r.none, UI.GREY3))
 	for f in copied:
-		v.add_child(UI.label(r.copied % [G.docs.file_label(f), int(G.FILES[f][0])], UI.BLUE2, null, 8, 260))
+		v.add_child(UI.label(r.copied % G.docs.file_label(f), UI.BLUE2, null, 8, 260))
 	for f in missed:
 		v.add_child(UI.label(r.missed % G.docs.file_label(f), UI.GREEN2, null, 8, 260))
-	v.add_child(UI.label(r.field % int(G.day.FIELD), UI.GREY3))
-	v.add_child(UI.label(r.case % int(G.st.case), UI.LIGHT))
+	v.add_child(UI.label(r.field, UI.GREY3))
+	v.add_child(UI.label(G.case_text(), UI.LIGHT, null, 8, 260))
 	var p := float(G.st.pix)
 	var vi := 0 if p < 30 else (1 if p < 60 else (2 if p < 100 else 3))
 	v.add_child(UI.label(String(r.version[vi]), UI.RED2 if vi >= 2 else UI.GREY3, null, 8, 260))
@@ -465,9 +467,8 @@ func report(n: int) -> void:
 	v.add_child(sep)
 	v.add_child(UI.label(r.gone % G.hours_gone(), UI.RED2))
 	v.add_child(UI.label(r.board % [G.st.solved.size(), G.L.board.sections.size()], UI.LIGHT))
-	v.add_child(UI.label(r.memory % int(G.st.mem), UI.PURPLE2))
-	v.add_child(UI.label(r.exposure % int(G.st.sus), UI.AMBER2))
-	v.add_child(UI.label(r.case % int(G.st.case), UI.BLUE2))
+	v.add_child(UI.label(G.sus_text(), UI.AMBER2, null, 8, 240))
+	v.add_child(UI.label(G.case_text(), UI.BLUE2, null, 8, 240))
 	v.add_child(UI.label(String(r.house[clampi(n - 1, 0, r.house.size() - 1)]), UI.GREY3, null, 8, 240))
 	var go := [false]
 	var nx := item(r.next, func(): go[0] = true)
@@ -617,6 +618,33 @@ func subtitle(who: String, text: String, sec := 2.6) -> void:
 	tw.tween_property(s, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(s.queue_free)
 
+# ---------------------------------------------------------------- напряжение вместо шкалы палева
+var _tension: TextureRect
+
+## v 0..1: края экрана темнеют и краснеют. С 30% палева — заметно, к 100% — почти вся рамка.
+func tension(v: float) -> void:
+	if _tension == null:
+		_tension = TextureRect.new()
+		var gt := GradientTexture2D.new()
+		var gr := Gradient.new()
+		gr.set_color(0, Color(0, 0, 0, 0))
+		gr.set_color(1, Color("#3a0608"))
+		gr.set_offset(0, 0.55)
+		gt.gradient = gr
+		gt.fill = GradientTexture2D.FILL_RADIAL
+		gt.fill_from = Vector2(0.5, 0.5)
+		gt.fill_to = Vector2(1.0, 1.0)
+		gt.width = 96
+		gt.height = 54
+		_tension.texture = gt
+		_tension.stretch_mode = TextureRect.STRETCH_SCALE
+		_tension.size = Vector2(480, 270)
+		_tension.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(_tension)
+		root.move_child(_tension, 0)
+	var a := clampf((v - 0.25) / 0.75, 0.0, 1.0)
+	create_tween().tween_property(_tension, "modulate:a", a * 0.95, 0.6)
+
 # ---------------------------------------------------------------- подсказка «куда нажать»
 var _point_key := ""
 var _point: Panel
@@ -635,7 +663,7 @@ func _point_target() -> Control:
 	if not G.in_game or G.ending != "" or not G.desk or not G.hud:
 		return null
 	var icons := {"note": "note", "clues": "web", "pin": "draw", "night2": "map", "map": "map", "tale": "tale",
-		"cipher": "cipher", "guard": "tm", "restore": "bin", "mom": "chat", "lie": "mail"}
+		"cipher": "cipher", "guard": "tm", "restore": "bin", "mom": "chat", "lie": "mail", "tower": "cam", "voice": "voice"}
 	match _point_key:
 		"lens": return G.hud.btn_lens
 		"board": return G.hud.btn_board

@@ -76,6 +76,17 @@ func solve(sid: String) -> void:
 		G.board.sel_blank = i
 		G.board.place(ans[i])
 
+func _find_button(n: Node, text: String) -> Button:
+	if n == null:
+		return null
+	if n is Button and n.text == text:
+		return n
+	for c in n.get_children():
+		var b := _find_button(c, text)
+		if b:
+			return b
+	return null
+
 func to_night_end() -> void:
 	G.st.mins = G.NIGHT_LEN - 1
 	G.night.minute()
@@ -157,7 +168,8 @@ func _play(k: String) -> bool:
 	# что спрятать/стереть до первого дня
 	match k:
 		"b": for f in ["web", "mail", "photos", "diary"]: G.docs.delete_file(f)
-		"s": for f in ["log", "parental", "tale", "essay"]: G.docs.delete_file(f)
+		"s": for f in ["log", "parental", "tale", "essay", "voice"]: G.docs.delete_file(f)
+		"p": for f in ["log", "parental"]: G.docs.hide_file(f)
 		"x": for f in ["mail", "diary"]: G.docs.delete_file(f)
 		"a", "t":
 			G.docs.hide_file("parental")
@@ -286,6 +298,61 @@ func _play(k: String) -> bool:
 		errors.append("cipher not solved")
 	if k == "b":
 		G.docs.delete_file("cipher")
+	# «Кто позвал» ещё закрыт: нужна 3-я ночь. Прячем улики, чтобы следствие не нашло Лёву раньше.
+	if G.section_open("s6"):
+		errors.append("s6 opened before night 3")
+	if k != "b":
+		for f in ["map", "cipher", "tale", "draw", "essay", "diary", "log", "parental"]:
+			G.docs.hide_file(f)
+	G.desk.close_all()
+	to_night_end()
+	if not await until(func(): return int(G.st.night) == 3 and G.night.running, 240, "night 3"): return false
+	await shot("n3-start")
+	# камера → окно → башня: приблизить и посчитать вспышки
+	G.docs.cam_view = "window"
+	G.docs.cam_zoom = 4
+	G.docs.cam_center = G.docs.TOWER_TOP
+	G.docs.open_cam()
+	await wait(0.4)
+	await shot("n3-tower")
+	var three := _find_button(G.desk.win("cam"), "3")
+	if three == null:
+		errors.append("tower count buttons missing")
+		return false
+	three.pressed.emit()
+	if not G.flag("signal"):
+		errors.append("signal not found")
+	await wait(0.3)
+	await shot("n3-signal")
+	G.desk.close_all()
+	G.docs.cam_view = "room"
+	# голосовое: реверс + ×0.75
+	G.docs.open_voice()
+	G.docs.voice_listen(G.desk.win("voice"))
+	if G.flag("voice"):
+		errors.append("voice solved with wrong settings")
+	await wait(0.2)
+	await shot("n3-voice-garbled")
+	G.docs.voice_speed = 0.75
+	G.docs.voice_rev = true
+	G.docs.voice_listen(G.desk.win("voice"))
+	if not G.flag("voice"):
+		errors.append("voice not restored")
+	await wait(0.3)
+	await shot("n3-voice")
+	G.desk.close_all()
+	solve("s7")
+	solve("s8")
+	if not G.section_open("s6"):
+		errors.append("s6 still closed after s7/s8")
+	# грубая ошибка на доске: блокировка
+	G.board.sel_section = "s6"
+	G.st.f["lock"] = G.board._now() + 5
+	var before := int(G.st.blanks.get("s6", {}).size())
+	G.board.place("pixel")
+	if int(G.st.blanks.get("s6", {}).size()) != before:
+		errors.append("board accepted a word while overheated")
+	G.st.f.erase("lock")
 	G.docs.open_parental()
 	solve("s6")
 	if int(G.st.mem) < 100:

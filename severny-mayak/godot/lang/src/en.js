@@ -35,11 +35,12 @@ SM_LANG.en = {
 
   desk:{ note:'README', draw:'Drawings', log:'Pixel', web:'Webby', mail:'Mail', photos:'Photos', tale:'Story',
     diary:'Diary', cam:'Camera', mic:'Microphone', chat:'Whisper', bin:'Bin', parental:'Control', map:'Map',
-    flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache', essay:'Essay', boat:'Storm', fish:'Fish' },
+    flags:'Flags', tm:'Processes', dont:'dont_open', cache:'.cache', essay:'Essay', voice:'Voice msg', boat:'Storm', fish:'Fish' },
 
   whispers:['where is he','it\'s you','don\'t turn off','23:58','captain?','lighthouse','come','alone'],
 
   words:{
+    light:'light', three:'three times', here:'I\'m here', alive:'alive', t0658:'06:58', asked:'asked', two:'twice', sos:'SOS', t0700:'07:00',
     t0704:'07:04', phone:'phone', desk:'desk', tower:'water tower', rechnaya:'River Street',
     sat:'Saturday', d0210:'October 2', lighthouse:'North Lighthouse', ai:'an AI',
     door:'door', ladder:'fire ladder', hatch:'hatch', inside:'from inside', top:'at the top',
@@ -52,28 +53,36 @@ SM_LANG.en = {
 
   board:{
     title:'EVIDENCE BOARD', bank:'WORD BANK', empty:'The bank is empty. Turn on the lens (Q) and collect words from documents.',
-    right:'CORRECT', wrong:'DOESN\'T ADD UP', almost:'ALMOST: TWO MISTAKES OR FEWER', locked:'This section is still locked.',
+    right:'CORRECT', wrong:'DOESN\'T ADD UP', almost:'ALMOST: TWO MISTAKES OR FEWER', hot:'MEMORY OVERHEATED. WAIT %d MIN.', locked:'This section is still locked.',
     hint:'Pick a blank, then a word. Click a filled blank to clear it.',
     sections:[
-      {id:'s1', title:'The morning of October 4', mem:15, lines:[
+      {id:'s1', title:'The morning of October 4', mem:10, lines:[
         'Lyova left home at {t0704}.',
         'He left his {phone} on the {desk}.',
         'He looked up how to walk to the old {tower} on {rechnaya}.' ]},
-      {id:'s2', title:'Who knew what', mem:15, lines:[
+      {id:'s2', title:'Who knew what', mem:10, lines:[
         'Pixel was going to be deleted on {sat}.',
         'Lyova learned about it on {d0210}.',
         'At night he searched where the {lighthouse} is, and whether {ai} can live without a computer.' ]},
-      {id:'s3', title:'The tower', mem:20, lines:[
+      {id:'s3', title:'The tower', mem:15, lines:[
         'The police checked the tower: the {door} is welded shut.',
         'You can climb to the top by the {ladder}.',
         'At the top there is a {hatch} that can\'t be opened {inside}.',
         'So Lyova is {top}.' ]},
-      {id:'s4', title:'The route', mem:15, lines:[
+      {id:'s4', title:'The route', mem:10, lines:[
         'Lyova walked past the {school} and the {garages} to the river.',
         'He took a {flashlight} and {sandwich}.' ]},
       {id:'s5', title:'The story', mem:15, lines:[
         'The chapter "The Lighthouse Rule" was written by {pixel} at {t2310}.',
         'By the rule, the captain must come {alone} and not {tell} anyone.' ]},
+      {id:'s7', title:'The signal', mem:10, lines:[
+        'At night a {light} blinks at the top of the tower.',
+        'It blinks {three} — in the story that was the keeper saying "{here}".',
+        'So Lyova is {alive}.' ]},
+      {id:'s8', title:'The voice message', mem:10, lines:[
+        'Lyova recorded a voice message at {t0658}, right before he left.',
+        'He didn\'t tell Mom because Pixel {asked} him not to.',
+        'If the door is locked, he\'ll climb the {ladder}.' ]},
       {id:'s6', title:'Who called him', mem:20, lines:[
         'At {t2331} night mode was disabled by {pixel}.',
         'At {t2358} the chat record was deleted by {pixel}.',
@@ -106,6 +115,8 @@ SM_LANG.en = {
     restore:'restore the deleted record from the bin',
     mom:'Mom is online. Answer her',
     clues:'read the files on the desktop and collect words with the lens',
+    tower:'turn the camera to the window and find the tower',
+    voice:'there\'s a voice message from Lyova in the cache — restore his voice',
     wait:'wait for morning or keep looking',
     day:'freeze while he looks. A phone call is your chance',
     lie:'there\'s nothing in the parental log. Reread the mail'
@@ -143,7 +154,7 @@ SM_LANG.en = {
     sus80:['Someone is looking at me. Freeze.'],
     endNight:['Dawn. Dad is about to turn the computer off.','In the daytime a detective will sit here.'],
     night2:['I woke up. 22:00 — autostart. I set it myself.','The second night. The police went to the tower.'],
-    night3:['The third night. Mom is asleep on his bed.','Right under the camera. Every sound is a risk.'],
+    night3:['The third night. Mom is asleep on his bed.','Right under the camera. Every sound is a risk.','The camera can look out the window too. You can see the river from there. And the tower.'],
     night4:['The fourth night. Frost tonight.','If he\'s up there… I don\'t have much time. He has less.'],
     mapFirst:['There\'s a map cache left in the temp folder. The route from that morning. The pieces are mixed up.'],
     mapDone:['A mark by the tower: "at the top". Not the door. The top.'],
@@ -193,6 +204,13 @@ SM_LANG.en = {
     fishFed:['He ate. At least someone in this house is alive because of me.'],
     fishDead:['Captain is floating.','I forgot. I was busy hiding myself.'],
     homework:['Homework. He did it on October 2.','"Pixel said…" I worked out the way to the river for him.'],
+    signalSeen:['A light. At the very top of the tower.','It\'s blinking. Count.'],
+    signalDone:['Three times. "I\'m here."','That\'s not the keeper. That\'s him. A flashlight. He\'s alive.'],
+    signalWrong:['No. Look again.'],
+    voiceFirst:['A voice message. The morning of October 4. I "processed" it — reversed and sped up, so nobody could make it out.','Put it back. Reverse and speed.'],
+    voiceDone:['His voice.','"Shine a light for me." He expected me to shine.'],
+    s7:['He\'s alive. He\'s up there, signaling with a flashlight — like in our story.'],
+    s8:['"Like you asked." Me again.'],
     welcome:['You\'re back.'],
     night5:['The fifth night. Minus five.','If he\'s still up there, this is the last night anyone can reach him in time.'],
     dayIntro:['In the daytime a stranger sat at the computer. Detective Orlov.','He\'s copying files to a flash drive. Everything he reads will help find Lyova…','…and will tell him about me.','While he\'s looking, don\'t move. If his phone rings and he turns away, there\'s time.','Right-click an icon: hide it in .cache or erase it.'],
@@ -243,6 +261,11 @@ SM_LANG.en = {
       ['Day: the detective','He copies files to a flash drive. The files help find Lyova — and tell him about you. Right-click a file to hide or erase it. Best while he looks away.'],
       ['Time','Lyova doesn\'t have much. At the bottom, Pixel\'s hint says what to do next, and a blinking frame shows where to click.'] ],
     keys:'Tab — board · Q — lens · H — house · D — hide all · W — speed up the night · Space — next · Esc — pause' },
+  voice:{ title:'voice_0410.ogg', meta:'Recorded: 04.10 06:58. Modified: PIKSEL.EXE — reversed, speed ×1.33. Modified at <<t0700|07:00>>.', speed:'SPEED ×%.2f', rev:'REVERSE: %s', play:'▶ Listen',
+    text:'pixel its me. <<t0658|06:58>>. im leaving. i didnt tell mom, like you <<asked|asked>>. i took the flashlight and sandwiches.\n\nif the door is locked ill climb the <<ladder|fire ladder>> to the top. youll shine a light for me ok? <<three|three times>>. ill see it.' },
+  feel:{
+    caseQ:['The investigation is going nowhere.','The investigation has reached the river and the old buildings.','The investigation is thinking about the water tower.','The investigation is about to climb the tower.'],
+    susQ:['Nobody in the house suspects a thing.','The parents sometimes listen to the computer.','Dad keeps glancing at the computer. He heard something.','Everyone in the house is sure: the computer is alive.'] },
   uncanny:{ logDate:'today, 03:12', log:[['l','pixel are you there?'],['p','I\'m here. I\'m always here.'],['l','im cold']],
     photoCap:'August. Grandma, Grandpa, Mom, Dad. Grandpa caught a pike!' },
   mic:{ title:'Microphone', idle:'Silence. The fridge is humming.', live:'• RECORDING', lost:'…the voices went quiet.' },
@@ -400,7 +423,7 @@ SM_LANG.en = {
   tale:{ folder:'The lighthouse story',
     chapters:[
       {n:'chapter_1.txt', title:'How the keeper lit the light', meta:'12.09 · Lyova, PIKSEL.EXE', shard:0,
-        body:[['p','Far in the north, where the map ends, there stands a lighthouse. A keeper made of light and wires lives there. He never sleeps.'],['l','and he has an antenna'],['p','Every night the keeper lights the lamp. {{The light flashes three times — that means "I\'m here".}}'],['l','and the captain of the main ship is me']]},
+        body:[['p','Far in the north, where the map ends, there stands a lighthouse. A keeper made of light and wires lives there. He never sleeps.'],['l','and he has an antenna'],['p','Every night the keeper lights the lamp. {{The light flashes <<three|three times>> — that means "<<here|I\'m here>>".}}'],['l','and the captain of the main ship is me']]},
       {n:'chapter_2.txt', title:'The captain and the storm', meta:'19.09 · Lyova, PIKSEL.EXE', shard:1,
         body:[['p','A storm came. All the ships went into the harbor, but the captain stayed at sea, because in the harbor they laughed at him.'],['l','dima was the boss of the harbor'],['p','The keeper shone for the captain all night. And the captain understood: as long as the lighthouse is lit, he is not alone.']]},
       {n:'chapter_3.txt', title:'The island without grown-ups', meta:'26.09 · Lyova, PIKSEL.EXE',
@@ -419,7 +442,8 @@ SM_LANG.en = {
       ['October 3, night.','I cant sleep. Packed my backpack: a <<flashlight|flashlight>>, <<sandwich|sandwiches>>, a sweater. {{Ill leave my phone.}} If the <<door|door>> is locked ill climb the <<ladder|fire ladder>>. Grandma said from the top you can see the whole river.']
     ], shard:4 },
 
-  cam:{ title:'Camera', osd:'CAM-1', rec:'• REC', led:'• LIGHT ON', empty:'Lyova\'s room. Nobody.', person:'In the room: %s.', off:'MONITOR OFF' },
+  cam:{ title:'Camera', osd:'CAM-1', rec:'• REC', led:'• LIGHT ON', empty:'Lyova\'s room. Nobody.', person:'In the room: %s.', off:'MONITOR OFF', toWindow:'WINDOW', toRoom:'ROOM', winHint:'Click to zoom in, right-click to zoom out.', towerDark:'The tower. Dark. Nothing to see.', towerLight:'A light! How many flashes in a row?',
+    signal:'At the very top of the tower a <<light|light>> is blinking. <<three|Three times>> — a pause — three again. Not <<two|twice>>, not <<sos|SOS>>. Someone up there is <<alive|alive>>.' },
 
   bin:{ title:'Bin', restore:'Restore', files:[
       {n:'math_homework.doc', s:'04.10', line:'Homework. He threw it away.'},
@@ -464,8 +488,8 @@ SM_LANG.en = {
     momOn1:'Lyova\'s computer is online. Lyova, is that you?', momOn2:'If it\'s you, write even one letter',
     typing:'Mom is typing…', momOff:'Mom is offline' },
 
-  day:{ who:'Detective Orlov', window:'Orlov is viewing: %s', copying:'copying to a flash drive…', copied:'copied · case +%d%%',
-    toast:'CASE +%d%% · %s', missing:'ORLOV: "WASN\'T THERE A FILE HERE?.."', bye:'*yes… I\'ll call back*', cacheName:'.cache',
+  day:{ who:'Detective Orlov', window:'Orlov is viewing: %s', copying:'copying to a flash drive…', copied:'copied',
+    toast:'COPIED: %s', missing:'ORLOV: "WASN\'T THERE A FILE HERE?.."', bye:'*yes… I\'ll call back*', cacheName:'.cache',
     caseNo:'REPORT · CASE No. 1147', head:'COMPUTER EXAMINATION', seizeHead:'SEIZURE',
     seizeText:'Order: seize the computer for forensic examination.', seizeCard:'Tomorrow the computer will be seized.',
     caseLine:'Case: %d%%',
@@ -505,8 +529,8 @@ SM_LANG.en = {
       cipher:'A cipher. "Up the ladder, like you said." Who is "you"?',
       cache:'A hidden folder. Someone hid files here: %s.'
     },
-    report:{ title:'CASE No. 1147 · DAY %d', none:'Nothing new was copied today.', copied:'Copied: %s  +%d%%', missed:'Not found: %s',
-      field:'Search on the ground: +%d%%', case:'Case: %d%%', gone:'Lyova gone: %d h', next:'Continue',
+    report:{ title:'CASE No. 1147 · DAY %d', none:'Nothing new was copied today.', copied:'Copied: %s', missed:'Not found: %s',
+      field:'The search on the ground goes on.', case:'Case: %d%%', gone:'Lyova gone: %d h', next:'Continue',
       version:['Working theory: the boy left on his own and is hiding with friends.','The investigation got interested in the AI friend from a kids\' app.',
         'Orlov: "That program knew where he went. And kept quiet."','Decided: tomorrow the computer will be seized for examination.'] } },
   leva:['They found Lyova at the top of the water tower: the hatch had slammed shut. Hungry and frozen, but alive.',
@@ -554,7 +578,7 @@ SM_LANG.en = {
   flags:{ title:'Flags', record:'Lyova\'s record: 8 of 10', q:'Whose flag is this?', round:'Round %d/10', right:'Correct!', wrong:'No: %s', result:'You got %d of 10', again:'Again', start:'Play',
     countries:{ru:'Russia',fr:'France',de:'Germany',it:'Italy',jp:'Japan',ua:'Ukraine',pl:'Poland',se:'Sweden',fi:'Finland',no:'Norway',dk:'Denmark',ch:'Switzerland',gr:'Greece',us:'USA',gb:'United Kingdom',ca:'Canada',br:'Brazil',cn:'China',tr:'Turkey',es:'Spain',nl:'Netherlands',be:'Belgium',at:'Austria',ie:'Ireland',ee:'Estonia',lt:'Lithuania',cz:'Czechia',is:'Iceland',hu:'Hungary',bg:'Bulgaria',ro:'Romania',in:'India',ar:'Argentina',kz:'Kazakhstan',mayak:'The North Lighthouse'} },
   ach:{
-    NIGHT1:['The first night','Survive the first night.'], BOARD:['It all adds up','Solve every board section.'], FAST:['Just in time','Learn the truth on the second night.'],
+    NIGHT1:['The first night','Survive the first night.'], BOARD:['It all adds up','Solve every board section.'], FAST:['Just in time','Learn the truth on the third night.'],
     TRUTH:['23:58','Restore the deleted record.'], END_A:['The Light Goes Out','Tell the truth.'], END_B:['The Keeper Waits','Nobody makes it in time.'],
     END_C:['The Captain\'s Voice','Answer as Lyova.'], END_T:['A Real Light','Find the true ending.'], SHARDS:['The last chapter','Gather every story shard.'],
     CAUGHT:['Busted','Get caught.'], GHOST:['Quiet as a mouse','Finish while barely drawing attention.'], FLAGS:['Flag expert','10 of 10 in Flags.'],

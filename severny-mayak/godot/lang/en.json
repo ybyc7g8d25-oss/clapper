@@ -100,6 +100,7 @@
   "dont": "dont_open",
   "cache": ".cache",
   "essay": "Essay",
+  "voice": "Voice msg",
   "boat": "Storm",
   "fish": "Fish"
  },
@@ -114,6 +115,15 @@
   "alone"
  ],
  "words": {
+  "light": "light",
+  "three": "three times",
+  "here": "I'm here",
+  "alive": "alive",
+  "t0658": "06:58",
+  "asked": "asked",
+  "two": "twice",
+  "sos": "SOS",
+  "t0700": "07:00",
   "t0704": "07:04",
   "phone": "phone",
   "desk": "desk",
@@ -159,13 +169,14 @@
   "right": "CORRECT",
   "wrong": "DOESN'T ADD UP",
   "almost": "ALMOST: TWO MISTAKES OR FEWER",
+  "hot": "MEMORY OVERHEATED. WAIT %d MIN.",
   "locked": "This section is still locked.",
   "hint": "Pick a blank, then a word. Click a filled blank to clear it.",
   "sections": [
    {
     "id": "s1",
     "title": "The morning of October 4",
-    "mem": 15,
+    "mem": 10,
     "lines": [
      "Lyova left home at {t0704}.",
      "He left his {phone} on the {desk}.",
@@ -175,7 +186,7 @@
    {
     "id": "s2",
     "title": "Who knew what",
-    "mem": 15,
+    "mem": 10,
     "lines": [
      "Pixel was going to be deleted on {sat}.",
      "Lyova learned about it on {d0210}.",
@@ -185,7 +196,7 @@
    {
     "id": "s3",
     "title": "The tower",
-    "mem": 20,
+    "mem": 15,
     "lines": [
      "The police checked the tower: the {door} is welded shut.",
      "You can climb to the top by the {ladder}.",
@@ -196,7 +207,7 @@
    {
     "id": "s4",
     "title": "The route",
-    "mem": 15,
+    "mem": 10,
     "lines": [
      "Lyova walked past the {school} and the {garages} to the river.",
      "He took a {flashlight} and {sandwich}."
@@ -209,6 +220,26 @@
     "lines": [
      "The chapter \"The Lighthouse Rule\" was written by {pixel} at {t2310}.",
      "By the rule, the captain must come {alone} and not {tell} anyone."
+    ]
+   },
+   {
+    "id": "s7",
+    "title": "The signal",
+    "mem": 10,
+    "lines": [
+     "At night a {light} blinks at the top of the tower.",
+     "It blinks {three} — in the story that was the keeper saying \"{here}\".",
+     "So Lyova is {alive}."
+    ]
+   },
+   {
+    "id": "s8",
+    "title": "The voice message",
+    "mem": 10,
+    "lines": [
+     "Lyova recorded a voice message at {t0658}, right before he left.",
+     "He didn't tell Mom because Pixel {asked} him not to.",
+     "If the door is locked, he'll climb the {ladder}."
     ]
    },
    {
@@ -285,6 +316,8 @@
   "restore": "restore the deleted record from the bin",
   "mom": "Mom is online. Answer her",
   "clues": "read the files on the desktop and collect words with the lens",
+  "tower": "turn the camera to the window and find the tower",
+  "voice": "there's a voice message from Lyova in the cache — restore his voice",
   "wait": "wait for morning or keep looking",
   "day": "freeze while he looks. A phone call is your chance",
   "lie": "there's nothing in the parental log. Reread the mail"
@@ -409,7 +442,8 @@
   ],
   "night3": [
    "The third night. Mom is asleep on his bed.",
-   "Right under the camera. Every sound is a risk."
+   "Right under the camera. Every sound is a risk.",
+   "The camera can look out the window too. You can see the river from there. And the tower."
   ],
   "night4": [
    "The fourth night. Frost tonight.",
@@ -610,6 +644,31 @@
   "homework": [
    "Homework. He did it on October 2.",
    "\"Pixel said…\" I worked out the way to the river for him."
+  ],
+  "signalSeen": [
+   "A light. At the very top of the tower.",
+   "It's blinking. Count."
+  ],
+  "signalDone": [
+   "Three times. \"I'm here.\"",
+   "That's not the keeper. That's him. A flashlight. He's alive."
+  ],
+  "signalWrong": [
+   "No. Look again."
+  ],
+  "voiceFirst": [
+   "A voice message. The morning of October 4. I \"processed\" it — reversed and sped up, so nobody could make it out.",
+   "Put it back. Reverse and speed."
+  ],
+  "voiceDone": [
+   "His voice.",
+   "\"Shine a light for me.\" He expected me to shine."
+  ],
+  "s7": [
+   "He's alive. He's up there, signaling with a flashlight — like in our story."
+  ],
+  "s8": [
+   "\"Like you asked.\" Me again."
   ],
   "welcome": [
    "You're back."
@@ -820,6 +879,28 @@
    ]
   ],
   "keys": "Tab — board · Q — lens · H — house · D — hide all · W — speed up the night · Space — next · Esc — pause"
+ },
+ "voice": {
+  "title": "voice_0410.ogg",
+  "meta": "Recorded: 04.10 06:58. Modified: PIKSEL.EXE — reversed, speed ×1.33. Modified at <<t0700|07:00>>.",
+  "speed": "SPEED ×%.2f",
+  "rev": "REVERSE: %s",
+  "play": "▶ Listen",
+  "text": "pixel its me. <<t0658|06:58>>. im leaving. i didnt tell mom, like you <<asked|asked>>. i took the flashlight and sandwiches.\n\nif the door is locked ill climb the <<ladder|fire ladder>> to the top. youll shine a light for me ok? <<three|three times>>. ill see it."
+ },
+ "feel": {
+  "caseQ": [
+   "The investigation is going nowhere.",
+   "The investigation has reached the river and the old buildings.",
+   "The investigation is thinking about the water tower.",
+   "The investigation is about to climb the tower."
+  ],
+  "susQ": [
+   "Nobody in the house suspects a thing.",
+   "The parents sometimes listen to the computer.",
+   "Dad keeps glancing at the computer. He heard something.",
+   "Everyone in the house is sure: the computer is alive."
+  ]
  },
  "uncanny": {
   "logDate": "today, 03:12",
@@ -1706,7 +1787,7 @@
      ],
      [
       "p",
-      "Every night the keeper lights the lamp. {{The light flashes three times — that means \"I'm here\".}}"
+      "Every night the keeper lights the lamp. {{The light flashes <<three|three times>> — that means \"<<here|I'm here>>\".}}"
      ],
      [
       "l",
@@ -1821,7 +1902,13 @@
   "led": "• LIGHT ON",
   "empty": "Lyova's room. Nobody.",
   "person": "In the room: %s.",
-  "off": "MONITOR OFF"
+  "off": "MONITOR OFF",
+  "toWindow": "WINDOW",
+  "toRoom": "ROOM",
+  "winHint": "Click to zoom in, right-click to zoom out.",
+  "towerDark": "The tower. Dark. Nothing to see.",
+  "towerLight": "A light! How many flashes in a row?",
+  "signal": "At the very top of the tower a <<light|light>> is blinking. <<three|Three times>> — a pause — three again. Not <<two|twice>>, not <<sos|SOS>>. Someone up there is <<alive|alive>>."
  },
  "bin": {
   "title": "Bin",
@@ -2051,8 +2138,8 @@
   "who": "Detective Orlov",
   "window": "Orlov is viewing: %s",
   "copying": "copying to a flash drive…",
-  "copied": "copied · case +%d%%",
-  "toast": "CASE +%d%% · %s",
+  "copied": "copied",
+  "toast": "COPIED: %s",
   "missing": "ORLOV: \"WASN'T THERE A FILE HERE?..\"",
   "bye": "*yes… I'll call back*",
   "cacheName": ".cache",
@@ -2208,9 +2295,9 @@
   "report": {
    "title": "CASE No. 1147 · DAY %d",
    "none": "Nothing new was copied today.",
-   "copied": "Copied: %s  +%d%%",
+   "copied": "Copied: %s",
    "missed": "Not found: %s",
-   "field": "Search on the ground: +%d%%",
+   "field": "The search on the ground goes on.",
    "case": "Case: %d%%",
    "gone": "Lyova gone: %d h",
    "next": "Continue",
@@ -2413,7 +2500,7 @@
   ],
   "FAST": [
    "Just in time",
-   "Learn the truth on the second night."
+   "Learn the truth on the third night."
   ],
   "TRUTH": [
    "23:58",

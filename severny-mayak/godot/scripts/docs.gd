@@ -47,6 +47,8 @@ func desk_list() -> Array:
 		{"id": "dont", "ic": "noteRed", "label": func(): return d.dont, "open": open_dont,
 			"show": func(): return G.flag("dontShown") and not G.flag("dontRead")},
 		{"id": "essay", "ic": "note", "label": func(): return d.essay, "open": open_essay},
+		{"id": "voice", "ic": "voice", "label": func(): return d.voice, "open": open_voice,
+			"show": func(): return int(G.st.night) >= 3},
 		{"id": "boat", "ic": "boat", "label": func(): return d.boat, "open": open_boat},
 		{"id": "fish", "ic": "fish", "label": func(): return d.fish, "open": open_fish},
 		{"id": "dream1", "ic": "dream", "label": func(): return G.L.dreams[0].file, "open": open_dream.bind(0),
@@ -202,6 +204,68 @@ func open_note() -> void:
 			G.set_flag("lensTut")
 			G.pix.goal("lens")
 			say(G.L.lines.lensTut))
+
+# ---------------------------------------------------------------- голосовое Лёвы (3-я ночь)
+## В кэше Пикселя — голосовое, которое Лёва записал утром 4 октября. Пиксель «обработал» его, чтобы никто
+## не разобрал: развернул задом наперёд и ускорил ×1.33. Вернуть: реверс + скорость ×0.75.
+var voice_speed := 1.0
+var voice_rev := false
+
+func voice_ok() -> bool:
+	return is_equal_approx(voice_speed, 0.75) and voice_rev
+
+func open_voice() -> void:
+	D.open_win("voice", G.L.voice.title, "mic", 246, 150, _voice_build)
+	first("voiceSeen", G.L.lines.voiceFirst)
+
+func _voice_build(w: OSWindow) -> void:
+	var vc = G.L.voice
+	var v := UI.vbox(3)
+	v.add_child(rt(G.doc(vc.meta), UI.INK2))
+	if G.flag("voice"):
+		v.add_child(rt(G.doc(vc.text)))
+		w.set_content(UI.scroll(paper(v)))
+		return
+	var row := UI.hbox(2)
+	row.add_child(UI.button("−", func():
+		voice_speed = maxf(0.25, voice_speed - 0.25)
+		w.rebuild()))
+	row.add_child(UI.label(vc.speed % voice_speed, UI.INK))
+	row.add_child(UI.button("+", func():
+		voice_speed = minf(2.0, voice_speed + 0.25)
+		w.rebuild()))
+	row.add_child(UI.button(vc.rev % (G.L.ui.on if voice_rev else G.L.ui.off), func():
+		voice_rev = not voice_rev
+		w.rebuild()))
+	row.add_child(UI.button(vc.play, func(): voice_listen(w), "red"))
+	v.add_child(row)
+	# расшифровка «плывёт», пока настройки неверные
+	var err := absf(voice_speed - 0.75) + (0.0 if voice_rev else 0.7)
+	v.add_child(UI.label(_garble(G.plain(vc.text), clampf(err, 0.15, 0.95)), UI.GREY, null, 8, 226))
+	w.set_content(UI.scroll(paper(v)))
+
+## Послушать: писк на выбранной скорости; при верных настройках — голос становится разборчивым.
+func voice_listen(w: OSWindow) -> void:
+	Sfx.play("type", -4.0, voice_speed)
+	G.stealth.add_sus(2.0, "beep")
+	if voice_ok() and not G.flag("voice"):
+		G.set_flag("voice")
+		Sfx.play("chime")
+		say(G.L.lines.voiceDone, func(): G.pix.goal("board"))
+	if is_instance_valid(w):
+		w.rebuild()
+
+func _garble(t: String, amount: float) -> String:
+	var rnd := RandomNumberGenerator.new()
+	rnd.seed = int(amount * 1000)
+	var noise := "шщжхзсфв~"
+	var out := ""
+	for ch in t:
+		if ch != " " and ch != "\n" and rnd.randf() < amount:
+			out += noise[rnd.randi() % noise.length()]
+		else:
+			out += ch
+	return out
 
 # ---------------------------------------------------------------- школьное сочинение
 func open_essay() -> void:
@@ -572,6 +636,9 @@ func _cam_build(w: OSWindow) -> void:
 		w.set_content(root)
 		return
 	var dad_view: bool = G.flag("dadCamNow")
+	if cam_view == "window" and not dad_view:
+		_cam_window(w, root)
+		return
 	var room := TextureRect.new()
 	room.texture = UI.tex("cam_dad" if dad_view else "cam_room")
 	root.add_child(room)
@@ -604,6 +671,104 @@ func _cam_build(w: OSWindow) -> void:
 		var sb := shard_btn(2)
 		sb.position = Vector2(60, 30)
 		root.add_child(sb)
+	if not dad_view:
+		root.add_child(_cam_toggle(w, c.toWindow))
+	w.set_content(root)
+
+# ---------------------------------------------------------------- камера → окно → башня
+## Камера стоит у окна: её можно развернуть на улицу и приблизить. С 3-й ночи на верхушке башни
+## мигает свет — три раза и пауза («я здесь», как в сказке). Найти, приблизить, посчитать вспышки.
+var cam_view := "room"
+var cam_zoom := 1
+var cam_center := Vector2(240, 150)       # центр обзора в координатах картинки cam_window (480x300)
+const TOWER_TOP := Vector2(402, 156)
+const VIEW := Vector2(242, 150)
+
+func _cam_toggle(w: OSWindow, text: String) -> Button:
+	var b := UI.button(text, func():
+		cam_view = "window" if cam_view == "room" else "room"
+		cam_zoom = 1
+		cam_center = Vector2(240, 150)
+		w.rebuild(), "dark")
+	b.position = Vector2(186, 148)
+	return b
+
+func _cam_window(w: OSWindow, root: Control) -> void:
+	var c = G.L.cam
+	var view := Control.new()
+	view.clip_contents = true
+	view.size = VIEW
+	view.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.add_child(view)
+	var sc := 0.5 * cam_zoom
+	var img := TextureRect.new()
+	img.texture = UI.tex("cam_window")
+	img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	img.size = Vector2(480, 300) * sc
+	img.position = (VIEW / 2 - cam_center * sc).clamp(VIEW - img.size, Vector2.ZERO).round()
+	img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	view.add_child(img)
+	var alive: bool = int(G.st.night) >= 3
+	var tpos: Vector2 = img.position + TOWER_TOP * sc
+	if alive:
+		# свет фонарика на верхушке: три вспышки — пауза
+		var lt := ColorRect.new()
+		lt.color = Color("#f2e3a0")
+		lt.size = Vector2.ONE * maxf(1.0, sc)
+		lt.position = (tpos - lt.size / 2).round()
+		lt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		view.add_child(lt)
+		var tw := lt.create_tween().set_loops()
+		for i in 3:
+			tw.tween_callback(func(): lt.visible = true)
+			tw.tween_interval(0.3)
+			tw.tween_callback(func(): lt.visible = false)
+			tw.tween_interval(0.3)
+		tw.tween_interval(1.8)
+	view.gui_input.connect(func(e):
+		if e is InputEventMouseButton and e.pressed:
+			if e.button_index == MOUSE_BUTTON_LEFT and cam_zoom < 8:
+				cam_center = ((e.position - img.position) / sc).clamp(Vector2.ZERO, Vector2(480, 300))
+				cam_zoom *= 2
+				Sfx.play("click")
+				w.rebuild()
+			elif e.button_index == MOUSE_BUTTON_RIGHT and cam_zoom > 1:
+				cam_zoom /= 2
+				Sfx.play("click")
+				w.rebuild())
+	var osd := UI.label("%s %s  ×%d" % [c.osd, G.clock(), cam_zoom], UI.PAPER)
+	osd.position = Vector2(4, 2)
+	root.add_child(osd)
+	var near := Rect2(Vector2.ZERO, VIEW).has_point(tpos) and cam_zoom >= 4
+	var cap_text: String = c.winHint
+	if near and not alive:
+		cap_text = c.towerDark
+	elif near and alive and not G.flag("signal"):
+		cap_text = c.towerLight
+		first("signalSeen", G.L.lines.signalSeen)
+		var row := UI.hbox(2)
+		row.position = Vector2(4, 120)
+		for n in range(1, 6):
+			var nn := n
+			row.add_child(UI.button(str(n), func():
+				if nn == 3:
+					G.set_flag("signal")
+					Sfx.play("chime")
+					say(G.L.lines.signalDone, func(): if not G.flag("voice"): G.pix.goal("voice"))
+				else:
+					Sfx.play("err", -6.0)
+					say(G.L.lines.signalWrong)
+				w.rebuild(), "dark"))
+		root.add_child(row)
+	var cap: Control
+	if G.flag("signal") and near:
+		cap = UI.panel(rt(G.doc(c.signal), UI.PAPER), Color(UI.BLACK, 0.7), Color(0, 0, 0, 0), 0, 2)
+		cap.custom_minimum_size = Vector2(236, 0)
+	else:
+		cap = UI.label(cap_text, UI.PAPER, null, 8, 180)
+	cap.position = Vector2(4, 133 if not (G.flag("signal") and near) else 104)
+	root.add_child(cap)
+	root.add_child(_cam_toggle(w, c.toRoom))
 	w.set_content(root)
 
 func refresh_cam() -> void:

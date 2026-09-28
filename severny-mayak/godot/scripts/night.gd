@@ -3,7 +3,7 @@ extends Node
 ## Ночной цикл: время идёт (22:00 → 06:00), по расписанию в доме происходят события,
 ## решённые разделы доски двигают сюжет. В конце ночи — отчёт; правда — развязка и финал.
 
-const SEC_PER_MIN := 1.8       # 1 игровая минута = 1,8 с (ночь ≈ 14 минут; «ждать» — в 6 раз быстрее)
+const SEC_PER_MIN := 2.2       # 1 игровая минута = 2,2 с (ночь ≈ 18 минут; «ждать» — в 6 раз быстрее)
 var running := false
 var events: Array = []
 var ev_i := 0
@@ -91,7 +91,7 @@ func start_night(fresh: bool) -> void:
 		match n:
 			1: say(G.L.lines.bootNg if G.st.ng else G.L.lines.boot, func(): G.pix.goal("freeze"))
 			2: say(G.L.lines.night2, func(): G.pix.goal("night2"))
-			3: say(G.L.lines.night3)
+			3: say(G.L.lines.night3, func(): if not G.flag("signal"): G.pix.goal("tower"))
 			4: say(G.L.lines.night4)
 			_: say(G.L.lines.night5)
 		if G.flag("seize"):
@@ -290,7 +290,7 @@ func reveal() -> void:
 	if G.flag("revealed"):
 		return
 	G.set_flag("revealed")
-	if int(G.st.night) <= 2:
+	if int(G.st.night) <= 3:
 		G.achieve("FAST")
 	update_stage()
 	var lines: Array = G.L.lines.reveal.duplicate()

@@ -7,7 +7,7 @@ extends Node
 
 const COPY_SEC := 3.5          # сколько идёт копирование одного файла
 const AWAY_SEC := 6.0          # сколько длится звонок
-const FIELD := 8.0             # поиски на местности: столько «Дело» растёт за день само
+const FIELD := 5.0             # поиски на местности: день 1 +5, дальше каждый день на 3 больше (подключают людей)
 const HIDE_PENALTY := 15.0     # эксперт нашёл скрытую папку — это подозрительно
 
 var away := false
@@ -19,6 +19,10 @@ var missed_today: Array = []
 
 func per_day(d: int) -> int:
 	return [4, 5, 6][clampi(d - 1, 0, 2)]
+
+## Поиски на местности: с каждым днём людей больше.
+func field(d: int) -> float:
+	return FIELD + 3.0 * (d - 1)
 
 ## С третьего дня с Орловым эксперт — он находит скрытую папку.
 func expert(d: int) -> bool:
@@ -153,7 +157,7 @@ func run() -> void:
 	if not await _until(func(): return G.stealth.phase == "", 60.0):
 		return
 	active = false
-	G.add_case(FIELD)
+	G.add_case(field(d))
 	await G.pix.say_wait(G.L.lines.dayEnd)
 	if not _alive(rid):
 		return
@@ -245,9 +249,9 @@ func inspect(id: String, call_first := false) -> void:
 	var p0 := float(G.st.pix)
 	var got := apply_copy(id)
 	copied_today.append_array(got)
-	st.text = dd.copied % [int(float(G.st.case) - c0)]
+	st.text = dd.copied
 	Sfx.play("stamp", -6.0)
-	G.menus.toast(dd.toast % [int(float(G.st.case) - c0), title])
+	G.menus.toast(dd.toast % title)
 	if float(G.st.pix) - p0 >= 15.0:
 		if G.flag("copyBadSaid"):
 			G.pix.say([G.L.lines.copyBad2[int(G.st.copied.size()) % G.L.lines.copyBad2.size()]])
@@ -354,7 +358,7 @@ func seized(d: int) -> void:
 		if G.file_state(id) != "deleted" and exists(id) and not G.st.copied.has(id):
 			G.st.copied.append(id)
 			G.add_case(float(G.FILES[id][0]))
-	G.add_case(FIELD)
+	G.add_case(field(d))
 	G.st.found_h = G.hours_at(d, true) + 8 if float(G.st.case) >= 100.0 else -1
 	Sfx.play("click")
 	G.menus.monitor_off(true)
@@ -374,7 +378,7 @@ func simulate() -> String:
 		else:
 			for id in plan(d):
 				apply_copy(id)
-		G.add_case(FIELD)
+		G.add_case(field(d))
 		if float(G.st.case) >= 100.0:
 			G.st.found_h = G.hours_at(d, true)
 			return "police" if G.leva_idx(int(G.st.found_h)) < 3 else "lost"

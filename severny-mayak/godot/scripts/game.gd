@@ -15,12 +15,15 @@ const DAY_START := 13 * 60                    # днём следователь 
 const DEADLINE := 119                         # столько часов Лёва продержится наверху башни
 const V := 4                                  # версия сохранений
 ## Файлы-улики: [насколько продвигают дело (поиск Лёвы), насколько выдают Пикселя].
+## Баланс подобран так: ничего не прятать — после 2-го дня компьютер изымают (игрок проживает 3 ночи);
+## честный путь к правде — в 3-ю ночь, Лёва ещё цел.
 const FILES := {
-	"web": [10, 5], "mail": [15, 10], "log": [10, 30], "photos": [10, 5], "parental": [5, 30],
-	"diary": [20, 15], "draw": [5, 5], "essay": [5, 10], "tale": [10, 25], "map": [25, 0], "cipher": [25, 15],
+	"web": [7, 4], "mail": [9, 8], "log": [5, 25], "photos": [7, 4], "parental": [4, 25],
+	"diary": [11, 12], "draw": [3, 4], "essay": [3, 8], "tale": [5, 20], "map": [15, 0], "cipher": [12, 12],
+	"voice": [12, 18],
 }
 ## В каком порядке следователь смотрит файлы.
-const INV_ORDER := ["web", "mail", "log", "photos", "parental", "diary", "essay", "draw", "tale", "map", "cipher"]
+const INV_ORDER := ["web", "mail", "log", "photos", "parental", "diary", "essay", "draw", "tale", "map", "cipher", "voice"]
 ## Окна, которые принадлежат файлу (закрываются, когда файл прячут или стирают).
 const FILE_WINS := {"draw": ["draw", "dr0", "dr1", "dr2"], "photos": ["photos", "ph0", "ph1", "ph2", "ph3"],
 	"tale": ["tale", "ch0", "ch1", "ch2", "ch3"]}
@@ -177,9 +180,9 @@ func hours_gone() -> int:
 
 ## Каким найдут Лёву через h часов: 0 — замёрз, но цел; 1 — больница; 2 — без сознания; 3 — поздно.
 func leva_idx(h: int) -> int:
-	if h < 47: return 0
-	if h < 71: return 1
-	if h < 95: return 2
+	if h < 71: return 0
+	if h < 95: return 1
+	if h < 110: return 2
 	return 3
 
 ## Дата: ночь n — (3+n) октября, день после ночи n — (4+n) октября.
@@ -199,6 +202,15 @@ func hidden_files() -> Array:
 		if file_state(id) == "hidden":
 			out.append(id)
 	return out
+
+## Шкал на экране нет — состояние описывается словами (в отчётах ночи и дня).
+func case_text() -> String:
+	var c := float(st.case)
+	return String(L.feel.caseQ[0 if c < 30 else (1 if c < 60 else (2 if c < 85 else 3))])
+
+func sus_text() -> String:
+	var s := float(st.sus)
+	return String(L.feel.susQ[0 if s < 25 else (1 if s < 50 else (2 if s < 75 else 3))])
 
 func add_case(n: float) -> void:
 	st.case = clampf(float(st.case) + n, 0.0, 100.0)
@@ -283,7 +295,9 @@ func section_open(id: String) -> bool:
 		"s1", "s2": return true
 		"s3", "s4": return int(st.night) >= 2
 		"s5": return st.solved.has("s3")
-		"s6": return st.solved.has("s4") and st.solved.has("s5")
+		"s7", "s8": return int(st.night) >= 3
+		# «Кто позвал» — только когда ясно, что Лёва жив и что он слышал в то утро (3-я ночь)
+		"s6": return st.solved.has("s4") and st.solved.has("s5") and st.solved.has("s7") and st.solved.has("s8")
 	return false
 
 ## Проверить раздел. Возвращает число ошибок (0 — верно), -1 — не заполнен.

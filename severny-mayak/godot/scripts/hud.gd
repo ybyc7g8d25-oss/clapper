@@ -69,6 +69,11 @@ func build() -> void:
 	cb.add_child(pix_bar)
 	gone_l = _lab(278, UI.RED2)
 	mem_l = _lab(390, UI.PURPLE2)
+	# просьба автора: никаких видимых шкал — палево, дело и память игрок чувствует, а не читает
+	# (палево — темнеющие красные края экрана и сердцебиение, дело — словами в итоге дня)
+	for n in [sl, sus_box, cl, cb, mem_l]:
+		n.visible = false
+	gone_l.position.x = 150
 	# кнопки внизу
 	var bot := ColorRect.new()
 	bot.color = UI.BLACK

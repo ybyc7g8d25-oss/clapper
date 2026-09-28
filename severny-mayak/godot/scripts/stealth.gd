@@ -10,6 +10,7 @@ var open_at := 0
 var _last := 0.0
 var _cool := 0.0
 var _cam := 0.0
+var _heart := 0.0
 var _gen := 0
 var found := 0
 var checking := false
@@ -26,6 +27,8 @@ func frozen() -> bool:
 func render() -> void:
 	if G.hud:
 		G.hud.refresh()
+	if G.menus:
+		G.menus.tension(float(G.st.sus) / MAX)
 
 func add_sus(n: float, why := "") -> void:
 	if not active():
@@ -95,6 +98,13 @@ func _process(delta: float) -> void:
 				G.set_flag("camRisk")
 				G.pix.say(G.L.lines.camRisk)
 			add_sus(2.0, "cam")
+	# сердцебиение: чем ближе к провалу, тем чаще (шкалы на экране нет — только это и красные края)
+	var v := float(G.st.sus) / MAX
+	if v >= 0.45:
+		_heart += delta
+		if _heart >= lerpf(2.6, 0.9, (v - 0.45) / 0.55):
+			_heart = 0.0
+			Sfx.play("heart", lerpf(-16.0, -4.0, (v - 0.45) / 0.55))
 	# остывание
 	_cool += delta
 	if _cool >= 4.0:

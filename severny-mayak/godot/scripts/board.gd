@@ -223,6 +223,11 @@ func _render_bank() -> void:
 func place(wid: String) -> void:
 	if G.st.solved.has(sel_section) or not G.section_open(sel_section):
 		return
+	var left := locked_left()
+	if left > 0:
+		G.menus.toast(G.L.board.hot % left)
+		Sfx.play("err", -10.0)
+		return
 	var n := G.section_blanks(G.section(sel_section)).size()
 	if not G.st.blanks.has(sel_section):
 		G.st.blanks[sel_section] = {}
@@ -260,9 +265,23 @@ func _check() -> void:
 	status.text = G.L.board.almost if wrong <= 2 else G.L.board.wrong
 	status.add_theme_color_override("font_color", UI.AMBER2 if wrong <= 2 else UI.RED2)
 	G.pix.say(G.L.lines.almost if wrong <= 2 else G.L.lines.wrong)
+	if wrong > 2:
+		# грубая ошибка: память «перегревается» — писк (палево) и доска заблокирована на 20 игровых минут
+		G.stealth.add_sus(4.0, "beep")
+		G.st.f["lock"] = _now() + LOCK_MIN
+		G.fx.glitch(0.4)
 	var tw := create_tween()
 	tw.tween_interval(3.0)
 	tw.tween_callback(func(): status.text = "")
+
+const LOCK_MIN := 20
+
+func _now() -> int:
+	return int(G.st.night) * 1000 + int(G.st.mins)
+
+## Сколько игровых минут доска ещё «остывает» после грубой ошибки.
+func locked_left() -> int:
+	return maxi(0, int(G.fget("lock", 0)) - _now())
 
 ## Раздел решён: печать, память, последствия.
 func solve(sid: String) -> void:

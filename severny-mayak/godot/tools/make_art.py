@@ -317,6 +317,11 @@ def make_icons(v2):
     cv = Canvas(16, 16); cv.rect(1, 11, 14, 3, 'brown2'); cv.rect(3, 14, 10, 1, 'brown')      # кораблик
     cv.rect(7, 2, 1, 9, 'ink'); cv.poly([(8, 2), (14, 10), (8, 10)], 'white'); cv.poly([(6, 4), (2, 10), (6, 10)], 'paper')
     save(cv, 'icon_boat')
+    cv = Canvas(16, 16); cv.rect(2, 3, 12, 10, 'grey4'); cv.frame(2, 3, 12, 10, 'grey2')     # голосовое: кассета-волна
+    for i, h in enumerate((2, 5, 3, 7, 4, 6, 2, 4, 3)):
+        cv.rect(3 + i, 8 - h // 2, 1, h, 'cyan')
+    cv.rect(5, 13, 6, 2, 'grey2')
+    save(cv, 'icon_voice')
     cv = Canvas(16, 16); cv.rect(1, 3, 14, 12, 'navy'); cv.frame(0, 2, 16, 14, 'grey1'); cv.rect(1, 12, 14, 3, 'tan')   # аквариум
     cv.rect(5, 6, 5, 3, 'orange'); cv.rect(10, 5, 2, 5, 'orange2'); cv.px(6, 7, 'ink'); cv.px(3, 4, 'cyan'); cv.px(12, 3, 'cyan')
     save(cv, 'icon_fish')
@@ -332,6 +337,54 @@ def make_icons(v2):
     cv = Canvas(16, 16); cv.rect(0, 0, 16, 16, 'grey5'); cv.frame(0, 0, 16, 16, 'grey3'); cv.rect(3, 7, 10, 2, 'red')
     cv.rect(3, 3, 2, 2, 'grey2'); cv.rect(7, 3, 2, 2, 'grey2'); save(cv, 'icon_flags')
 
+
+
+
+# ================================================================ КАМЕРА → ОКНО: ночной город, река, башня (480x300, зум до ×8)
+def cam_window():
+    W, H = 480, 300
+    cv = Canvas(W, H, '#0b0e15')
+    for y in range(170):
+        k = y / 170
+        for x in range(W):
+            if bayer(x, y) < k * .6:
+                cv.px(x, y, '#141b29')
+    rnd = random.Random(11)
+    for _ in range(70):
+        cv.px(rnd.randint(0, W - 1), rnd.randint(0, 120), '#5a6478')
+    # дальний берег и река
+    cv.rect(0, 200, W, 100, '#0a0d13')
+    for y in range(206, 240):
+        for x in range(W):
+            if bayer(x, y) < .25:
+                cv.px(x, y, '#151c2a')
+    for x in range(0, W, 7):   # блики на воде
+        cv.px(x + rnd.randint(0, 3), rnd.randint(210, 236), '#2a3448')
+    # город слева: дома с окнами
+    x = 0
+    while x < 330:
+        w = rnd.randint(18, 34); h = rnd.randint(40, 110)
+        cv.rect(x, 200 - h, w, h, '#0d1119')
+        for wy in range(200 - h + 5, 196, 8):
+            for wx in range(x + 3, x + w - 3, 6):
+                if rnd.random() < .18:
+                    cv.rect(wx, wy, 2, 3, '#b89045')
+        x += w + rnd.randint(1, 4)
+    # голые деревья у реки
+    for tx in range(335, 480, 9):
+        th = rnd.randint(10, 22)
+        cv.rect(tx, 200 - th, 1, th, '#0a0d13')
+        cv.px(tx - 1, 200 - th + 3, '#0a0d13'); cv.px(tx + 1, 200 - th + 5, '#0a0d13')
+    # водонапорная башня: кирпичный ствол, бак, пожарная лестница сбоку
+    bx = 396
+    cv.rect(bx, 168, 12, 34, '#10141d')
+    cv.rect(bx - 3, 158, 18, 11, '#121722')
+    cv.rect(bx - 4, 157, 20, 2, '#1a2130')
+    cv.rect(bx + 5, 154, 2, 3, '#121722')          # люк на крыше
+    for ly in range(160, 202, 3):                  # лестница
+        cv.px(bx + 14, ly, '#1f2736'); cv.px(bx + 16, ly, '#1f2736')
+    cv.rect(bx + 14, 160, 1, 42, '#1a2130'); cv.rect(bx + 16, 160, 1, 42, '#1a2130')
+    return cv
 
 
 # ================================================================ ЗАСТАВКА «ПИКСЕЛЬ»: пустая детская, светится монитор
@@ -419,6 +472,7 @@ def make_docs(v2):
         save(framed, n)
     save(v2.title_bg(), 'title_bg')
     save(title_room(), 'title_room')
+    save(cam_window(), 'cam_window')
     save(v2.title_lamp(), 'title_lamp')
     save(v2.epilogue_wall(), 'wall_epilogue_src')
 
